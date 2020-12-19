@@ -1,9 +1,9 @@
 
 
 #include "datatoimage.h"
+#include "glm.hpp"
 
-
-void DataToImage() {
+void DataToImage(const glm::vec3* data) {
 
 	FILE *fp;
 	fp = fopen("../image/test.ppm", "w");
@@ -11,10 +11,9 @@ void DataToImage() {
 	fprintf(fp, "P3\n");
 	fprintf(fp, "%d %d\n", SIZE, SIZE);
 	fprintf(fp, "255\n");
-
-	for (int i = 0; i < 512; ++i) {
-		for (int j = 0; j < 512; ++j) {
-			fprintf(fp, "%.0f %.0f %.0f\n", i*1.0f * 255 / 512, j*1.0f * 255 / 512, 0.0f);
+	for (int i = 0; i < SIZE; ++i) {
+		for (int j = 0; j < SIZE; ++j) {
+			fprintf(fp, "%.0f %.0f %.0f\n", data[SIZE*i + j].x, data[SIZE*i + j].y, data[SIZE*i + j].z);
 		}
 	}
 
