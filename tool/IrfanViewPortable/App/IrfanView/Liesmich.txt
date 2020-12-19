@@ -1,0 +1,21 @@
+-----------------------------------------------------------------------------
+Datei : 'Liesmich.txt' - Information über IrfanView-Sprachen
+Autor : Irfan Skiljan
+E-Mail: irfanview@gmx.net
+WWW   : http://www.irfanview.com
+-----------------------------------------------------------------------------
+
+
+
+- Wie installiert man zusätzliche Sprachen für IrfanView?
+
+  1) Finden Sie das IrfanView-Verzeichnis
+
+  2) Entzippen Sie alle Dateien aus dem ZIP ins IrfanView-Verzeichnis 
+     (inkl. aller Unterverz.)
+
+  3) Starten Sie IrfanView und gehen Sie ins Menü: "Options->Change Language" und 
+     ändern Sie die Sprache auf "DEUTSCH.DLL".
+
+
+Viel Spass!
