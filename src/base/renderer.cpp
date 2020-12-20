@@ -1,8 +1,9 @@
 #include "header.h"
-#include "datatoimage.h"
 #include "renderer.h"
+#include "datatoimage.h"
 #include "glm.hpp"
 #include "ray.h"
+#include "geometrys.h"
 
 void Renderer::Run()
 {
@@ -18,14 +19,8 @@ void Renderer::Run()
 		Ray r = {};
 		r.origin = glm::vec3{ 0,0,0 };
 		r.direction = glm::normalize(dir);
-		
-		FLOAT t;
-		if (s.Intersect(r, &t)) {
-			imageData[yx] = glm::vec3{ 255,255,255 };
-		}
-		else{
-			imageData[yx] = glm::vec3{ 0,0,0 };
-		}
+	
+		imageData[yx] = raytracer->Trace(DEPTH, r) * 255.0;
 		++yx;
 	}
 
@@ -41,10 +36,23 @@ void Renderer::Initialize() {
 	s.center = glm::vec3{ 0., 10., 0 };
 	s.radius = 1;
 
+	Geometrys::Instance()->shapes.push_back(
+		new Sphere(glm::vec3{ 0., 6., .5 }, glm::vec3{ 1., 1., 1. }, .9, .05, .2, .85, 0., 1.7));
+	Geometrys::Instance()->shapes.push_back(
+		new Sphere(glm::vec3{ -1., 8., -.5 }, glm::vec3{ 1., .5, .2 }, 1., .7, .3, 0., .05, 1.2));
+	Geometrys::Instance()->shapes.push_back(
+		new Sphere(glm::vec3{ 1., 8., -.5 }, glm::vec3{ .1, .8, .8 }, 1., .3, .7, 0., 0., 1.2));
+	Geometrys::Instance()->shapes.push_back(
+		new Sphere(glm::vec3{ 3., -6., 15. }, glm::vec3{ 1., .8, 1. }, 7., 0., 0., 0., .6, 1.5));
+	Geometrys::Instance()->shapes.push_back(
+		new Sphere(glm::vec3{ -3., -3., 12. }, glm::vec3{ .8, 1., 1. }, 5., 0., 0., 0., .5, 1.5));
+
+	
 }
 
 void Renderer::deIntialize() {
 
 	delete[] imageData;
-
 }
+
+Renderer::Renderer() {}
