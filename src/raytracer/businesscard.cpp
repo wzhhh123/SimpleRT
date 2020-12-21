@@ -23,11 +23,11 @@ glm::dvec3 BusinessCard::Trace(int level, Ray r) {
 		;
 	}
 	else {
-		return { 0.02,0.02,0.02 };
+		return { 0,0,0 };
 	}
 
 	Sphere* s = dynamic_cast<Sphere*>(Geometrys::Instance()->shapes[index]);
-	glm::dvec3 color = { 0.02,0.02,0.02 };
+	glm::dvec3 color = { 0,0,0 };
 	FLOAT eta = s->ir;
 	glm::dvec3 P = r.origin + r.direction * mint;
 	glm::dvec3 N = glm::normalize(s->center - P);
@@ -53,8 +53,10 @@ glm::dvec3 BusinessCard::Trace(int level, Ray r) {
 	color *= intersectColor;
 	FLOAT temp = 1 - eta * eta*(1 - d * d);
 
-	return (s->kt)*(temp > 0 ? Trace(level, { P, eta*r.direction + N * (eta*d - sqrt(temp)) }) : glm::dvec3{ 0.02, 0.02, 0.02 })
-		+ (s->ks)*Trace(level, { P, 2 * d * N + r.direction }) + s->kl*intersectColor + s->kd* color;
+	return (s->kt)*(temp > 0 ? Trace(level, { P, eta*r.direction + N * (eta*d - sqrt(temp)) }) : glm::dvec3{ 0,0,0 }) + 
+		(s->ks)*Trace(level, { P, 2 * d * N + r.direction }) + 
+		s->kl*intersectColor + 
+		s->kd* color;
 
 
 }

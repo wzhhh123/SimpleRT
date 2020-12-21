@@ -13,7 +13,7 @@ public:
 	void deIntialize();
 
 	Sphere s;
-	glm::vec3 *imageData;
+	glm::dvec3 *imageData;
 	RayTracer* raytracer;
 
 	Renderer();
