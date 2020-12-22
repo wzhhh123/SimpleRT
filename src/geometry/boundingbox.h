@@ -9,7 +9,7 @@ public:
 	
 	BoundingBox();
 
-	bool Intersect(Ray r, FLOAT* t) override;
+	bool Intersect(Ray r, IntersectPoint& p) override;
 
 	
 };

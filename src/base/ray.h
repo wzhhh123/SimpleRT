@@ -7,7 +7,7 @@ class Ray {
 
 public:
 	
-	glm::dvec3 origin;
-	glm::dvec3 direction;
+	VEC3 origin;
+	VEC3 direction;
 
 };

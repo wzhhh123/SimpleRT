@@ -17,16 +17,16 @@ bool Geometrys::Intersect(Ray r, FLOAT* t, int* index)
 	FLOAT mint = 1e30;
 	for (size_t i = 0; i < shapes.size(); ++i)
 	{
-		FLOAT t;
+		IntersectPoint p;
 		Shape* shape = shapes[i];
-		if (shape->Intersect(r, &t)) {
+		if (shape->Intersect(r, p)) {
 			if (!found) {
 				found = true;
-				mint = t;
+				mint = p.t;
 				*index = i;
 			}
-			else if (mint > t) {
-				mint = t;
+			else if (mint > p.t) {
+				mint = p.t;
 				*index = i;
 			}
 		}

@@ -7,6 +7,6 @@ class RayTracer {
 	
 public:
 
-	virtual glm::dvec3 Trace(int level, Ray r) = 0;
+	virtual VEC3 Trace(int level, Ray r) = 0;
 
 };

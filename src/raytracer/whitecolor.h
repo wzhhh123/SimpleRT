@@ -1,7 +1,9 @@
 #pragma once
 
 #include "base/raytracer.h"
-class BusinessCard  : public RayTracer{
+
+
+class WhiteColor : public RayTracer{
 
 public:
 

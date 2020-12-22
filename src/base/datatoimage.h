@@ -3,4 +3,4 @@
 #include "header.h"
 #include "glm.hpp"
 
-void DataToImage(const glm::dvec3* data);
+void DataToImage(const VEC3* data);

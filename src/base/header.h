@@ -7,5 +7,6 @@
 
 #define FLOAT double
 #define  SIZE  512
-#define AOV 25
+#define AOV 30
 #define DEPTH 5
+#define VEC3 glm::dvec3

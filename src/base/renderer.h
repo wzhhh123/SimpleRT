@@ -12,7 +12,7 @@ public:
 	void Run();
 	void deIntialize();
 
-	glm::dvec3 *imageData;
+	VEC3 *imageData;
 	RayTracer* raytracer;
 
 	Renderer();
