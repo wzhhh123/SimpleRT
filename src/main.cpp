@@ -3,8 +3,8 @@
 #include "base/datatoimage.h"
 #include "base/renderer.h"
 #include "raytracer/businesscard.h"
-int main() {
 
+int main() {
 	
 	Renderer renderer;
 	renderer.Initialize();

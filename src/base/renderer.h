@@ -12,7 +12,6 @@ public:
 	void Run();
 	void deIntialize();
 
-	Sphere s;
 	glm::dvec3 *imageData;
 	RayTracer* raytracer;
 
