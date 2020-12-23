@@ -5,14 +5,15 @@ project(SimpleRT)
 set(CMAKE_CXX_STANDARD 17)
 
 
-#add_subdirectory(ext/assimp)
+add_subdirectory(ext/assimp)
 #link_directories(${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code) 
 
 include_directories(
 
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm/glm
-
+  ${CMAKE_CURRENT_SOURCE_DIR}/ext/assimp/include
+  ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/include
 )
 
 # 收集所有头文件源文件，存入 ALL_FILES 变量中
@@ -39,4 +40,18 @@ endforeach()
 #add 给Tutorial添加一个可执行文件 .cpp文件
 add_executable(SimpleRT ${ALL_FILES})
 
-#arget_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimpd.lib ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib)
+#target_link_libraries(SimpleRT ext/assimp)
+
+if(CMAKE_CL_64)
+    add_custom_command(TARGET SimpleRT POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code/Release/assimp-vc141-mt.dll"              
+    $<TARGET_FILE_DIR:SimpleRT>)
+else()
+    add_custom_command(TARGET SimpleRT POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code/Release/assimp-vc141-mt.dll"              
+    $<TARGET_FILE_DIR:SimpleRT>)
+endif()
+
+target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code/Release/assimp-vc141-mt.lib)
