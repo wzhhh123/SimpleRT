@@ -6,7 +6,7 @@
 void DataToImage(const VEC3* data) {
 
 	FILE *fp;
-	fp = fopen("../image/test.ppm", "w");
+	fp = fopen("../assets/image/test.ppm", "w");
 
 	fprintf(fp, "P3\n");
 	fprintf(fp, "%d %d\n", SIZE, SIZE);

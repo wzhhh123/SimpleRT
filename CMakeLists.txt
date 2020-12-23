@@ -5,14 +5,13 @@ project(SimpleRT)
 set(CMAKE_CXX_STANDARD 17)
 
 
-#add_subdirectory(third/glfw)
-
+#add_subdirectory(ext/assimp)
+#link_directories(${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code) 
 
 include_directories(
 
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm/glm
-  #${CMAKE_CURRENT_SOURCE_DIR}/third/glfw/include
 
 )
 
@@ -40,5 +39,4 @@ endforeach()
 #add 给Tutorial添加一个可执行文件 .cpp文件
 add_executable(SimpleRT ${ALL_FILES})
 
-#target_link_libraries(SimpleRT "$ENV{VULKAN_PATH}/lib/vulkan-1.lib" ${CMAKE_CURRENT_BINARY_DIR}/third/glfw/src/Debug/glfw3.lib)
-
+#arget_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimpd.lib ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib)

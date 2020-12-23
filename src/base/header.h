@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <vector>
 #include <algorithm>
+#include <iostream>
+
 
 #define FLOAT double
 #define  SIZE  512

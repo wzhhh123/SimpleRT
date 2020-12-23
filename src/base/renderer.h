@@ -4,6 +4,8 @@
 
 #include "geometry/sphere.h"
 #include "raytracer.h"
+#include "asset/model.h"
+
 class Renderer {
 
 public:
@@ -14,6 +16,7 @@ public:
 
 	VEC3 *imageData;
 	RayTracer* raytracer;
+	Model model;
 
 	Renderer();
 
