@@ -7,6 +7,6 @@ class RayTracer {
 	
 public:
 
-	virtual VEC3 Trace(int level, Ray r) = 0;
+	virtual dVec3 Trace(int level, Ray r) = 0;
 
 };

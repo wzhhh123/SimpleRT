@@ -8,7 +8,7 @@ class WhiteColor : public RayTracer{
 public:
 
 
-	VEC3 Trace(int level, Ray r) override;
+	dVec3 Trace(int level, Ray r) override;
 
 
 };

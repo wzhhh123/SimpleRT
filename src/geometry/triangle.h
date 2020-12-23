@@ -6,13 +6,13 @@ class Triangle : public Shape {
 
 public:
 	
-	Triangle(VEC3 _v0, VEC3 _v1, VEC3 _v2);
+	Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2);
 
 	bool Intersect(Ray r, IntersectPoint& p) override;
 
 
-	VEC3 v0;
-	VEC3 v1;
-	VEC3 v2;
+	dVec3 v0;
+	dVec3 v1;
+	dVec3 v2;
 
 };

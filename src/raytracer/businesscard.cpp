@@ -7,10 +7,10 @@
 
 
 
-VEC3 BusinessCard::Trace(int level, Ray r) {
+dVec3 BusinessCard::Trace(int level, Ray r) {
 
-	VEC3 point = r.origin;
-	VEC3 dir = r.direction;
+	dVec3 point = r.origin;
+	dVec3 dir = r.direction;
 	if (!level--)
 		return { 0,0,0 };
 
@@ -27,10 +27,10 @@ VEC3 BusinessCard::Trace(int level, Ray r) {
 	}
 
 	Sphere* s = dynamic_cast<Sphere*>(Geometrys::Instance()->shapes[index]);
-	VEC3 color = { 0,0,0 };
+	dVec3 color = { 0,0,0 };
 	FLOAT eta = s->ir;
-	VEC3 P = r.origin + r.direction * mint;
-	VEC3 N = glm::normalize(s->center - P);
+	dVec3 P = r.origin + r.direction * mint;
+	dVec3 N = glm::normalize(s->center - P);
 	FLOAT d = -glm::dot(r.direction, N);
 	if (d < 0) {
 		N = -N;
@@ -40,7 +40,7 @@ VEC3 BusinessCard::Trace(int level, Ray r) {
 
 	for (size_t i = 0; i < Geometrys::Instance()->shapes.size(); ++i) {
 		Sphere* sphere = dynamic_cast<Sphere*>(Geometrys::Instance()->shapes[i]);
-		VEC3 U = glm::normalize(sphere->center - P);
+		dVec3 U = glm::normalize(sphere->center - P);
 		FLOAT e = sphere->kl * glm::dot(N, U);
 		Ray reflectRay = { P, U };
 		IntersectPoint intersectPoint;
@@ -49,11 +49,11 @@ VEC3 BusinessCard::Trace(int level, Ray r) {
 		}
 	}
 
-	VEC3 intersectColor = s->color;
+	dVec3 intersectColor = s->color;
 	color *= intersectColor;
 	FLOAT temp = 1 - eta * eta*(1 - d * d);
 
-	return (s->kt)*(temp > 0 ? Trace(level, { P, eta*r.direction + N * (eta*d - sqrt(temp)) }) : VEC3{ 0,0,0 }) + 
+	return (s->kt)*(temp > 0 ? Trace(level, { P, eta*r.direction + N * (eta*d - sqrt(temp)) }) : dVec3{ 0,0,0 }) + 
 		(s->ks)*Trace(level, { P, 2 * d * N + r.direction }) + 
 		s->kl*intersectColor + 
 		s->kd* color;

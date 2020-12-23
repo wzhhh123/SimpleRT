@@ -7,10 +7,10 @@
 
 
 
-VEC3 WhiteColor::Trace(int level, Ray r) {
+dVec3 WhiteColor::Trace(int level, Ray r) {
 
-	VEC3 point = r.origin;
-	VEC3 dir = r.direction;
+	dVec3 point = r.origin;
+	dVec3 dir = r.direction;
 
 	bool found = false;
 	FLOAT mint = 1e30;

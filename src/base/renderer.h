@@ -14,7 +14,7 @@ public:
 	void Run();
 	void deIntialize();
 
-	VEC3 *imageData;
+	dVec3 *imageData;
 	RayTracer* raytracer;
 	Model model;
 

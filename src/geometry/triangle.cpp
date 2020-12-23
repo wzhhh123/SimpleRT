@@ -4,7 +4,7 @@
 
 
 
-Triangle::Triangle(VEC3 _v0, VEC3 _v1, VEC3 _v2) : v0(_v0), v1(_v1), v2(_v2)
+Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2) : v0(_v0), v1(_v1), v2(_v2)
 {
 
 }
@@ -18,18 +18,18 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 	auto dir = r.direction;
 
 	// E1
-	VEC3 E1 = v1 - v0;
+	dVec3 E1 = v1 - v0;
 
 	// E2
-	VEC3 E2 = v2 - v0;
+	dVec3 E2 = v2 - v0;
 
 	// P
-	VEC3 P = glm::cross(dir, E2);
+	dVec3 P = glm::cross(dir, E2);
 
 	// determinant
 	FLOAT det = glm::dot(E1, P);
 
-	VEC3 T;
+	dVec3 T;
 	if (det > 0)
 	{
 		T = orig - v0;
@@ -50,7 +50,7 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 		return false;
 
 	// Q
-	VEC3 Q = glm::cross(T, E1);
+	dVec3 Q = glm::cross(T, E1);
 
 	// Calculate v and make sure u + v <= 1
 	p.v = glm::dot(dir, Q);

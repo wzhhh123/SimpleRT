@@ -3,7 +3,7 @@
 #include "datatoimage.h"
 #include "glm.hpp"
 
-void DataToImage(const VEC3* data) {
+void DataToImage(const dVec3* data) {
 
 	FILE *fp;
 	fp = fopen("../assets/image/test.ppm", "w");

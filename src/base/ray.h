@@ -7,7 +7,7 @@ class Ray {
 
 public:
 	
-	VEC3 origin;
-	VEC3 direction;
+	dVec3 origin;
+	dVec3 direction;
 
 };
