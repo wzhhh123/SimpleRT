@@ -42,16 +42,18 @@ add_executable(SimpleRT ${ALL_FILES})
 
 #target_link_libraries(SimpleRT ext/assimp)
 
+
+
 if(CMAKE_CL_64)
-    add_custom_command(TARGET SimpleRT POST_BUILD 
+   add_custom_command(TARGET SimpleRT POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code/Release/assimp-vc141-mt.dll"              
+    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/assimp-vc141-mtd.dll"              
     $<TARGET_FILE_DIR:SimpleRT>)
 else()
-    add_custom_command(TARGET SimpleRT POST_BUILD 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code/Release/assimp-vc141-mt.dll"              
+   add_custom_command(TARGET SimpleRT POST_BUILD 
+   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/assimp-vc141-mtd.dll"              
     $<TARGET_FILE_DIR:SimpleRT>)
 endif()
 
-target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code/Release/assimp-vc141-mt.lib)
+target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib)

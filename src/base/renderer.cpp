@@ -63,7 +63,7 @@ void Renderer::Initialize() {
 
 	const aiScene* scene = model.obj;
 	for (unsigned int i = 0; i < model.obj->mNumMeshes; ++i) {
-		aiVector3D* vertices = (scene)->mMeshes[i]->mVertices;
+		aiVector3D* vertices = (scene)->mMeshes[i]->mTextureCoords[0];
 		for (unsigned int p = 0; p < model.obj->mMeshes[i]->mNumFaces; ++p)
 		{
 			aiFace face = (scene->mMeshes[i]->mFaces[p]);
