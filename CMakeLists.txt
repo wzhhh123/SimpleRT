@@ -42,6 +42,7 @@ add_executable(SimpleRT ${ALL_FILES})
 
 #target_link_libraries(SimpleRT ext/assimp)
 
+#复制dll到工作目录
 if(CMAKE_CL_64)
     add_custom_command(TARGET SimpleRT POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
