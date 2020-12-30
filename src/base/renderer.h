@@ -7,7 +7,6 @@
 #include "asset/model.h"
 
 class Renderer {
-
 public:
 	
 	void Initialize();
