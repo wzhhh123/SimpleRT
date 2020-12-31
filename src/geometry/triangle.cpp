@@ -3,7 +3,7 @@
 
 
 
-
+//https://www.cnblogs.com/samen168/p/5162337.html
 
 Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, dMat4 model): 
 	v0(_v0, _n0, _uv0, model), v1(_v1, _n1, _uv1, model), v2(_v2, _n2, _uv2, model), objectToWorld(model)
@@ -73,7 +73,7 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 	p.weightU *= fInvDet;
 	p.weightV *= fInvDet;
 
-	p.normalWS = v1.normalWS;// *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
+	p.normalWS = v0.normalWS;// *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
 	p.normalOS = v1.normalOS * p.weightU + v2.normalOS * p.weightV + v0.normalOS * (1 - p.weightU - p.weightV);
 
 	

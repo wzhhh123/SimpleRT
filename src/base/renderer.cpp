@@ -61,7 +61,7 @@ void Renderer::Initialize() {
 	//rotation = glm::rotate(rotation, eulerToRadius(100), dVec3{ 0,0,1 });
 	dMat4 rotation = glm::rotate(trans, eulerToRadius(0), dVec3{ 0,1,0 });
 	rotation = glm::rotate(rotation, eulerToRadius(180), dVec3{ 1,0,0 });
-	rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ ,0,1 });
+	rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 0,0,1 });
 	dMat4 scale = glm::scale(rotation, dVec3{ .01,.01,.01 });
 
 
