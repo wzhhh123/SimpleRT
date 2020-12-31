@@ -19,6 +19,8 @@ dVec3 WhiteColor::Trace(int level, Ray r) {
 
 	if (found) {
 		return nearestHit.normalWS;
+		//return nearestHit.normalOS;
+
 		//return nearestHit.normalWS;
 		//return nearestHit.normalTS;
 

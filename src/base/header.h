@@ -8,8 +8,10 @@
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 
+
 #define FLOAT double
-#define  SIZE  100
+#define  SIZE  388
+#define CHANNEL_COUNT  3
 #define AOV 60
 #define DEPTH 5
 #define dVec2 glm::dvec2
@@ -22,6 +24,8 @@
 #define Mat3 glm::mat3
 #define Vec3 glm::vec3
 #define Vec4 glm::vec4
+
+#define OUTPUT_PATH "../assets/image/result.jpg"
 
 #define EULER_TO_RADIUS 0.0174532925199438  // pi/180
 

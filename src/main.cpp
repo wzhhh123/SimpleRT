@@ -4,8 +4,10 @@
 #include "base/renderer.h"
 #include "raytracer/businesscard.h"
 #include "raytracer/whitecolor.h"
+#include "tool/imagehelper.h"
 int main() {
 	
+
 	Renderer renderer;
 	renderer.Initialize();
 //	renderer.raytracer = new BusinessCard();

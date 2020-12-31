@@ -3,6 +3,8 @@
 #include "datatoimage.h"
 #include "glm.hpp"
 
+
+//to ppm，  -255,0,0给我显示了个红色，可能是数值溢出，不用了
 void DataToImage(const dVec3* data) {
 
 	FILE *fp;

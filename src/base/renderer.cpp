@@ -8,7 +8,7 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 #include "geometry/triangle.h"
-
+#include "tool/imagehelper.h"
 
 void Renderer::Run()
 {
@@ -25,18 +25,24 @@ void Renderer::Run()
 		r.origin = dVec3{ 0,0,0 };
 		r.direction = glm::normalize(dir);
 	
-		imageData[yx] = raytracer->Trace(DEPTH, r) * 255.0;
+		auto col = raytracer->Trace(DEPTH, r) * 255.0;
+		imageData[yx * CHANNEL_COUNT] = col.x < 0 ? 0 : (int)(col.x);
+		imageData[yx * CHANNEL_COUNT + 1] = col.y < 0 ? 0 : (int)(col.y);
+		imageData[yx * CHANNEL_COUNT + 2] = col.z < 0 ? 0 : (int)(col.z);
+
 		++yx;
+
+		SaveImage(SIZE, SIZE, CHANNEL_COUNT, imageData);
 	}
 
-	DataToImage(imageData);
+	//DataToImage(imageData);
 
 }
 
 
 void Renderer::Initialize() {
 
-	imageData = new dVec3[SIZE*SIZE];
+	imageData = (unsigned char*) new char[SIZE*SIZE * CHANNEL_COUNT];
 
 	//Geometrys::Instance()->shapes.push_back(
 	//	new Sphere(VEC3{ -0.57, -1, 2.3698 }, VEC3{ 1., 1., 1. }, 0.5, .05, .2, .85, 0., 1.7));
@@ -55,12 +61,12 @@ void Renderer::Initialize() {
 	//Geometrys::Instance()->shapes.push_back(
 	//	new Triangle(VEC3{ -0.5, 0.5,2 }, VEC3{ -0.5, -0.5,2 }, VEC3{ 0.5, -0.5,2 }));
 
-	dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ -0.10000000149011612, -1, -3.4000000953674318 });
+	dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ 0-.1, -0.8, -3.4});
 	//dMat4 rotation = glm::rotate(trans, eulerToRadius(210), dVec3{ 0,1,0 });
 	//rotation = glm::rotate(rotation, eulerToRadius(261), dVec3{ 1,0,0 });
 	//rotation = glm::rotate(rotation, eulerToRadius(100), dVec3{ 0,0,1 });
-	dMat4 rotation = glm::rotate(trans, eulerToRadius(0), dVec3{ 0,1,0 });
-	rotation = glm::rotate(rotation, eulerToRadius(180), dVec3{ 1,0,0 });
+	dMat4 rotation = glm::rotate(trans, eulerToRadius(60), dVec3{ 0,1,0 });
+	rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 1,0,0 });
 	rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 0,0,1 });
 	dMat4 scale = glm::scale(rotation, dVec3{ .01,.01,.01 });
 
@@ -68,13 +74,9 @@ void Renderer::Initialize() {
 
 	const aiScene* scene = model.obj;
 	for (unsigned int i = 0; i < model.obj->mNumMeshes; ++i) {
-<<<<<<< HEAD
 		aiVector3D* vertices = (scene)->mMeshes[i]->mVertices;
 		aiVector3D* normals = (scene)->mMeshes[i]->mNormals;
 		aiVector3D* uvs = (scene)->mMeshes[i]->mTextureCoords[0];
-=======
-		aiVector3D* vertices = (scene)->mMeshes[i]->mTextureCoords[0];
->>>>>>> 1dfe02d47b0b7b2789537cb40b184480d8285c14
 		for (unsigned int p = 0; p < model.obj->mMeshes[i]->mNumFaces; ++p)
 		{
 			aiFace face = (scene->mMeshes[i]->mFaces[p]);

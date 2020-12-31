@@ -13,7 +13,7 @@ public:
 	void Run();
 	void deIntialize();
 
-	dVec3 *imageData;
+	unsigned char* imageData;
 	RayTracer* raytracer;
 	Model model;
 

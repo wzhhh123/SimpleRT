@@ -13,6 +13,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm/glm
   ${CMAKE_CURRENT_SOURCE_DIR}/ext/assimp/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/ext/stb
   ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/include
 )
 
@@ -42,12 +43,7 @@ add_executable(SimpleRT ${ALL_FILES})
 
 #target_link_libraries(SimpleRT ext/assimp)
 
-<<<<<<< HEAD
-
-
-=======
 #复制dll到工作目录
->>>>>>> 624e244cb78198e86dd2e20878636665b4a0b141
 if(CMAKE_CL_64)
    add_custom_command(TARGET SimpleRT POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different

@@ -10,12 +10,9 @@ Vertex::Vertex(dVec3 _v, dVec3 _n, dVec2 _uv, dMat4 _objectToWorld) {
 	uv = _uv;
 	normalOS = glm::normalize(_n);
 
-	dMat4 rotation = glm::rotate(glm::dmat4(1.0), eulerToRadius(0), dVec3{ 0,1,0 });
-	rotation = glm::rotate(rotation, eulerToRadius(180), dVec3{ 1,0,0 });
-	rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 0,0,1 });
-	dMat4 scale = glm::scale(rotation, dVec3{ .01,.01,.01 });
-	//normalWS = glm::normalize(glm::transpose(glm::inverse(objectToWorld)) * dVec4(normalOS, 0));
-	normalWS = glm::normalize(scale * dVec4(normalOS, 0));
+
+	dVec4 nor = objectToWorld * dVec4(normalOS, 0);
+	normalWS = glm::normalize(dVec3{ nor.x, nor.y, nor.z });
 	vertexWS = objectToWorld * dVec4{ v,1 };
 
 }

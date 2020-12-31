@@ -73,8 +73,11 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 	p.weightU *= fInvDet;
 	p.weightV *= fInvDet;
 
-	p.normalWS = v0.normalWS;// *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
-	p.normalOS = v1.normalOS * p.weightU + v2.normalOS * p.weightV + v0.normalOS * (1 - p.weightU - p.weightV);
+	//p.normalWS = v1.normalWS;
+
+	p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
+	//p.normalOS = v1.normalOS * p.weightU + v2.normalOS * p.weightV + v0.normalOS * (1 - p.weightU - p.weightV);
+	p.normalOS = v1.normalOS;
 
 	
 	return true;
