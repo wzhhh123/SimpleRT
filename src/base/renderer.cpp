@@ -8,7 +8,7 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 #include "geometry/triangle.h"
-#include "gtc/matrix_transform.hpp"
+
 
 void Renderer::Run()
 {
@@ -19,7 +19,7 @@ void Renderer::Run()
 		dVec3 dir;
 		dir.x = yx % SIZE - SIZE / 2;
 		dir.y = SIZE / 2 - yx / SIZE;
-		dir.z = SIZE  / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离
+		dir.z = -SIZE  / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离
 
 		Ray r = {};
 		r.origin = dVec3{ 0,0,0 };
@@ -55,26 +55,44 @@ void Renderer::Initialize() {
 	//Geometrys::Instance()->shapes.push_back(
 	//	new Triangle(VEC3{ -0.5, 0.5,2 }, VEC3{ -0.5, -0.5,2 }, VEC3{ 0.5, -0.5,2 }));
 
-
-	dMat4 scale = glm::scale(dMat4(1.0f), dVec3{ 90,90,90 });
-	dMat4 trans = glm::translate(scale, dVec3{ 0, -0.5, 2 });
+	dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ -0.10000000149011612, -1, -3.4000000953674318 });
+	//dMat4 rotation = glm::rotate(trans, eulerToRadius(210), dVec3{ 0,1,0 });
+	//rotation = glm::rotate(rotation, eulerToRadius(261), dVec3{ 1,0,0 });
+	//rotation = glm::rotate(rotation, eulerToRadius(100), dVec3{ 0,0,1 });
+	dMat4 rotation = glm::rotate(trans, eulerToRadius(0), dVec3{ 0,1,0 });
+	rotation = glm::rotate(rotation, eulerToRadius(180), dVec3{ 1,0,0 });
+	rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ ,0,1 });
+	dMat4 scale = glm::scale(rotation, dVec3{ .01,.01,.01 });
 
 
 
 	const aiScene* scene = model.obj;
 	for (unsigned int i = 0; i < model.obj->mNumMeshes; ++i) {
 		aiVector3D* vertices = (scene)->mMeshes[i]->mVertices;
+		aiVector3D* normals = (scene)->mMeshes[i]->mNormals;
+		aiVector3D* uvs = (scene)->mMeshes[i]->mTextureCoords[0];
 		for (unsigned int p = 0; p < model.obj->mMeshes[i]->mNumFaces; ++p)
 		{
 			aiFace face = (scene->mMeshes[i]->mFaces[p]);
-			dVec3 posX = trans * dVec4(vertices[face.mIndices[0]].x, vertices[face.mIndices[0]].y, vertices[face.mIndices[0]].z, 1);
-			dVec3 posY = trans * dVec4(vertices[face.mIndices[1]].x, vertices[face.mIndices[1]].y, vertices[face.mIndices[1]].z, 1);
-			dVec3 posZ = trans * dVec4(vertices[face.mIndices[2]].x, vertices[face.mIndices[2]].y, vertices[face.mIndices[2]].z, 1);
-			Geometrys::Instance()->shapes.push_back(new Triangle(posX, posY, posZ));
+			Geometrys::Instance()->shapes.push_back(new Triangle(
+				dVec3(vertices[face.mIndices[0]].x, vertices[face.mIndices[0]].y, vertices[face.mIndices[0]].z),
+				dVec3(vertices[face.mIndices[1]].x, vertices[face.mIndices[1]].y, vertices[face.mIndices[1]].z),
+				dVec3(vertices[face.mIndices[2]].x, vertices[face.mIndices[2]].y, vertices[face.mIndices[2]].z),
 
-			std::cout << vertices[face.mIndices[0]].x << " " << vertices[face.mIndices[0]].y << " " << vertices[face.mIndices[0]].z << std::endl;
-			std::cout << vertices[face.mIndices[1]].x << " " << vertices[face.mIndices[1]].y << " " << vertices[face.mIndices[1]].z << std::endl;
-			std::cout << vertices[face.mIndices[2]].x << " " << vertices[face.mIndices[2]].y << " " << vertices[face.mIndices[2]].z << std::endl;
+				dVec3(normals[face.mIndices[0]].x, normals[face.mIndices[0]].y, normals[face.mIndices[0]].z),
+				dVec3(normals[face.mIndices[1]].x, normals[face.mIndices[1]].y, normals[face.mIndices[1]].z),
+				dVec3(normals[face.mIndices[2]].x, normals[face.mIndices[2]].y, normals[face.mIndices[2]].z),
+
+				dVec2(uvs[face.mIndices[0]].x, uvs[face.mIndices[0]].y),
+				dVec2(uvs[face.mIndices[1]].x, uvs[face.mIndices[1]].y),
+				dVec2(uvs[face.mIndices[2]].x, uvs[face.mIndices[2]].y),
+
+				scale
+			));
+
+			//std::cout << vertices[face.mIndices[0]].x << " " << vertices[face.mIndices[0]].y << " " << vertices[face.mIndices[0]].z << std::endl;
+			//std::cout << vertices[face.mIndices[1]].x << " " << vertices[face.mIndices[1]].y << " " << vertices[face.mIndices[1]].z << std::endl;
+			//std::cout << vertices[face.mIndices[2]].x << " " << vertices[face.mIndices[2]].y << " " << vertices[face.mIndices[2]].z << std::endl;
 		}
 	}
 

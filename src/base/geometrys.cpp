@@ -11,10 +11,11 @@ Geometrys* Geometrys::Instance() {
 }
 
 
-bool Geometrys::Intersect(Ray r, FLOAT* t, int* index)
+bool Geometrys::Intersect(Ray r, IntersectPoint* p, int* index)
 {
 	bool found = false;
 	FLOAT mint = 1e30;
+	IntersectPoint nearestHit{};
 	for (size_t i = 0; i < shapes.size(); ++i)
 	{
 		IntersectPoint p;
@@ -22,16 +23,18 @@ bool Geometrys::Intersect(Ray r, FLOAT* t, int* index)
 		if (shape->Intersect(r, p)) {
 			if (!found) {
 				found = true;
+				nearestHit = p;
 				mint = p.t;
 				*index = i;
 			}
 			else if (mint > p.t) {
 				mint = p.t;
 				*index = i;
+				nearestHit = p;
 			}
 		}
 	}
-	*t = mint;
+	*p = nearestHit;
 	return found;
 }
 

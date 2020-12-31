@@ -12,7 +12,7 @@ public:
 	std::vector<Shape*> shapes;
 
 
-	bool Intersect(Ray r, FLOAT*t, int* index);
+	bool Intersect(Ray r, IntersectPoint* p, int* index);
 
 private:
 	

@@ -15,9 +15,9 @@ dVec3 BusinessCard::Trace(int level, Ray r) {
 		return { 0,0,0 };
 
 	bool found = false;
-	FLOAT mint = 1e30;
+	IntersectPoint nearestHit;
 	int index = 0;
-	found = Geometrys::Instance()->Intersect(r, &mint, &index);
+	found = Geometrys::Instance()->Intersect(r, &nearestHit, &index);
 
 	if (found) {
 		;
@@ -29,7 +29,7 @@ dVec3 BusinessCard::Trace(int level, Ray r) {
 	Sphere* s = dynamic_cast<Sphere*>(Geometrys::Instance()->shapes[index]);
 	dVec3 color = { 0,0,0 };
 	FLOAT eta = s->ir;
-	dVec3 P = r.origin + r.direction * mint;
+	dVec3 P = r.origin + r.direction * nearestHit.t;
 	dVec3 N = glm::normalize(s->center - P);
 	FLOAT d = -glm::dot(r.direction, N);
 	if (d < 0) {
@@ -57,6 +57,5 @@ dVec3 BusinessCard::Trace(int level, Ray r) {
 		(s->ks)*Trace(level, { P, 2 * d * N + r.direction }) + 
 		s->kl*intersectColor + 
 		s->kd* color;
-
 
 }

@@ -7,9 +7,10 @@
 struct IntersectPoint {
 
 	FLOAT t;
-	FLOAT u;
-	FLOAT v;
-
+	FLOAT weightU;
+	FLOAT weightV;
+	dVec3 normalWS;
+	dVec3 normalOS;
 };
 
 class Shape {

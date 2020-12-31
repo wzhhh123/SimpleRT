@@ -13,12 +13,15 @@ dVec3 WhiteColor::Trace(int level, Ray r) {
 	dVec3 dir = r.direction;
 
 	bool found = false;
-	FLOAT mint = 1e30;
+	IntersectPoint nearestHit;
 	int index = 0;
-	found = Geometrys::Instance()->Intersect(r, &mint, &index);
+	found = Geometrys::Instance()->Intersect(r, &nearestHit, &index);
 
 	if (found) {
-		return { 1,1,1 };
+		return nearestHit.normalWS;
+		//return nearestHit.normalWS;
+		//return nearestHit.normalTS;
+
 	}
 	else {
 		return { 0,0,0 };
