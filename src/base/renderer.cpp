@@ -32,8 +32,9 @@ void Renderer::Run()
 
 		++yx;
 
-		SaveImage(SIZE, SIZE, CHANNEL_COUNT, imageData);
 	}
+
+	SaveImage(SIZE, SIZE, CHANNEL_COUNT, imageData);
 
 	//DataToImage(imageData);
 
@@ -102,6 +103,8 @@ void Renderer::Initialize() {
 		}
 	}
 
+
+	std::cout << "load data done!" << std::endl;
 
 
 }
