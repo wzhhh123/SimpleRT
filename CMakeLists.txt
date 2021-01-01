@@ -57,3 +57,9 @@ else()
 endif()
 
 target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib)
+
+
+OPTION(DEBUG_MODE "Build the project using macro" ON)
+IF(DEBUG_MODE)
+    add_definitions("-DDEBUG_MODE")
+endif(DEBUG_MODE)

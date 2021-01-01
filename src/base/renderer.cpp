@@ -19,7 +19,7 @@ void Renderer::Run()
 		dVec3 dir;
 		dir.x = yx % SIZE - SIZE / 2;
 		dir.y = SIZE / 2 - yx / SIZE;
-		dir.z = -SIZE  / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离
+		dir.z = SIZE  / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离 //照顾一下aabb计算 使用左手系
 
 		Ray r = {};
 		r.origin = dVec3{ 0,0,0 };
@@ -71,7 +71,7 @@ void Renderer::Initialize() {
 		models[0] = new Model();
 		models[0]->Initialize("../assets/models/box.fbx");
 
-		dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ 0 - .1, -0.8, -3.4 });
+		dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ -0.1, -0.8, 3.4 });
 		dMat4 rotation = glm::rotate(trans, eulerToRadius(60), dVec3{ 0,1,0 });
 		rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 1,0,0 });
 		rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 0,0,1 });

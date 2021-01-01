@@ -2,6 +2,7 @@
 #include "base/header.h"
 #include "base/shape.h"
 #include "struct/vertex.h"
+#include "boundingbox.h"
 
 class Triangle : public Shape {
 
@@ -19,6 +20,8 @@ public:
 	dVec3 bitangent;
 
 	dMat4 objectToWorld;
+
+	BoundingBox boundingBox;
 
 	//void TangentToObject();
 

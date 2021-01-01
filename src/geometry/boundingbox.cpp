@@ -3,16 +3,54 @@
 
 
 
+BoundingBox::BoundingBox(){}
 
-BoundingBox::BoundingBox()
+BoundingBox::BoundingBox(dVec3 a, dVec3 b)
 {
-
+	for (int i = 0; i < 3; ++i)
+	{
+		amin[i] = std::min(a[i], b[i]);
+		amax[i] = std::max(a[i], b[i]);
+	}
 }
 
 
 void BoundingBox::Union(BoundingBox& a) {
 	amax = glm::max(a.amax, amax);
 	amin = glm::min(a.amin, amin);
+}
+
+
+//Ïà½»
+bool BoundingBox::Cross(BoundingBox& box) {
+
+	if (box.amin.x > amax.x ||
+		box.amin.y > amax.y ||
+		box.amin.z > amax.z ||
+		box.amax.x < amin.x ||
+		box.amax.y < amin.y ||
+		box.amax.z < amin.z
+		)
+		return false;
+	return true;
+
+}
+
+
+int BoundingBox::MaxExtent() {
+	int maxExtent = 0;
+	FLOAT delta = amax[maxExtent] - amin[maxExtent];
+
+	if (amax[1] - amin[1] > delta) {
+		maxExtent = 1;
+		delta = amax[1] - amin[1];
+	}
+	
+	if (amax[2] - amin[2] > delta) {
+		maxExtent = 2;
+	}
+
+	return maxExtent;
 }
 
 

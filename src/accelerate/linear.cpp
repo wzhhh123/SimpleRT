@@ -2,7 +2,7 @@
 
 #include "linear.h"
 #include "base/shape.h"
-
+#include "geometry/triangle.h"
 
 void Linear::Initialize(std::vector<Shape*>*scene)
 {
@@ -18,7 +18,9 @@ bool Linear::Intersect(Ray& r, IntersectPoint* p, int* index)
 	{
 		IntersectPoint p;
 		Shape* shape = (*scene)[i];
-		if (shape->Intersect(r, p)) {
+		Triangle* tri = (Triangle*)shape;
+		if (tri->boundingBox.Intersect(r, p)) {
+		//if (shape->Intersect(r, p)) {
 			if (!found) {
 				found = true;
 				nearestHit = p;

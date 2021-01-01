@@ -7,19 +7,23 @@ class BoundingBox : public Shape {
 
 public:
 	
-	BoundingBox();
+	BoundingBox::BoundingBox();
+
+	BoundingBox(dVec3 a, dVec3 b);
 
 	bool Intersect(Ray r, IntersectPoint& p) override;
 
 	void Intersect(BoundingBox& a);
 
-
-
 	void Union(BoundingBox& a);
 
 	void Union(dVec3& p);
 
-	
+
+	bool Cross(BoundingBox& box);
+
+	int MaxExtent();
+
 	dVec3 amin, amax;
 };
 

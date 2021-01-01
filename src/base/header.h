@@ -7,7 +7,7 @@
 #include <iostream>
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
-
+#include <math.h>
 
 #define FLOAT double
 #define  SIZE  200
@@ -51,3 +51,5 @@ class WhiteColor;
 class Vertex;
 class Accelerate;
 class Linear;
+class  Bvh;
+
