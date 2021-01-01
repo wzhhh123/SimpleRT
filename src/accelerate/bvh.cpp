@@ -124,3 +124,15 @@ bool Bvh::Intersect(Ray& r, IntersectPoint* p, int* index)
 	return found;
 
 }
+
+
+bool Bvh::SearchTree(Ray& r, IntersectPoint* p, int * index, TreeNode* treeNode) {
+
+	IntersectPoint p = IntersectPoint();
+	BoundingBox& boundingBox = treeNode->curBox;
+	if (boundingBox.Intersect(r, p)) {
+
+	}
+
+
+}

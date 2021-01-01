@@ -21,6 +21,8 @@ public:
 	virtual void Initialize(std::vector<Shape*>*scene);
 	virtual bool Intersect(Ray& r, IntersectPoint* p, int* index);
 
+
+
 	std::vector<Shape*>* scene;
 
 private:
@@ -29,6 +31,8 @@ private:
 	TreeNode* treeNode;
 
 	TreeNode* BuildTree(BoundingBox box, std::vector<int>&, int depth);
+
+	bool SearchTree(Ray& r, IntersectPoint* p, int * index, TreeNode* treeNode);
 
 	int maxDepth = 0;
 };

@@ -105,8 +105,8 @@ bool BoundingBox::Intersect(Ray r, IntersectPoint& p)
 		}
 	}
 
+	p.t = tmin < 0 ? tmax : tmin;
 	return true;
-
 }
 
 
