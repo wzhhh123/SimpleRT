@@ -5,7 +5,7 @@
 #include "geometry/sphere.h"
 #include "raytracer.h"
 #include "asset/model.h"
-
+#include "accelerate.h"
 class Renderer {
 public:
 	
@@ -15,7 +15,8 @@ public:
 
 	unsigned char* imageData;
 	RayTracer* raytracer;
-	Model model;
+	std::vector<Model*>models;
+	std::vector<dMat4> objectToWorldMats;
 
 	Renderer();
 

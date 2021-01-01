@@ -62,49 +62,30 @@ void Renderer::Initialize() {
 	//Geometrys::Instance()->shapes.push_back(
 	//	new Triangle(VEC3{ -0.5, 0.5,2 }, VEC3{ -0.5, -0.5,2 }, VEC3{ 0.5, -0.5,2 }));
 
-	dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ 0-.1, -0.8, -3.4});
-	//dMat4 rotation = glm::rotate(trans, eulerToRadius(210), dVec3{ 0,1,0 });
-	//rotation = glm::rotate(rotation, eulerToRadius(261), dVec3{ 1,0,0 });
-	//rotation = glm::rotate(rotation, eulerToRadius(100), dVec3{ 0,0,1 });
-	dMat4 rotation = glm::rotate(trans, eulerToRadius(60), dVec3{ 0,1,0 });
-	rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 1,0,0 });
-	rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 0,0,1 });
-	dMat4 scale = glm::scale(rotation, dVec3{ .01,.01,.01 });
 
+	//prepare scene data
+	{
+		models.resize(1);
+		objectToWorldMats.resize(1);
 
+		models[0] = new Model();
+		models[0]->Initialize("../assets/models/box.fbx");
 
-	const aiScene* scene = model.obj;
-	for (unsigned int i = 0; i < model.obj->mNumMeshes; ++i) {
-		aiVector3D* vertices = (scene)->mMeshes[i]->mVertices;
-		aiVector3D* normals = (scene)->mMeshes[i]->mNormals;
-		aiVector3D* uvs = (scene)->mMeshes[i]->mTextureCoords[0];
-		for (unsigned int p = 0; p < model.obj->mMeshes[i]->mNumFaces; ++p)
-		{
-			aiFace face = (scene->mMeshes[i]->mFaces[p]);
-			Geometrys::Instance()->shapes.push_back(new Triangle(
-				dVec3(vertices[face.mIndices[0]].x, vertices[face.mIndices[0]].y, vertices[face.mIndices[0]].z),
-				dVec3(vertices[face.mIndices[1]].x, vertices[face.mIndices[1]].y, vertices[face.mIndices[1]].z),
-				dVec3(vertices[face.mIndices[2]].x, vertices[face.mIndices[2]].y, vertices[face.mIndices[2]].z),
+		dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ 0 - .1, -0.8, -3.4 });
+		dMat4 rotation = glm::rotate(trans, eulerToRadius(60), dVec3{ 0,1,0 });
+		rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 1,0,0 });
+		rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 0,0,1 });
+		dMat4 scale = glm::scale(rotation, dVec3{ .01,.01,.01 });
+		objectToWorldMats[0] = scale;
 
-				dVec3(normals[face.mIndices[0]].x, normals[face.mIndices[0]].y, normals[face.mIndices[0]].z),
-				dVec3(normals[face.mIndices[1]].x, normals[face.mIndices[1]].y, normals[face.mIndices[1]].z),
-				dVec3(normals[face.mIndices[2]].x, normals[face.mIndices[2]].y, normals[face.mIndices[2]].z),
-
-				dVec2(uvs[face.mIndices[0]].x, uvs[face.mIndices[0]].y),
-				dVec2(uvs[face.mIndices[1]].x, uvs[face.mIndices[1]].y),
-				dVec2(uvs[face.mIndices[2]].x, uvs[face.mIndices[2]].y),
-
-				scale
-			));
-
-			//std::cout << vertices[face.mIndices[0]].x << " " << vertices[face.mIndices[0]].y << " " << vertices[face.mIndices[0]].z << std::endl;
-			//std::cout << vertices[face.mIndices[1]].x << " " << vertices[face.mIndices[1]].y << " " << vertices[face.mIndices[1]].z << std::endl;
-			//std::cout << vertices[face.mIndices[2]].x << " " << vertices[face.mIndices[2]].y << " " << vertices[face.mIndices[2]].z << std::endl;
-		}
+		std::cout << "load models done!" << std::endl;
 	}
 
+	{
+		Geometrys::Instance()->Initialize(models, objectToWorldMats);
+		std::cout << "init geometry done!" << std::endl;
+	}
 
-	std::cout << "load data done!" << std::endl;
 
 
 }

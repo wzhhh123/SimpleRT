@@ -25,6 +25,8 @@
 #define Vec3 glm::vec3
 #define Vec4 glm::vec4
 
+#define RAY_LENGTH 1000
+
 #define OUTPUT_PATH "../assets/image/result.jpg"
 
 #define EULER_TO_RADIUS 0.0174532925199438  // pi/180
@@ -47,3 +49,5 @@ class Triangle;
 class BusinessCard;
 class WhiteColor;
 class Vertex;
+class Accelerate;
+class Linear;
