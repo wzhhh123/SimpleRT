@@ -1,9 +1,6 @@
 
 
 #include "bvh.h"
-#include "base/shape.h"
-#include "geometry/triangle.h"
-#include "geometry/boundingbox.h"
 
 
 void Bvh::Initialize(std::vector<Shape*>*scene)
@@ -129,8 +126,8 @@ bool Bvh::Intersect(Ray& r, IntersectPoint* p, int* index)
 bool Bvh::SearchTree(Ray& r, IntersectPoint* p, int * index, TreeNode* treeNode) {
 
 	IntersectPoint p = IntersectPoint();
-	BoundingBox& boundingBox = treeNode->curBox;
-	if (boundingBox.Intersect(r, p)) {
+	Shape* boundingBox = &(treeNode->curBox);
+	if (boundingBox->Intersect(r, *p)) {
 
 	}
 

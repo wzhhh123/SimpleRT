@@ -1,9 +1,9 @@
 #pragma once
 
 #include "base/header.h"
+#include "geometry/triangle.h"
 #include "base/accelerate.h"
 #include "geometry/boundingbox.h"
-
 
 
 struct TreeNode {
