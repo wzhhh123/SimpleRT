@@ -11,7 +11,7 @@ public:
 
 	std::vector<Shape*> shapes;
 
-	bool Intersect(Ray r, IntersectPoint* p, int* index);
+	bool Intersect(Ray r, IntersectPoint* p);
 
 	void Initialize(std::vector<Model*>& models, std::vector<dMat4>& objectToWorlds);
 

@@ -9,7 +9,7 @@ void Linear::Initialize(std::vector<Shape*>*scene)
 	this->scene = scene;
 }
 
-bool Linear::Intersect(Ray& r, IntersectPoint* p, int* index)
+bool Linear::Intersect(Ray& r, IntersectPoint* p)
 {
 	bool found = false;
 	FLOAT mint = 1e30;
@@ -19,18 +19,18 @@ bool Linear::Intersect(Ray& r, IntersectPoint* p, int* index)
 		IntersectPoint p;
 		Shape* shape = (*scene)[i];
 		Triangle* tri = (Triangle*)shape;
-		if (tri->boundingBox.Intersect(r, p)) {
-		//if (shape->Intersect(r, p)) {
+		//if (tri->boundingBox.Intersect(r, p)) {
+		if (shape->Intersect(r, p)) {
 			if (!found) {
 				found = true;
-				nearestHit = p;
 				mint = p.t;
-				*index = i;
+				nearestHit = p;
+				nearestHit.index = i;
 			}
 			else if (mint > p.t) {
 				mint = p.t;
-				*index = i;
 				nearestHit = p;
+				nearestHit.index = i;
 			}
 		}
 	}

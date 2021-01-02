@@ -77,10 +77,10 @@ TreeNode* Bvh::BuildTree(BoundingBox box, std::vector<int>&indices, int depth) {
 
 	dVec3 extent = { 0,0,(box.amax.z - box.amin.z) * 0.5 };
 
-	sonBoxes[4] = { box.amin + extent, midPoint + extent };
-	sonBoxes[5] = { dVec3{midPoint.x, box.amin.y, box.amin.z} +extent,  dVec3{box.amax.x, midPoint.y, midPoint.z} +extent };
-	sonBoxes[6] = { dVec3{midPoint.x, midPoint.y, box.amin.z}+extent, dVec3{midPoint.x, box.amax.y, midPoint.z} +extent };
-	sonBoxes[7] = { dVec3{midPoint.x, midPoint.y, box.amin.z}+extent, dVec3{box.amax.x, box.amax.y, midPoint.z} +extent };
+	sonBoxes[4] = { dVec3{box.amin.x, box.amin.y, midPoint.z}, dVec3{midPoint.x, midPoint.y, box.amax.z} };
+	sonBoxes[5] = { dVec3{midPoint.x, box.amin.y, midPoint.z}, dVec3{box.amax.x, midPoint.y, box.amax.z} };
+	sonBoxes[6] = { dVec3{box.amin.x, midPoint.y, midPoint.z}, dVec3{midPoint.x, box.amax.y, box.amax.z} };
+	sonBoxes[7] = { dVec3{midPoint.x, midPoint.y, midPoint.z}, dVec3{box.amax.x, box.amax.y, box.amax.z} };
 
 	curNode->sons.resize(8);
 
@@ -91,45 +91,53 @@ TreeNode* Bvh::BuildTree(BoundingBox box, std::vector<int>&indices, int depth) {
 	return curNode;
 }
 
-
-bool Bvh::Intersect(Ray& r, IntersectPoint* p, int* index)
+bool Bvh::Intersect(Ray& r, IntersectPoint* p)
 {
+	return SearchTree(r, p, treeNode);
+}
+
+bool Bvh::SearchTree(Ray& r, IntersectPoint* p, TreeNode* treeNode) {
+
 	bool found = false;
-	FLOAT mint = 1e30;
-	IntersectPoint nearestHit{};
-	for (size_t i = 0; i < scene->size(); ++i)
-	{
-		IntersectPoint p;
-		Shape* shape = (*scene)[i];
-		Triangle* tri = (Triangle*)shape;
-		if (tri->boundingBox.Intersect(r, p)) {
-			//if (shape->Intersect(r, p)) {
-			if (!found) {
-				found = true;
-				nearestHit = p;
-				mint = p.t;
-				*index = i;
+	IntersectPoint nearestHit = IntersectPoint();
+	Shape* boundingBox = &(treeNode->curBox);
+
+	//这里不知道为什么不能直接调用boundingbox的instersect，要转到shape调用
+	if (boundingBox->Intersect(r, nearestHit)) {
+		if (treeNode->isLeaf) {
+			for (size_t i = 0; i < treeNode->indices.size(); ++i)
+			{
+				IntersectPoint p;
+				Shape* shape = (*scene)[treeNode->indices[i]];
+				if (shape->Intersect(r, p)) {
+					p.index = treeNode->indices[i];
+					if (!found) {
+						found = true;
+						nearestHit = p;
+					}
+					else if (p.t < nearestHit.t) {
+						nearestHit = p;
+					}
+				}
 			}
-			else if (mint > p.t) {
-				mint = p.t;
-				*index = i;
-				nearestHit = p;
+		}
+		else {
+			for (int i = 0; i < 8; ++i) {
+				IntersectPoint p;
+				if (treeNode->sons[i] != nullptr && SearchTree(r, &p, treeNode->sons[i])) {
+					if (!found) {
+						found = true;
+						nearestHit = p;
+					}
+					else if(p.t < nearestHit.t){
+						nearestHit = p;
+					}
+				}
 			}
 		}
 	}
-	*p = nearestHit;
+
+	if (found) *p = nearestHit;
+	
 	return found;
-
-}
-
-
-bool Bvh::SearchTree(Ray& r, IntersectPoint* p, int * index, TreeNode* treeNode) {
-
-	IntersectPoint p = IntersectPoint();
-	Shape* boundingBox = &(treeNode->curBox);
-	if (boundingBox->Intersect(r, *p)) {
-
-	}
-
-
 }

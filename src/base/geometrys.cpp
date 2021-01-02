@@ -11,9 +11,8 @@ Geometrys* Geometrys::Instance() {
 }
 
 
-bool Geometrys::Intersect(Ray r, IntersectPoint* p, int* index)
-{
-	return accelerater->Intersect(r, p, index);
+bool Geometrys::Intersect(Ray r, IntersectPoint* p){
+	return accelerater->Intersect(r, p);
 }
 
 Geometrys::Geometrys() : isInit(false) {  }

@@ -11,6 +11,7 @@ struct IntersectPoint {
 	FLOAT weightV;
 	dVec3 normalWS;
 	dVec3 normalOS;
+	int index; //index of geometry::shape array
 };
 
 class Shape {
