@@ -9,6 +9,8 @@
 #include "assimp/postprocess.h"
 #include "geometry/triangle.h"
 #include "tool/imagehelper.h"
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
 
 void Renderer::Run()
 {
@@ -62,22 +64,45 @@ void Renderer::Initialize() {
 	//Geometrys::Instance()->shapes.push_back(
 	//	new Triangle(VEC3{ -0.5, 0.5,2 }, VEC3{ -0.5, -0.5,2 }, VEC3{ 0.5, -0.5,2 }));
 
-	//prepare scene data
+
+	using namespace std;
+	using namespace rapidjson;
+
+	string line, jsonText;
+	ifstream ifs(CONFIG_PATH);
+	while (getline(ifs, line))
+		jsonText.append(line);//Ã»ÓÐ»»ÐÐ
+
+	Document document;
+	document.Parse(jsonText.c_str());
+	ifs.close();
+
+
+	const auto &objs = document["scene"].GetArray();
+	models.resize(objs.Size());
+	objectToWorldMats.resize(objs.Size());
+	int index = 0;
+	for (const auto &obj : objs)
 	{
-		models.resize(1);
-		objectToWorldMats.resize(1);
+		std::string path = obj["path"].GetString();
 
-		models[0] = new Model();
-		models[0]->Initialize("../assets/models/cerberus/cerberus.gltf");
+		auto position = obj["position"].GetArray().Begin();
+		dMat4 trans = glm::translate(dMat4(1.0f), dVec3(position->GetFloat(), (position + 1)->GetFloat(), (position + 2)->GetFloat()));
 
-		dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ 0.5, 0.20000000298023225, 1.7999999523162842 });
-		dMat4 rotation = glm::rotate(trans, eulerToRadius(59.0), dVec3{ 0,1,0 });
-		rotation = glm::rotate(rotation, eulerToRadius(253.8000030517578), dVec3{ 1,0,0 });
-		rotation = glm::rotate(rotation, eulerToRadius(224.3000030517578), dVec3{ 0,0,1 });
-		dMat4 scale = glm::scale(rotation, dVec3{ 1.0, 1.0, 1.0 });
-		objectToWorldMats[0] = scale;
+		auto rotate = obj["euler"].GetArray().Begin();
+		dVec3 euler = dVec3(rotate->GetFloat(), (rotate + 1)->GetFloat(), (rotate + 2)->GetFloat());
 
-		std::cout << "load models done!" << std::endl;
+		dMat4 rotation = glm::rotate(trans, eulerToRadius(euler.y), dVec3{ 0,1,0 });
+		rotation = glm::rotate(rotation, eulerToRadius(euler.x), dVec3{ 1,0,0 });
+		rotation = glm::rotate(rotation, eulerToRadius(euler.z), dVec3{ 0,0,1 });
+
+		auto scalec = obj["scale"].GetArray().Begin();
+		dMat4 scale = glm::scale(rotation, dVec3(scalec->GetFloat(), (scalec + 1)->GetFloat(), (scalec + 2)->GetFloat()));
+		objectToWorldMats[index] = scale;
+
+		models[index] = new Model();
+		models[index]->Initialize(path.c_str());
+		++index;
 	}
 
 	{

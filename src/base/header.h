@@ -1,6 +1,11 @@
 
 #pragma once
 
+#include <fstream>
+
+#include <string>
+#include <ostream>
+#include <sstream>
 #include <stdio.h>
 #include <vector>
 #include <algorithm>
@@ -8,6 +13,7 @@
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include <math.h>
+
 
 #define FLOAT double
 #define  SIZE  500
@@ -28,8 +34,12 @@
 #define RAY_LENGTH 1000
 
 #define OUTPUT_PATH "../assets/image/result.jpg"
+#define CONFIG_PATH "../assets/configs/configtest.json"
+
+
 
 #define EULER_TO_RADIUS 0.0174532925199438  // pi/180
+
 
 inline FLOAT eulerToRadius(float euler) {
 	return (EULER_TO_RADIUS * euler);
