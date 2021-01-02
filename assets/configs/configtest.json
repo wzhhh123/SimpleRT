@@ -1,39 +1,9 @@
 {
     "scene": [
         {
-            "path": "../assets/models/cornellbox_normal/leftwall.obj",
-            "position": [ 0.02, -0.8, 2 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ]
-        },
-        {
-            "path": "../assets/models/cornellbox_normal/light.obj",
+            "path": "../assets/models/cornellbox/CornellBox-Glossy-Floor.obj",
             "position": [ 0, -0.8, 2 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ]
-        },
-        {
-            "path": "../assets/models/cornellbox_normal/rightwall.obj",
-            "position": [ -0.02, -0.8, 2 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ]
-        },
-        {
-            "path": "../assets/models/cornellbox_normal/walls.obj",
-            "position": [ 0, -0.8, 1.9 ],
             "euler": [ 0, 180, 0 ],
-            "scale": [ 1, 1, 1 ]
-        },
-        {
-            "path": "../assets/models/cornellbox_normal/sphere1.obj",
-            "position": [ 0, -0.8, 2 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ]
-        },
-        {
-            "path": "../assets/models/cornellbox_normal/sphere2.obj",
-            "position": [ 0, -0.8, 2 ],
-            "euler": [ 0, 0, 0 ],
             "scale": [ 1, 1, 1 ]
         }
     ]
