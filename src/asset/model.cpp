@@ -4,6 +4,7 @@
 
 Model::Model()
 {
+	hasNormal = true;
 }
 
 
@@ -14,6 +15,7 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 	{
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
 		meshes.push_back(mesh);
+		hasNormal &= mesh->HasNormals();
 	}
 	// 接下来对它的子节点重复这一过程
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -111,12 +113,21 @@ int Model::GetVertexCount()
 
 void Model::GetNormals(std::vector<glm::vec3>&normals) {
 	normals.resize(GetVertexCount());
+	if (!hasNormal) {
+		std::cout << "mesh has no normal!" << std::endl;
+		return;
+	}
+
 	int index = 0;
 	for (auto i = 0; i < meshes.size(); ++i) {
 		for (auto j = 0; j < meshes[i]->mNumVertices; ++j) {
 			normals[index++] = { meshes[i]->mNormals[j].x , meshes[i]->mNormals[j].y, meshes[i]->mNormals[j].z };
 		}
 	}
+}
+
+bool Model::HasNormal() {
+	return hasNormal;
 }
 
 void Model::GetVertices(std::vector<glm::vec3>&vertices)

@@ -6,6 +6,7 @@
 #include "raytracer.h"
 #include "asset/model.h"
 #include "accelerate.h"
+
 class Renderer {
 public:
 	
@@ -18,6 +19,9 @@ public:
 	std::vector<Model*>models;
 	std::vector<dMat4> objectToWorldMats;
 
+	static Renderer* Instance();
+
+private:
 	Renderer();
 
 };

@@ -1,21 +1,24 @@
 
 
 #include "base/header.h"
-
+#include "base/renderer.h"
 #include "vertex.h"
-Vertex::Vertex(dVec3 _v, dVec3 _n, dVec2 _uv, dMat4 _objectToWorld) {
+Vertex::Vertex(dVec3 _v, dVec3 _n, dVec2 _uv, dMat4 _objectToWorld, int _modelIndex) {
 
+	modelIndex = _modelIndex;
 	objectToWorld = _objectToWorld;
 	v = _v;
 	uv = _uv;
 	normalOS = glm::normalize(_n);
-
-
 	dVec4 nor = objectToWorld * dVec4(normalOS, 0);
 	normalWS = glm::normalize(dVec3{ nor.x, nor.y, nor.z });
 	vertexWS = objectToWorld * dVec4{ v,1 };
+}
+
+Vertex::Vertex() {
 
 }
+
 
 //
 //void Vertex::SetTangentToObject(dMat3 _tangentToObject) {

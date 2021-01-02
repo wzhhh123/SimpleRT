@@ -13,11 +13,10 @@ int main() {
 	//Geometrys::Instance()->accelerater = new Linear();
 	Geometrys::Instance()->accelerater = new Bvh();
 
-	Renderer renderer;
-	renderer.Initialize();
+	Renderer::Instance()->Initialize();
 //	renderer.raytracer = new BusinessCard();
-	renderer.raytracer = new WhiteColor();
-	renderer.Run();
-	renderer.deIntialize();
+	Renderer::Instance()->raytracer = new WhiteColor();
+	Renderer::Instance()->Run();
+	Renderer::Instance()->deIntialize();
 
 }

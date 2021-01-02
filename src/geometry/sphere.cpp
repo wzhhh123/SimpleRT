@@ -14,6 +14,7 @@ bool Sphere::Intersect(Ray r, IntersectPoint& p)
 	res = b - res > 1e-7 ? b - res : b + res;
 	if (res >= 1e-7 && res < tmin) {
 		p.t = res;
+		
 		return true;
 	}
 	return false;

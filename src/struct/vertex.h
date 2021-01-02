@@ -18,13 +18,15 @@ public:
 
 	dMat4 objectToWorld;
 
-	Vertex(dVec3 _v, dVec3 _n, dVec2 _uv, dMat4 _objectToWorld);
+	Vertex(dVec3 _v, dVec3 _n, dVec2 _uv, dMat4 _objectToWorld, int _modelIndex);
 
-
+	Vertex();
 //	void SetTangentToObject(dMat3 _tangentToObject);
 
 private:
 	dMat3 tangentToObject;
 	dVec3 v;
+
+	int modelIndex;
 
 };

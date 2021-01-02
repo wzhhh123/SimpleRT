@@ -1,13 +1,29 @@
 ﻿
 #include "triangle.h"
-
+#include "base/renderer.h"
 
 
 //https://www.cnblogs.com/samen168/p/5162337.html
 
-Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, dMat4 model): 
-	v0(_v0, _n0, _uv0, model), v1(_v1, _n1, _uv1, model), v2(_v2, _n2, _uv2, model), objectToWorld(model)
+Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, dMat4 model, int _modelIndex) :
+	objectToWorld(model), modelIndex(_modelIndex)
 {
+	if (Renderer::Instance()->models[modelIndex]->hasNormal) {
+		v0 = { _v0, _n0, _uv0, model, modelIndex };
+		v1 = { _v1, _n1, _uv1, model, modelIndex };
+		v2 = { _v2, _n2, _uv2, model, modelIndex };
+	}
+	else {
+		//看了一下nori 手动计算一下面法线
+		dVec3 e1 = _v1 - _v0;
+		dVec3 e2 = _v2 - _v0;
+		dVec3 nor = glm::normalize(glm::cross(e1, e2));
+		v0 = { _v0, nor, _uv0, model, modelIndex };
+		v1 = { _v1, nor, _uv1, model, modelIndex };
+		v2 = { _v2, nor, _uv2, model, modelIndex };
+	}
+
+
 	boundingBox = BoundingBox(v1.vertexWS, v2.vertexWS);
 	boundingBox.Union(v0.vertexWS);
 }

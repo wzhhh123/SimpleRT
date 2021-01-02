@@ -111,7 +111,12 @@ void Renderer::Initialize() {
 	}
 
 
+}
 
+
+Renderer* Renderer::Instance() {
+	static Renderer* ins = new Renderer();
+	return ins;
 }
 
 void Renderer::deIntialize() {

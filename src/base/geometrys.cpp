@@ -43,6 +43,7 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 		std::vector < glm::vec2 > uvs;
 		models[j]->GetUVs(uvs);
 
+
 		for (auto i = 0; i < indices.size(); i += 3) {
 			shapes[cnt++] = new Triangle(
 
@@ -58,7 +59,8 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 				dVec2(uvs[indices[i + 1]].x, uvs[indices[i + 1]].y),
 				dVec2(uvs[indices[i + 2]].x, uvs[indices[i + 2]].y),
 
-				objectToWorlds[j]
+				objectToWorlds[j],
+				j
 			);
 		}
 	}

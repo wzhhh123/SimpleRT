@@ -34,4 +34,9 @@ public:
 
 	Assimp::Importer importer;
 	const aiScene *aiObj;
+
+
+	bool HasNormal();
+
+	bool hasNormal;
 };
