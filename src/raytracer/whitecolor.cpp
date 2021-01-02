@@ -17,8 +17,8 @@ dVec3 WhiteColor::Trace(int level, Ray r) {
 	found = Geometrys::Instance()->Intersect(r, &nearestHit);
 
 	if (found) {
-		return { 1,1,1 };
-		//return nearestHit.normalWS;
+		//return { 1,1,1 };
+		return nearestHit.normalWS;
 		//return nearestHit.normalOS;
 
 		//return nearestHit.normalWS;

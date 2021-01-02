@@ -65,7 +65,6 @@ TreeNode* Bvh::BuildTree(BoundingBox box, std::vector<int>&indices, int depth) {
 	}
 
 
-
 	dVec3 midPoint = (box.amax + box.amin)*0.5;
 	
 	std::vector<BoundingBox> sonBoxes(8);

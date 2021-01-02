@@ -69,13 +69,13 @@ void Renderer::Initialize() {
 		objectToWorldMats.resize(1);
 
 		models[0] = new Model();
-		models[0]->Initialize("../assets/models/box.fbx");
+		models[0]->Initialize("../assets/models/Common_Bench_A.FBX");
 
-		dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ -0.1, -0.8, 3.4 });
-		dMat4 rotation = glm::rotate(trans, eulerToRadius(60), dVec3{ 0,1,0 });
-		rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 1,0,0 });
+		dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ -0.30000001192092898, -0.800000011920929, 3.4000000953674318 });
+		dMat4 rotation = glm::rotate(trans, eulerToRadius(54.20000076293945), dVec3{ 0,1,0 });
+		rotation = glm::rotate(rotation, eulerToRadius(267.6000061035156), dVec3{ 1,0,0 });
 		rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 0,0,1 });
-		dMat4 scale = glm::scale(rotation, dVec3{ .01,.01,.01 });
+		dMat4 scale = glm::scale(rotation, dVec3{ 0.01,0.01,0.01 });
 		objectToWorldMats[0] = scale;
 
 		std::cout << "load models done!" << std::endl;

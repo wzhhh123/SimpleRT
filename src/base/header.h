@@ -10,7 +10,7 @@
 #include <math.h>
 
 #define FLOAT double
-#define  SIZE  200
+#define  SIZE  500
 #define CHANNEL_COUNT  3
 #define AOV 60
 #define DEPTH 5
