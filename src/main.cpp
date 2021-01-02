@@ -10,8 +10,8 @@
 #include "accelerate/bvh.h"
 int main() {
 	
-	Geometrys::Instance()->accelerater = new Linear();
-	//Geometrys::Instance()->accelerater = new Bvh();
+	//Geometrys::Instance()->accelerater = new Linear();
+	Geometrys::Instance()->accelerater = new Bvh();
 
 	Renderer renderer;
 	renderer.Initialize();

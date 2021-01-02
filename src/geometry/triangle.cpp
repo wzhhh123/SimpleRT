@@ -1,4 +1,4 @@
-
+Ôªø
 #include "triangle.h"
 
 
@@ -12,76 +12,57 @@ Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 
 	boundingBox.Union(v0.vertexWS);
 }
 
-//øÀ¿≥ƒ∑∑®‘Ú+œÚ¡øªÏ∫œª˝
+//https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+//M√∂ller‚ÄìTrumbore intersection algorithm
+//ÂÖãËé±ÂßÜÊ≥ïÂàô+ÂêëÈáèÊ∑∑ÂêàÁßØ
 bool Triangle::Intersect(Ray r, IntersectPoint& p)
 {
 
-	auto orig = r.origin;
-	auto dir = r.direction;
-
-	// E1
-	dVec3 E1 = v1.vertexWS - v0.vertexWS;
-
-	// E2
-	dVec3 E2 = v2.vertexWS - v0.vertexWS;
-
-	// P
-	dVec3 P = glm::cross(dir, E2);
-
-	// determinant
-	FLOAT det = glm::dot(E1, P);
-
-	dVec3 T;
-	if (det > 0)
+	const float EPSILON = 0.0000001;
+	dVec3 vertex0 = v0.vertexWS;
+	dVec3 vertex1 = v1.vertexWS;
+	dVec3 vertex2 = v2.vertexWS;
+	dVec3 edge1, edge2, h, s, q;
+	float a, f, u, v;
+	edge1 = vertex1 - vertex0;
+	edge2 = vertex2 - vertex0;
+	h = glm::cross(r.direction, edge2);
+	a = glm::dot(edge1, h);
+	if (a > -EPSILON && a < EPSILON)
+		return false;    // This ray is parallel to this triangle.
+	f = 1.0 / a;
+	s = r.origin - vertex0;
+	u = f * glm::dot(s, h);
+	if (u < 0.0 || u > 1.0)
+		return false;
+	q = glm::cross(s, edge1);
+	v = f * glm::dot(r.direction, q);
+	if (v < 0.0 || u + v > 1.0)
+		return false;
+	// At this stage we can compute t to find out where the intersection point is on the line.
+	float t = f * glm::dot(edge2, q);
+	if (t > EPSILON) // ray intersection
 	{
-		T = orig - v0.vertexWS;
+		p.t = t;
+		p.weightU = u;
+		p.weightV = v;
+
+		p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
+		//p.normalOS = v1.normalOS * p.weightU + v2.normalOS * p.weightV + v0.normalOS * (1 - p.weightU - p.weightV);
+		p.normalOS = v1.normalOS;
+
+		return true;
 	}
-	else
-	{
-		T = v0.vertexWS  - orig;
-		det = -det;
-	}
-
-	// If determinant is near zero, ray lies in plane of triangle
-	if (det < 0.0001f)
+	else // This means that there is a line intersection but not a ray intersection.
 		return false;
 
-	// Calculate u and make sure u <= 1
-	p.weightU = glm::dot(T, P);
-	if (p.weightU < 0.0 || p.weightU > det)
-		return false;
-
-	// Q
-	dVec3 Q = glm::cross(T, E1);
-
-	// Calculate v and make sure u + v <= 1
-	p.weightV = glm::dot(dir, Q);
-	if (p.weightV < 0.0 || p.weightU + p.weightV > det)
-		return false;
-
-	// Calculate t, scale parameters, ray intersects triangle
-	p.t = glm::dot(E2, Q);
-
-	FLOAT fInvDet = 1.0 / det;
-	p.t *= fInvDet;
-	p.weightU *= fInvDet;
-	p.weightV *= fInvDet;
-
-	//p.normalWS = v1.normalWS;
-
-	p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
-	//p.normalOS = v1.normalOS * p.weightU + v2.normalOS * p.weightV + v0.normalOS * (1 - p.weightU - p.weightV);
-	p.normalOS = v1.normalOS;
-
-	
-	return true;
 
 }
 
 
 
 
-//”√µΩ∑®œﬂÃ˘Õº‘Ÿ…œ’‚∏ˆ
+//Áî®Âà∞Ê≥ïÁ∫øË¥¥ÂõæÂÜç‰∏äËøô‰∏™
 //void Triangle::TangentToObject() {
 //	float deltaU1 = _uv1.x - _uv0.x;
 //	float deltaU2 = _uv2.x - _uv0.x;
@@ -92,7 +73,7 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 //	dVec3 e1 = _v1 - _v0;
 //	dVec3 e2 = _v2 - _v0;
 //
-//	//¡–”≈œ»£¨≤ª”∞œÏº∆À„
+//	//Âàó‰ºòÂÖàÔºå‰∏çÂΩ±ÂìçËÆ°ÁÆó
 //	auto mid = glm::mat2x2(deltaV2, -deltaU2, -deltaV1, deltaU1);
 //	auto right = glm::mat3x2(e1.x, e2.x, e1.y, e2.y, e1.z, e2.z);
 //	float left = 1.0 / (deltaU1*deltaV2 - deltaU2 * deltaV1);

@@ -62,20 +62,19 @@ void Renderer::Initialize() {
 	//Geometrys::Instance()->shapes.push_back(
 	//	new Triangle(VEC3{ -0.5, 0.5,2 }, VEC3{ -0.5, -0.5,2 }, VEC3{ 0.5, -0.5,2 }));
 
-
 	//prepare scene data
 	{
 		models.resize(1);
 		objectToWorldMats.resize(1);
 
 		models[0] = new Model();
-		models[0]->Initialize("../assets/models/Common_Bench_A.FBX");
+		models[0]->Initialize("../assets/models/cerberus/cerberus.gltf");
 
-		dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ -0.30000001192092898, -0.800000011920929, 3.4000000953674318 });
-		dMat4 rotation = glm::rotate(trans, eulerToRadius(54.20000076293945), dVec3{ 0,1,0 });
-		rotation = glm::rotate(rotation, eulerToRadius(267.6000061035156), dVec3{ 1,0,0 });
-		rotation = glm::rotate(rotation, eulerToRadius(0), dVec3{ 0,0,1 });
-		dMat4 scale = glm::scale(rotation, dVec3{ 0.01,0.01,0.01 });
+		dMat4 trans = glm::translate(dMat4(1.0f), dVec3{ 0.5, 0.20000000298023225, 1.7999999523162842 });
+		dMat4 rotation = glm::rotate(trans, eulerToRadius(59.0), dVec3{ 0,1,0 });
+		rotation = glm::rotate(rotation, eulerToRadius(253.8000030517578), dVec3{ 1,0,0 });
+		rotation = glm::rotate(rotation, eulerToRadius(224.3000030517578), dVec3{ 0,0,1 });
+		dMat4 scale = glm::scale(rotation, dVec3{ 1.0, 1.0, 1.0 });
 		objectToWorldMats[0] = scale;
 
 		std::cout << "load models done!" << std::endl;
