@@ -18,7 +18,7 @@ dVec3 WhiteColor::Trace(int level, Ray r) {
 
 	if (found) {
 
-		//return { nearestHit.t / 5.0, nearestHit.t / 5.0 ,nearestHit.t / 5.0 };
+		return { nearestHit.t / 5.0, nearestHit.t / 5.0 ,nearestHit.t / 5.0 };
 
 		//return { 1,1,1 };
 		return nearestHit.normalWS;

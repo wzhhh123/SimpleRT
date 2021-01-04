@@ -59,7 +59,7 @@ TreeNode* Bvh::BuildTree(BoundingBox box, std::vector<int>&indices, int depth) {
 	if (box.amax[maxExtent] - box.amin[maxExtent] < 0.05) {
 #if DEBUG_MODE
 		//看看是否会出现在一个小的aabb内还有大量三角形
-		std::cout << "Bvh stop partite because max extent  of aabb less than 0.05, leaf triangle count is " << indices.size() << std::endl;
+		std::cout << "Bvh stop partite because max extent of aabb less than 0.05, leaf triangle count is " << indices.size() << std::endl;
 #endif
 		return curNode;//最大维度才0.2，再划分下去可能没啥意义
 	}
