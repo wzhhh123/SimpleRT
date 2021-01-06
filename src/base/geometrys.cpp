@@ -42,6 +42,8 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 		models[j]->GetIndices(indices);
 		std::vector < glm::vec2 > uvs;
 		models[j]->GetUVs(uvs);
+		std::vector <int> meshIndex;
+		models[j]->GetMeshIndices(meshIndex);
 
 
 		for (auto i = 0; i < indices.size(); i += 3) {
@@ -60,10 +62,12 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 				dVec2(uvs[indices[i + 2]].x, uvs[indices[i + 2]].y),
 
 				objectToWorlds[j],
-				j
-			);
+				j,
+				meshIndex[i]
+			); 
 		}
 	}
 
 	accelerater->Initialize(&shapes);
 }
+

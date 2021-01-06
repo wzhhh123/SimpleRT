@@ -25,7 +25,7 @@ dVec3 BusinessCard::Trace(int level, Ray r) {
 		return { 0,0,0 };
 	}
 
-	Sphere* s = dynamic_cast<Sphere*>(Geometrys::Instance()->shapes[nearestHit.index]);
+	Sphere* s = dynamic_cast<Sphere*>(Geometrys::Instance()->shapes[nearestHit.shapeIndex]);
 	dVec3 color = { 0,0,0 };
 	FLOAT eta = s->ir;
 	dVec3 P = r.origin + r.direction * nearestHit.t;

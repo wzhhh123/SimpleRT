@@ -45,7 +45,6 @@ inline FLOAT eulerToRadius(float euler) {
 	return (EULER_TO_RADIUS * euler);
 }
 
-
 class Model;
 class Geometrys;
 class Ray;

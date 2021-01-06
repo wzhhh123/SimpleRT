@@ -25,12 +25,12 @@ bool Linear::Intersect(Ray& r, IntersectPoint* p)
 				found = true;
 				mint = p.t;
 				nearestHit = p;
-				nearestHit.index = i;
+				nearestHit.shapeIndex = i;
 			}
 			else if (mint > p.t) {
 				mint = p.t;
 				nearestHit = p;
-				nearestHit.index = i;
+				nearestHit.shapeIndex = i;
 			}
 		}
 	}

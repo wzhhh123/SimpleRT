@@ -114,6 +114,26 @@ void Renderer::Initialize() {
 }
 
 
+glm::vec4 Renderer::GetAmbient(int modelIndex, int meshIndex) {
+	return models[modelIndex]->meshes[meshIndex].ambient;
+}
+
+glm::vec4 Renderer::GetDiffuse(int modelIndex, int meshIndex) {
+	return models[modelIndex]->meshes[meshIndex].diffuse;
+}
+
+
+
+glm::vec4 Renderer::GetEmissive(int modelIndex, int meshIndex) {
+	return models[modelIndex]->meshes[meshIndex].emissive;
+}
+
+
+glm::vec4 Renderer::GetShininess(int modelIndex, int meshIndex) {
+	return models[modelIndex]->meshes[meshIndex].shininess;
+}
+
+
 Renderer* Renderer::Instance() {
 	static Renderer* ins = new Renderer();
 	return ins;

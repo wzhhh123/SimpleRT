@@ -4,9 +4,8 @@
 
 
 //https://www.cnblogs.com/samen168/p/5162337.html
-
-Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, dMat4 model, int _modelIndex) :
-	objectToWorld(model), modelIndex(_modelIndex)
+Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, dMat4 model, int _modelIndex,int _meshIndex) :
+	objectToWorld(model), modelIndex(_modelIndex), meshIndex(_meshIndex)
 {
 	if (Renderer::Instance()->models[modelIndex]->hasNormal) {
 		v0 = { _v0, _n0, _uv0, model, modelIndex };
@@ -22,8 +21,6 @@ Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 
 		v1 = { _v1, nor, _uv1, model, modelIndex };
 		v2 = { _v2, nor, _uv2, model, modelIndex };
 	}
-
-
 	boundingBox = BoundingBox(v1.vertexWS, v2.vertexWS);
 	boundingBox.Union(v0.vertexWS);
 }
@@ -66,13 +63,12 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 		p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
 		//p.normalOS = v1.normalOS * p.weightU + v2.normalOS * p.weightV + v0.normalOS * (1 - p.weightU - p.weightV);
 		p.normalOS = v1.normalOS;
-
+		p.meshIndex = meshIndex;
+		p.modelIndex = modelIndex;
 		return true;
 	}
 	else // This means that there is a line intersection but not a ray intersection.
 		return false;
-
-
 }
 
 

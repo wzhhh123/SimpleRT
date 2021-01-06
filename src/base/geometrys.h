@@ -17,6 +17,7 @@ public:
 
 	Accelerate* accelerater;
 
+
 private:
 	
 	Geometrys();

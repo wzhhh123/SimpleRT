@@ -74,8 +74,6 @@ TreeNode* Bvh::BuildTree(BoundingBox box, std::vector<int>&indices, int depth) {
 	sonBoxes[2] = { {box.amin.x, midPoint.y, box.amin.z},  {midPoint.x, box.amax.y, midPoint.z} };
 	sonBoxes[3] = { {midPoint.x, midPoint.y, box.amin.z},  {box.amax.x, box.amax.y, midPoint.z}};
 
-	dVec3 extent = { 0,0,(box.amax.z - box.amin.z) * 0.5 };
-
 	sonBoxes[4] = { dVec3{box.amin.x, box.amin.y, midPoint.z}, dVec3{midPoint.x, midPoint.y, box.amax.z} };
 	sonBoxes[5] = { dVec3{midPoint.x, box.amin.y, midPoint.z}, dVec3{box.amax.x, midPoint.y, box.amax.z} };
 	sonBoxes[6] = { dVec3{box.amin.x, midPoint.y, midPoint.z}, dVec3{midPoint.x, box.amax.y, box.amax.z} };
@@ -109,7 +107,7 @@ bool Bvh::SearchTree(Ray& r, IntersectPoint* p, TreeNode* treeNode) {
 				IntersectPoint p;
 				Shape* shape = (*scene)[treeNode->indices[i]];
 				if (shape->Intersect(r, p)) {
-					p.index = treeNode->indices[i];
+					p.shapeIndex = treeNode->indices[i];
 					if (!found) {
 						found = true;
 						nearestHit = p;

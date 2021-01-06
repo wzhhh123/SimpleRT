@@ -14,8 +14,41 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(mesh);
+		MeshInfo meshInfo;
+		meshInfo.mesh = mesh;
+
+		aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
+		aiColor4D color;
+		if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &color) == AI_SUCCESS) {
+			meshInfo.diffuse = { color.r, color.g, color.b, color.a };
+		}	
+		if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_AMBIENT, &color) == AI_SUCCESS) {
+			meshInfo.ambient = { color.r, color.g, color.b, color.a };
+		}
+		if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_EMISSIVE, &color) == AI_SUCCESS) {
+			meshInfo.emissive = { color.r, color.g, color.b, color.a };
+		}	
+		if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_SPECULAR, &color) == AI_SUCCESS) {
+			meshInfo.specular = { color.r, color.g, color.b, color.a };
+		}
+		if (aiGetMaterialColor(mat, AI_MATKEY_SHININESS, &color) == AI_SUCCESS) {
+			meshInfo.shininess = { color.r, color.g, color.b, color.a };
+		}
+		meshes.push_back(meshInfo);
 		hasNormal &= mesh->HasNormals();
+
+		/*		 mat.name
+				$mat.shadingm
+				$clr.ambient
+				$clr.diffuse
+				$clr.specular
+				$clr.emissive
+				$mat.shininess
+				$mat.opacity
+				$clr.transparent
+				$mat.refracti*/
+
+
 	}
 	// 接下来对它的子节点重复这一过程
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -56,10 +89,10 @@ int Model::GetIndexCount() {
 
 	int indexCnt = 0;
 	for (auto i = 0; i < meshes.size(); ++i) {
-		indexCnt += meshes[i]->mNumFaces * 3;
+		indexCnt += meshes[i].mesh->mNumFaces * 3;
 #if DEBUG_MODE
-		for (auto j = 0; j < meshes[i]->mNumFaces; ++j) {
-			assert(meshes[i]->mFaces[j].mNumIndices == 3);
+		for (auto j = 0; j < meshes[i].mesh->mNumFaces; ++j) {
+			assert(meshes[i].mesh->mFaces[j].mNumIndices == 3);
 		}
 #endif
 	}
@@ -78,12 +111,28 @@ void Model::GetIndices(std::vector<int>& indices) {
 	int index = 0;
 	int indexOffset = 0;
 	for (auto i = 0; i < meshes.size(); ++i) {
-		for (auto j = 0; j < meshes[i]->mNumFaces; ++j) {
-			indices[index++] = meshes[i]->mFaces[j].mIndices[0] + indexOffset;
-			indices[index++] = meshes[i]->mFaces[j].mIndices[1] + indexOffset;
-			indices[index++] = meshes[i]->mFaces[j].mIndices[2] + indexOffset;
+		for (auto j = 0; j < meshes[i].mesh->mNumFaces; ++j) {
+			indices[index++] = meshes[i].mesh->mFaces[j].mIndices[0] + indexOffset;
+			indices[index++] = meshes[i].mesh->mFaces[j].mIndices[1] + indexOffset;
+			indices[index++] = meshes[i].mesh->mFaces[j].mIndices[2] + indexOffset;
 		}
-		indexOffset += meshes[i]->mNumVertices;
+		indexOffset += meshes[i].mesh->mNumVertices;
+	}
+
+}
+
+void Model::GetMeshIndices(std::vector<int>& meshIndices) {
+
+	//简单粗暴地返回网格id
+	meshIndices.resize(GetIndexCount());
+	int index = 0;
+	int indexOffset = 0;
+	for (auto i = 0; i < meshes.size(); ++i) {
+		for (auto j = 0; j < meshes[i].mesh->mNumFaces; ++j) {
+			meshIndices[index++] = i;
+			meshIndices[index++] = i;
+			meshIndices[index++] = i;
+		}
 	}
 
 }
@@ -94,8 +143,8 @@ void Model::GetUVs(std::vector<glm::vec2>&uvs) {
 	uvs.resize(GetVertexCount());
 	int index = 0;
 	for (auto i = 0; i < meshes.size(); ++i) {
-		for (auto j = 0; j < meshes[i]->mNumUVComponents[0]; ++j) {
-			uvs[index++] = { meshes[i]->mTextureCoords[0][j].x, meshes[i]->mTextureCoords[0][j].y };
+		for (auto j = 0; j < meshes[i].mesh->mNumUVComponents[0]; ++j) {
+			uvs[index++] = { meshes[i].mesh->mTextureCoords[0][j].x, meshes[i].mesh->mTextureCoords[0][j].y };
 		}
 	}
 }
@@ -105,7 +154,7 @@ int Model::GetVertexCount()
 {
 	int verticeCnt = 0;
 	for (auto i = 0; i < meshes.size(); ++i) {
-		verticeCnt += meshes[i]->mNumVertices;
+		verticeCnt += meshes[i].mesh->mNumVertices;
 	}
 	return verticeCnt;
 }
@@ -120,8 +169,8 @@ void Model::GetNormals(std::vector<glm::vec3>&normals) {
 
 	int index = 0;
 	for (auto i = 0; i < meshes.size(); ++i) {
-		for (auto j = 0; j < meshes[i]->mNumVertices; ++j) {
-			normals[index++] = { meshes[i]->mNormals[j].x , meshes[i]->mNormals[j].y, meshes[i]->mNormals[j].z };
+		for (auto j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
+			normals[index++] = { meshes[i].mesh->mNormals[j].x , meshes[i].mesh->mNormals[j].y, meshes[i].mesh->mNormals[j].z };
 		}
 	}
 }
@@ -137,8 +186,8 @@ void Model::GetVertices(std::vector<glm::vec3>&vertices)
 	float div = 1;
 	int index = 0;
 	for (auto i = 0; i < meshes.size(); ++i) {
-		for (auto j = 0; j < meshes[i]->mNumVertices; ++j) {
-			vertices[index++] = { meshes[i]->mVertices[j].x / div, meshes[i]->mVertices[j].y / div, meshes[i]->mVertices[j].z / div };
+		for (auto j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
+			vertices[index++] = { meshes[i].mesh->mVertices[j].x / div, meshes[i].mesh->mVertices[j].y / div, meshes[i].mesh->mVertices[j].z / div };
 		}
 	}
 
