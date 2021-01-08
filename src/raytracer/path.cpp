@@ -26,6 +26,12 @@ dVec3 Path::Trace(int level, Ray r) {
 			L += beta * nearestHit.Le(-r.direction);
 		}
 
+		if (!found || bounds >= level) break;
+		auto diffuse = Renderer::Instance()->GetDiffuse(nearestHit.modelIndex, nearestHit.meshIndex);
+		dVec3 f = dVec3{ diffuse.x, diffuse.y, diffuse.z } * InvPi;
+		
+		beta *= f;
+
 
 	}
 

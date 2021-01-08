@@ -34,7 +34,18 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 		if (aiGetMaterialColor(mat, AI_MATKEY_SHININESS, &color) == AI_SUCCESS) {
 			meshInfo.shininess = { color.r, color.g, color.b, color.a };
 		}
+
 		meshes.push_back(meshInfo);
+
+		//第七个是区域光
+		if (meshes.size() == 7) {
+			meshInfo.isAreaLight = true;
+			meshInfo.emissive = { 40 ,40, 40, 1};
+		}
+		else {
+			meshInfo.isAreaLight = false;
+		}
+
 		hasNormal &= mesh->HasNormals();
 
 		/*		 mat.name

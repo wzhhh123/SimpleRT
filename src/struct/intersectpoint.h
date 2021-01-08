@@ -17,5 +17,5 @@ public:
 	int modelIndex;
 	int meshIndex;
 
-	dVec3 Le();
+	dVec3 Le(dVec3 direction);
 };

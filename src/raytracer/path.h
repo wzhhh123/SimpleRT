@@ -3,7 +3,7 @@
 #include "base/raytracer.h"
 
 
-class WhiteColor : public RayTracer{
+class Path : public RayTracer{
 
 public:
 
