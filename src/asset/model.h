@@ -44,6 +44,9 @@ public:
 	void GetNormals(std::vector<glm::vec3>&normals);
 	void GetUVs(std::vector<glm::vec2>&uvs);
 	void GetMeshIndices(std::vector<int>&);
+	void GetTangents(std::vector<glm::vec3>&tangents);
+	void GetBitangents(std::vector<glm::vec3>&bittangents);
+
 
 	Assimp::Importer importer;
 	const aiScene *aiObj;

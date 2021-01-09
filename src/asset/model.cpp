@@ -37,17 +37,21 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 
 		meshes.push_back(meshInfo);
 
+		//
 		//第七个是区域光
-		if (meshes.size() == 7) {
-			meshInfo.isAreaLight = true;
-			meshInfo.emissive = { 40 ,40, 40, 1};
+		if (meshes.size() == 8) {
+			meshes[meshes.size() - 1].isAreaLight = true;
+			meshes[meshes.size() - 1].emissive = { 1 ,1, 1, 1};
 		}
 		else {
-			meshInfo.isAreaLight = false;
+			meshes[meshes.size()-1].isAreaLight = false;
 		}
+
+		//后面六个没有uv
 
 		hasNormal &= mesh->HasNormals();
 
+		std::cout << std::endl;
 		/*		 mat.name
 				$mat.shadingm
 				$clr.ambient
@@ -59,8 +63,8 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 				$clr.transparent
 				$mat.refracti*/
 
-
 	}
+
 	// 接下来对它的子节点重复这一过程
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
@@ -149,16 +153,58 @@ void Model::GetMeshIndices(std::vector<int>& meshIndices) {
 }
 
 
-
 void Model::GetUVs(std::vector<glm::vec2>&uvs) {
-	uvs.resize(GetVertexCount());
+	int len = GetVertexCount();
+	uvs.resize(len);
 	int index = 0;
+
 	for (auto i = 0; i < meshes.size(); ++i) {
-		for (auto j = 0; j < meshes[i].mesh->mNumUVComponents[0]; ++j) {
+		//meshes[i].mesh->mNumUVComponents[0]全是2  不知道为什么 换成mNumVertices
+		for (auto j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
 			uvs[index++] = { meshes[i].mesh->mTextureCoords[0][j].x, meshes[i].mesh->mTextureCoords[0][j].y };
+			//	std::cout << uvs[index-1].x << " " << uvs[index - 1].x << std::endl;
 		}
 	}
 }
+
+
+
+void Model::GetTangents(std::vector<glm::vec3>&tangents) {
+	tangents.resize(GetVertexCount());
+	int index = 0;
+	for (auto i = 0; i < meshes.size(); ++i) {
+
+		if (meshes[i].mesh->HasTangentsAndBitangents()) {
+			for (int j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
+				tangents[index++] = {
+				meshes[i].mesh->mTangents[j].x,
+				meshes[i].mesh->mTangents[j].y,
+				meshes[i].mesh->mTangents[j].z
+				};
+			}
+		}
+		else {
+			std::cout << "fuckyou" << std::endl;
+		}
+	}
+}
+
+
+
+void Model::GetBitangents(std::vector<glm::vec3>&bittangents) {
+	bittangents.resize(GetVertexCount());
+	int index = 0;
+	for (auto i = 0; i < meshes.size(); ++i) {
+		for (int j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
+			bittangents[index++] = {
+			meshes[i].mesh->mBitangents[j].x,
+			meshes[i].mesh->mBitangents[j].y,
+			meshes[i].mesh->mBitangents[j].z
+			};
+		}
+	}
+}
+
 
 
 int Model::GetVertexCount()

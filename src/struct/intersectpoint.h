@@ -13,6 +13,10 @@ public:
 	FLOAT weightV;
 	dVec3 normalWS;
 	dVec3 normalOS;
+	dVec2 uv;
+	
+	dMat3 tangentToWorld;
+
 	int shapeIndex; //index of geometry::shape array
 	int modelIndex;
 	int meshIndex;

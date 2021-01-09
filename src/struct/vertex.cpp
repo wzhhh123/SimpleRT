@@ -3,6 +3,8 @@
 #include "base/header.h"
 #include "base/renderer.h"
 #include "vertex.h"
+
+
 Vertex::Vertex(dVec3 _v, dVec3 _n, dVec2 _uv, dMat4 _objectToWorld, int _modelIndex) {
 
 	modelIndex = _modelIndex;

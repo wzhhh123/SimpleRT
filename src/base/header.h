@@ -28,6 +28,7 @@
 
 #define Mat4 glm::mat4
 #define Mat3 glm::mat3
+#define Mat2 glm::mat2
 #define Vec3 glm::vec3
 #define Vec4 glm::vec4
 

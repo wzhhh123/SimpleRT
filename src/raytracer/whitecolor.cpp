@@ -18,16 +18,25 @@ dVec3 WhiteColor::Trace(int level, Ray r) {
 
 	if (found) {
 
+		dVec3 nor = { 0,0,1 };
+		return nearestHit.tangentToWorld * nor;
+
+		return nearestHit.normalWS;
 
 		glm::vec4 diffuse = Renderer::Instance()->GetDiffuse(nearestHit.modelIndex, nearestHit.meshIndex);
 		glm::vec4 ambient = Renderer::Instance()->GetAmbient(nearestHit.modelIndex, nearestHit.meshIndex);
 		glm::vec4 emissive = Renderer::Instance()->GetEmissive(nearestHit.modelIndex, nearestHit.meshIndex);
 		glm::vec4 shininess = Renderer::Instance()->GetShininess(nearestHit.modelIndex, nearestHit.meshIndex);
-		if(nearestHit.meshIndex!= 7)
-		return { nearestHit.meshIndex / 8.0 ,nearestHit.meshIndex / 8.0 ,nearestHit.meshIndex / 8.0 };
-		else {
-			return { 1,0,1 };
-		}
+
+		//std::cout << nearestHit.uv.x << " " << nearestHit.uv.y << std::endl;
+		return { nearestHit.uv.x, nearestHit.uv.y, 0 };
+		//if(nearestHit.meshIndex!= 7)
+		//return { nearestHit.meshIndex / 8.0 ,nearestHit.meshIndex / 8.0 ,nearestHit.meshIndex / 8.0 };
+		//else {
+		//	return { 1,0,1 };
+		//}
+
+
 		return shininess;
 		return emissive;
 		return ambient;
@@ -37,7 +46,6 @@ dVec3 WhiteColor::Trace(int level, Ray r) {
 		return { nearestHit.t / 5.0, nearestHit.t / 5.0 ,nearestHit.t / 5.0 };
 
 		//return { 1,1,1 };
-		return nearestHit.normalWS;
 		//return nearestHit.normalOS;
 
 		//return nearestHit.normalWS;

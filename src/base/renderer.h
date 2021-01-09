@@ -6,6 +6,10 @@
 #include "raytracer.h"
 #include "asset/model.h"
 #include "accelerate.h"
+#include "pcg32.h"
+#include "bxdf.h"
+#include "bxdf/lambert.h"
+
 
 class Renderer {
 public:
@@ -26,6 +30,9 @@ public:
 	glm::vec4 GetEmissive(int modelIndex, int meshIndex);
 	glm::vec4 GetShininess(int modelIndex, int meshIndex);
 
+
+	pcg32 rng;
+	BxDF* lambert;
 
 private:
 	Renderer();

@@ -144,4 +144,9 @@ void Renderer::deIntialize() {
 	delete[] imageData;
 }
 
-Renderer::Renderer() {}
+Renderer::Renderer() {
+
+	rng.seed(2, 56);
+
+
+}

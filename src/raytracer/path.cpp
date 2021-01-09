@@ -5,16 +5,21 @@
 #include "base/geometrys.h"
 #include "geometry/sphere.h"
 #include "base/renderer.h"
+#include "pcg32.h"
 
 
 dVec3 Path::Trace(int level, Ray r) {
 
 
 	dVec3 L(0), beta(1.0);
-	bool specularBounce = false;
+	bool specularBounce = true;
+	//bool specularBounce = false;
 
-	int bounds;
+	int bounds = 0;
 	FLOAT etaScale = 1;
+
+	pcg32& rng = Renderer::Instance()->rng;
+
 
 	for (bounds;; ++bounds) {
 
@@ -24,60 +29,46 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		if (bounds == 0 || specularBounce) {
 			L += beta * nearestHit.Le(-r.direction);
+			if (nearestHit.meshIndex == 7) {
+				if (bounds == 0) {
+				}
+				//L = { 1,1,1 };
+				break; //灯
+			}
 		}
 
 		if (!found || bounds >= level) break;
-		auto diffuse = Renderer::Instance()->GetDiffuse(nearestHit.modelIndex, nearestHit.meshIndex);
-		dVec3 f = dVec3{ diffuse.x, diffuse.y, diffuse.z } * InvPi;
-		
-		beta *= f;
+
+		//TODO sample one light
+
+		FLOAT pdf;
+		dVec3 wo = -r.direction, wi;
+
+		Lambert* lam = dynamic_cast<Lambert*>(Renderer::Instance()->lambert);
+		lam->albedo = Renderer::Instance()->GetDiffuse(nearestHit.modelIndex, nearestHit.meshIndex);
+		dVec3 f = lam->Sample_f(wo, &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf);
+
+	//	std::cout << f.x << " " << f.y << " " << f.z << std::endl;
+
+		if (f.x == 0.0 &&f.y == 0.0 &&f.z == 0.0) break;
+		if (pdf == 0.f) break;//不用追踪下去了，这条路径没用了
+
+		beta *= f * std::abs(glm::dot( nearestHit.tangentToWorld * glm::normalize(wi)
+			, nearestHit.normalWS)) / pdf;
+
+		//创建新射线 这里可能有误差
+		r.origin = nearestHit.t * r.direction + r.origin;
+		r.direction = nearestHit.tangentToWorld * glm::normalize(wi);
 
 
+		if (nearestHit.meshIndex == 7)break; //灯
+
+		//这里可以加上rr
 	}
 
 
 
+	return L;
 
-
-
-
-	dVec3 point = r.origin;
-	dVec3 dir = r.direction;
-
-	bool found = false;
-	IntersectPoint nearestHit;
-	found = Geometrys::Instance()->Intersect(r, &nearestHit);
-
-	if (found) {
-
-
-		glm::vec4 diffuse = Renderer::Instance()->GetDiffuse(nearestHit.modelIndex, nearestHit.meshIndex);
-		glm::vec4 ambient = Renderer::Instance()->GetAmbient(nearestHit.modelIndex, nearestHit.meshIndex);
-		glm::vec4 emissive = Renderer::Instance()->GetEmissive(nearestHit.modelIndex, nearestHit.meshIndex);
-		glm::vec4 shininess = Renderer::Instance()->GetShininess(nearestHit.modelIndex, nearestHit.meshIndex);
-		if(nearestHit.meshIndex!= 7)
-		return { nearestHit.meshIndex / 8.0 ,nearestHit.meshIndex / 8.0 ,nearestHit.meshIndex / 8.0 };
-		else {
-			return { 1,0,1 };
-		}
-		return shininess;
-		return emissive;
-		return ambient;
-		return diffuse;
-		return { diffuse.x, diffuse.y, diffuse.z };
-
-		return { nearestHit.t / 5.0, nearestHit.t / 5.0 ,nearestHit.t / 5.0 };
-
-		//return { 1,1,1 };
-		return nearestHit.normalWS;
-		//return nearestHit.normalOS;
-
-		//return nearestHit.normalWS;
-		//return nearestHit.normalTS;
-
-	}
-	else {
-		return { 0,0,0 };
-	}
 
 }

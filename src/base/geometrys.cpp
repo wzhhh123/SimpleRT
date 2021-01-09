@@ -45,8 +45,26 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 		std::vector <int> meshIndex;
 		models[j]->GetMeshIndices(meshIndex);
 
+		//std::vector<glm::vec3>tangents;
+		//models[j]->GetTangents(tangents);
+
+		//std::vector<glm::vec3>bitangents;
+		//models[j]->GetBitangents(bitangents);
 
 		for (auto i = 0; i < indices.size(); i += 3) {
+
+			//printf("(%02f,%02f,%02f) (%02f,%02f,%02f) (%02f,%02f,%02f)", 
+			//	tangents[i].x,
+			//	tangents[i].y, 
+			//	tangents[i].z, 
+			//	tangents[i].x, 
+			//	tangents[i].y, 
+			//	tangents[i].z, 
+			//	tangents[i].x, 
+			//	tangents[i].y, 
+			//	tangents[i].z );
+
+
 			shapes[cnt++] = new Triangle(
 
 				dVec3(vertices[indices[i]].x, vertices[indices[i]].y, vertices[indices[i]].z),
@@ -65,6 +83,7 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 				j,
 				meshIndex[i]
 			); 
+
 		}
 	}
 

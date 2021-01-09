@@ -16,10 +16,11 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/ext/stb
   ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/include
   ${CMAKE_CURRENT_SOURCE_DIR}/ext/rapidjson/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/ext/pcg32
 )
 
 # 收集所有头文件源文件，存入 ALL_FILES 变量中
-file(GLOB_RECURSE ALL_FILES "src/*.h*" "src/*.c*")
+file(GLOB_RECURSE ALL_FILES "src/*.h*" "src/*.c*" "*.json")
 
 # 定义按目录结构归类的方法
 function(assign_source_group)

@@ -17,5 +17,4 @@ dVec3 IntersectPoint::Le(dVec3 direction) {
 
 	return { 0,0,0 };
 
-
 }

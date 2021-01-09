@@ -26,7 +26,10 @@ public:
 	int modelIndex;
 	int meshIndex;
 
+	
+	void GetUVs(dVec2 uv[3]);
 	//void TangentToObject();
+
 
 //private:
 //	dMat3 tangentToObject;

@@ -7,7 +7,14 @@
 Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, dMat4 model, int _modelIndex,int _meshIndex) :
 	objectToWorld(model), modelIndex(_modelIndex), meshIndex(_meshIndex)
 {
+	//先这样hack一下  后面几个平面都是没uv的，但是又有uv的值 全是(0,1)，简直智障
+	if (_meshIndex >= 2) {
+		_uv0 = dVec2(0, 0);
+		_uv1 = dVec2(1, 1);
+		_uv2 = dVec2(1, 0);
+	}
 	if (Renderer::Instance()->models[modelIndex]->hasNormal) {
+
 		v0 = { _v0, _n0, _uv0, model, modelIndex };
 		v1 = { _v1, _n1, _uv1, model, modelIndex };
 		v2 = { _v2, _n2, _uv2, model, modelIndex };
@@ -30,7 +37,6 @@ Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 
 //克莱姆法则+向量混合积
 bool Triangle::Intersect(Ray r, IntersectPoint& p)
 {
-
 	const float EPSILON = 0.0000001;
 	dVec3 vertex0 = v0.vertexWS;
 	dVec3 vertex1 = v1.vertexWS;
@@ -60,8 +66,32 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 		p.weightU = u;
 		p.weightV = v;
 
-		p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
-		//p.normalOS = v1.normalOS * p.weightU + v2.normalOS * p.weightV + v0.normalOS * (1 - p.weightU - p.weightV);
+		dVec2 uv[3];
+		GetUVs(uv);
+		dVec2 duv02 = uv[0] - uv[2], duv12 = uv[1] - uv[2];
+		dVec3 dp02 = v0.vertexWS - v2.vertexWS, dp12 = v1.vertexWS - v2.vertexWS;
+		FLOAT determinant = duv02[0] * duv12[1] - duv02[1] * duv12[0];
+		bool degenerateUV = std::abs(determinant) < 1e-8;
+		dVec3 dpdu, dpdv;
+		//if (!degenerateUV) 
+		{
+			FLOAT invdet = 1 / determinant;
+			dpdu = (duv12[1] * dp02 - duv02[1] * dp12) * invdet;
+			dpdv = (-duv12[0] * dp02 + duv02[0] * dp12) * invdet;
+		}
+
+		p.normalWS = glm::normalize(glm::cross(dpdv, dpdu));
+
+
+		dVec3 tangent = glm::normalize(dpdu);
+		dVec3 bitangent = glm::normalize(glm::cross(tangent, p.normalWS));
+
+		p.tangentToWorld = { tangent, bitangent, p.normalWS };
+		
+
+		p.uv = v1.uv *p.weightU + v2.uv * p.weightV + v0.uv * (1 - p.weightU - p.weightV);
+
+		//p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
 		p.normalOS = v1.normalOS;
 		p.meshIndex = meshIndex;
 		p.modelIndex = modelIndex;
@@ -70,8 +100,6 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 	else // This means that there is a line intersection but not a ray intersection.
 		return false;
 }
-
-
 
 
 //用到法线贴图再上这个
@@ -97,3 +125,10 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 //
 //	tangentToObject = dMat3{ tangent.x, bitangent.x, zComp.x, tangent.y, bitangent.y, zComp.y, tangent.z, bitangent.z, zComp.z };
 //}
+
+
+void Triangle::GetUVs(dVec2 uv[3]) {
+		uv[0] = v0.uv;
+		uv[1] = v1.uv;
+		uv[2] = v2.uv;
+}
