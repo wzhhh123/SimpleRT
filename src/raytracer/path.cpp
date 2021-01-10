@@ -12,8 +12,7 @@ dVec3 Path::Trace(int level, Ray r) {
 
 
 	dVec3 L(0), beta(1.0);
-	bool specularBounce = true;
-	//bool specularBounce = false;
+	bool specularBounce = false;
 
 	int bounds = 0;
 	FLOAT etaScale = 1;
@@ -40,6 +39,12 @@ dVec3 Path::Trace(int level, Ray r) {
 		if (!found || bounds >= level) break;
 
 		//TODO sample one light
+		{
+			L += be
+
+		}
+
+
 
 		FLOAT pdf;
 		dVec3 wo = -r.direction, wi;
