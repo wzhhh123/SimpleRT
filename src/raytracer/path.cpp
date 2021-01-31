@@ -12,7 +12,7 @@ dVec3 Path::Trace(int level, Ray r) {
 
 
 	dVec3 L(0), beta(1.0);
-	bool specularBounce = false;
+	bool specularBounce = true;
 
 	int bounds = 0;
 	FLOAT etaScale = 1;
@@ -30,6 +30,7 @@ dVec3 Path::Trace(int level, Ray r) {
 			L += beta * nearestHit.Le(-r.direction);
 			if (nearestHit.meshIndex == 7) {
 				if (bounds == 0) {
+					//L = dVec3(1, 0, 1);
 				}
 				//L = { 1,1,1 };
 				break; //µÆ
@@ -40,7 +41,7 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		//TODO sample one light
 		{
-			L += be
+//			L += be
 
 		}
 

@@ -27,7 +27,19 @@ void Renderer::Run()
 		r.origin = dVec3{ 0,0,0 };
 		r.direction = glm::normalize(dir);
 	
-		auto col = raytracer->Trace(DEPTH, r) * 255.0;
+		dVec3 col = { 0,0,0 };
+		
+		int cnt = 0;
+		for (int i = 0; i < SPP; ++i) {
+			dVec3 temp = raytracer->Trace(DEPTH, r) * 255.0;
+			if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
+				col += temp;
+				++cnt;
+			}
+		}
+
+		col /= cnt;
+
 		imageData[yx * CHANNEL_COUNT] = col.x < 0 ? 0 : (int)(col.x);
 		imageData[yx * CHANNEL_COUNT + 1] = col.y < 0 ? 0 : (int)(col.y);
 		imageData[yx * CHANNEL_COUNT + 2] = col.z < 0 ? 0 : (int)(col.z);
