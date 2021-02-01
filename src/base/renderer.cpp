@@ -30,7 +30,8 @@ void Renderer::Run()
 		dVec3 col = { 0,0,0 };
 		
 		int cnt = 0;
-		for (int i = 0; i < SPP; ++i) {
+		//for (int i = 0; i < SPP; ++i) {
+		for (int i = 0; i < 1; ++i) {
 			dVec3 temp = raytracer->Trace(DEPTH, r) * 255.0;
 			if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
 				col += temp;
@@ -58,24 +59,6 @@ void Renderer::Run()
 void Renderer::Initialize() {
 
 	imageData = (unsigned char*) new char[SIZE*SIZE * CHANNEL_COUNT];
-
-	//Geometrys::Instance()->shapes.push_back(
-	//	new Sphere(VEC3{ -0.57, -1, 2.3698 }, VEC3{ 1., 1., 1. }, 0.5, .05, .2, .85, 0., 1.7));
-	//Geometrys::Instance()->shapes.push_back(
-	//	new Sphere(VEC3{ 0.63, -1, 2.369 }, VEC3{ 1., .5, .2 }, 0.5, .7, .3, 0., 0.05, 1.2));
-	//Geometrys::Instance()->shapes.push_back(
-	//	new Sphere(VEC3{ 0.01, 0.43, 3.15 }, VEC3{ .1, .8, .8 }, 1., .3, .7, 0., 0., 1.2));
-	//Geometrys::Instance()->shapes.push_back(
-	//	new Sphere(VEC3{ 3.67, 8.99, 5.64 }, VEC3{ 1., .8, 1. }, 3.5, 0., 0., 0., .6, 1.5));
-	//Geometrys::Instance()->shapes.push_back(
-	//	new Sphere(VEC3{ -5.02, 6.67, 5.97 }, VEC3{ .8, 1., 1. }, 2.5, 0., 0., 0., .5, 1.5));
-
-
-	//Geometrys::Instance()->shapes.push_back(
-	//	new Triangle(VEC3{ 0.5, -0.5,2}, VEC3{ 0.5, 0.5,2 }, VEC3{ -0.5, 0.5,2 }));
-	//Geometrys::Instance()->shapes.push_back(
-	//	new Triangle(VEC3{ -0.5, 0.5,2 }, VEC3{ -0.5, -0.5,2 }, VEC3{ 0.5, -0.5,2 }));
-
 
 	using namespace std;
 	using namespace rapidjson;
@@ -121,7 +104,6 @@ void Renderer::Initialize() {
 		Geometrys::Instance()->Initialize(models, objectToWorldMats);
 		std::cout << "init geometry done!" << std::endl;
 	}
-
 
 }
 

@@ -74,3 +74,4 @@ class  Bvh;
 class BxDF;
 class Lambert;
 class Path;
+class Distribution1D;

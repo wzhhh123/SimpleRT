@@ -46,3 +46,37 @@ dVec3 CosineSampleHemisphere(const dVec2 &u) {
 
 FLOAT CosineHemispherePdf(FLOAT cosTheta) { return cosTheta * InvPi; }
 
+
+Distribution1D::Distribution1D(const FLOAT *f, int n) : func(f, f + n), cdf(n + 1), pdf(n) {
+
+	cdf[0] = 0;
+
+	totalCnt = 0;
+	for (int i = 0; i < func.size(); ++i) {
+		totalCnt += func[i];
+	}
+
+	cdf[0] = 0;
+	for (int i = 1; i <= n; ++i) {
+		cdf[i] = cdf[i - 1] + func[i - 1] / totalCnt;
+	}
+
+	for (int i = 0; i < n; ++i) pdf[i] = func[i] / totalCnt;
+
+}
+
+
+int Distribution1D::SampleDiscrete(FLOAT u, FLOAT* pdf) const {
+
+	int offset = 0;
+
+	for (int i = 0; i < cdf.size(); ++i) {
+		if (cdf[i] <= u) {
+			offset = i;
+			break;
+		}
+	}
+
+	*pdf = pdf[offset];
+	return offset;
+}

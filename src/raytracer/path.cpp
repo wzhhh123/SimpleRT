@@ -26,6 +26,7 @@ dVec3 Path::Trace(int level, Ray r) {
 		IntersectPoint nearestHit;
 		found = Geometrys::Instance()->Intersect(r, &nearestHit);
 
+
 		if (bounds == 0 || specularBounce) {
 			L += beta * nearestHit.Le(-r.direction);
 			if (nearestHit.meshIndex == 7) {
@@ -45,6 +46,7 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		}
 
+		return abs(nearestHit.normalWS);
 
 
 		FLOAT pdf;

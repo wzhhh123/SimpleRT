@@ -10,9 +10,10 @@
 #include "accelerate/bvh.h"
 #include "raytracer/path.h"
 #include "bxdf/lambert.h"
-
+#include "base/sampling.h"
 int main() {
 	
+
 	//Geometrys::Instance()->accelerater = new Linear();
 	Geometrys::Instance()->accelerater = new Bvh();
 
