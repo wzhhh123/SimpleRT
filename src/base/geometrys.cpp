@@ -64,8 +64,7 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 			//	tangents[i].y, 
 			//	tangents[i].z );
 
-
-			shapes[cnt++] = new Triangle(
+			shapes[cnt] = new Triangle(
 
 				dVec3(vertices[indices[i]].x, vertices[indices[i]].y, vertices[indices[i]].z),
 				dVec3(vertices[indices[i + 1]].x, vertices[indices[i + 1]].y, vertices[indices[i + 1]].z),
@@ -84,7 +83,20 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 				meshIndex[i]
 			); 
 
+
+			if (j == 7) {
+				lights.push_back(shapes[cnt]);
+			}
+
+			++cnt;
+
 		}
+	}
+
+
+	std::vector<FLOAT> lightDis;
+	for (int i = 0; i < lights.size(); ++i) {
+
 	}
 
 	accelerater->Initialize(&shapes);

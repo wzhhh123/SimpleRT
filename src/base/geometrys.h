@@ -10,6 +10,7 @@ public:
 	static Geometrys* Instance();
 
 	std::vector<Shape*> shapes;
+	std::vector<Shape*>lights;
 
 	bool Intersect(Ray r, IntersectPoint* p);
 

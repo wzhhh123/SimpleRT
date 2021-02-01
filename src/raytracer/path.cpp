@@ -8,6 +8,11 @@
 #include "pcg32.h"
 
 
+
+dVec3 Path::UniformSampleOneLight(pcg32& rng) {
+
+}
+
 dVec3 Path::Trace(int level, Ray r) {
 
 
@@ -18,7 +23,6 @@ dVec3 Path::Trace(int level, Ray r) {
 	FLOAT etaScale = 1;
 
 	pcg32& rng = Renderer::Instance()->rng;
-
 
 	for (bounds;; ++bounds) {
 
@@ -42,11 +46,9 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		//TODO sample one light
 		{
-//			L += be
-
+			L += UniformSampleOneLight(rng);
 		}
 
-		return abs(nearestHit.normalWS);
 
 
 		FLOAT pdf;
