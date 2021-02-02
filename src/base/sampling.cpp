@@ -66,6 +66,10 @@ Distribution1D::Distribution1D(const FLOAT *f, int n) : func(f, f + n), cdf(n + 
 }
 
 
+Distribution1D::Distribution1D(){}
+
+
+
 int Distribution1D::SampleDiscrete(FLOAT u, FLOAT* pdf) const {
 
 	int offset = 0;
@@ -77,6 +81,6 @@ int Distribution1D::SampleDiscrete(FLOAT u, FLOAT* pdf) const {
 		}
 	}
 
-	*pdf = pdf[offset];
+	*pdf = this->pdf[offset];
 	return offset;
 }

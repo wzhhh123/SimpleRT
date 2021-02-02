@@ -3,6 +3,7 @@
 #include "base/header.h"
 #include "base/shape.h"
 #include "base/accelerate.h"
+#include "sampling.h"
 
 class Geometrys {
 
@@ -18,6 +19,9 @@ public:
 
 	Accelerate* accelerater;
 
+
+	Distribution1D lightDistribute;
+	std::vector<int>lightShapeIndices;
 
 private:
 	

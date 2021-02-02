@@ -12,11 +12,18 @@
 #include "bxdf/lambert.h"
 #include "base/sampling.h"
 int main() {
-	
+
+
+	for (int i = 0; i < 10; ++i) {
+		for (int j = 0; j < 10; ++j) {
+			dVec2 p = { i / 10.0, j / 10.0 };
+			dVec3 res = CosineSampleHemisphere(p);
+			std::cout << res.x << " " << res.y << " " << res.z << std::endl;
+		}
+	}
 
 	//Geometrys::Instance()->accelerater = new Linear();
 	Geometrys::Instance()->accelerater = new Bvh();
-
 
 	Renderer::Instance()->Initialize();
 //	renderer.raytracer = new BusinessCard();

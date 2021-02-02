@@ -11,4 +11,6 @@ public:
 	
 	virtual bool Intersect(Ray r, IntersectPoint& p) = 0;
 
+	virtual FLOAT Area();
+
 };

@@ -16,6 +16,7 @@ public:
 	dVec2 uv;
 	
 	dMat3 tangentToWorld;
+	dMat3 worldToTangent;
 
 	int shapeIndex; //index of geometry::shape array
 	int modelIndex;

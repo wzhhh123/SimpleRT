@@ -2,6 +2,7 @@
 
 #include "geometrys.h"
 #include "asset/model.h"
+#include "sampling.h"
 
 Geometrys* Geometrys::Instance() {
 
@@ -84,8 +85,9 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 			); 
 
 
-			if (j == 7) {
+			if (meshIndex[i] == 7) {
 				lights.push_back(shapes[cnt]);
+				lightShapeIndices.push_back(cnt);
 			}
 
 			++cnt;
@@ -96,8 +98,10 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 
 	std::vector<FLOAT> lightDis;
 	for (int i = 0; i < lights.size(); ++i) {
-
+		lightDis.push_back(dynamic_cast<Triangle*>(shapes[i])->Area());
 	}
+
+	lightDistribute = Distribution1D(lightDis.data(), lightDis.size());
 
 	accelerater->Initialize(&shapes);
 }

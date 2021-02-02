@@ -23,9 +23,10 @@ class Distribution1D {
 public:
 
 	Distribution1D(const FLOAT *f, int n);
+	Distribution1D();
 
 	int SampleDiscrete(FLOAT u, FLOAT* pdf) const;
 
 	std::vector<FLOAT>func, cdf, pdf;
-	int  totalCnt;
+	FLOAT  totalCnt;
 };

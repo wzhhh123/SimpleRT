@@ -12,6 +12,10 @@ public:
 
 	bool Intersect(Ray r, IntersectPoint& p) override;
 
+	FLOAT Area() override;
+
+	IntersectPoint Samping(dVec2 point, FLOAT* pdf);
+
 	Vertex v0;
 	Vertex v1;
 	Vertex v2;

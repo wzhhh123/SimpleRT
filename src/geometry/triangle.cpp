@@ -3,6 +3,42 @@
 #include "base/renderer.h"
 
 
+
+FLOAT Triangle::Area() {
+
+	auto e1 = v2.vertexWS - v0.vertexWS;
+	auto e2 = v1.vertexWS - v0.vertexWS;
+	return glm::length(glm::cross(e1, e2)) / 2;
+
+}
+
+
+dVec2 UniformSampleTriangle(const dVec2 &u) {
+	FLOAT su0 = std::sqrt(u[0]);
+	return dVec2(1 - su0, u[1] * su0);
+}
+
+
+IntersectPoint Triangle::Samping(dVec2 point, FLOAT* pdf) {
+
+	IntersectPoint it;
+	dVec2 b = UniformSampleTriangle(point);
+	it.weightU = b.x;
+	it.weightV = b.y;
+
+	it.normalWS = it.weightU * v0.normalWS + it.weightV  * v1.normalWS + (1 - it.weightV - it.weightU) * v2.normalWS;
+	it.normalOS = it.weightU * v0.normalOS + it.weightV  * v1.normalOS + (1 - it.weightV - it.weightU) * v2.normalOS;
+	it.uv = it.weightU * v0.uv + it.weightV  * v1.uv + (1 - it.weightV - it.weightU) * v2.uv;
+
+	it.modelIndex = modelIndex;
+	it.meshIndex = meshIndex;
+
+	*pdf = 1.0 / Area();
+
+	return it;
+}
+
+
 //https://www.cnblogs.com/samen168/p/5162337.html
 Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, dMat4 model, int _modelIndex,int _meshIndex) :
 	objectToWorld(model), modelIndex(_modelIndex), meshIndex(_meshIndex)
@@ -87,7 +123,7 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 		dVec3 bitangent = glm::normalize(glm::cross(tangent, p.normalWS));
 
 		p.tangentToWorld = { tangent, bitangent, p.normalWS };
-		
+		p.worldToTangent = glm::inverse(p.tangentToWorld);
 
 		p.uv = v1.uv *p.weightU + v2.uv * p.weightV + v0.uv * (1 - p.weightU - p.weightV);
 

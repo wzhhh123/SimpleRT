@@ -31,7 +31,7 @@ void Renderer::Run()
 		
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 1; ++i) {
+		for (int i = 0; i < 100; ++i) {
 			dVec3 temp = raytracer->Trace(DEPTH, r) * 255.0;
 			if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
 				col += temp;
@@ -40,7 +40,6 @@ void Renderer::Run()
 		}
 
 		col /= cnt;
-
 		imageData[yx * CHANNEL_COUNT] = col.x < 0 ? 0 : (int)(col.x);
 		imageData[yx * CHANNEL_COUNT + 1] = col.y < 0 ? 0 : (int)(col.y);
 		imageData[yx * CHANNEL_COUNT + 2] = col.z < 0 ? 0 : (int)(col.z);

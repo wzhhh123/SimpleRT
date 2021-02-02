@@ -9,15 +9,11 @@
 
 
 
-dVec3 Path::UniformSampleOneLight(pcg32& rng) {
-
-}
 
 dVec3 Path::Trace(int level, Ray r) {
 
-
 	dVec3 L(0), beta(1.0);
-	bool specularBounce = true;
+	bool specularBounce = false;
 
 	int bounds = 0;
 	FLOAT etaScale = 1;
@@ -29,7 +25,6 @@ dVec3 Path::Trace(int level, Ray r) {
 		bool found = false;
 		IntersectPoint nearestHit;
 		found = Geometrys::Instance()->Intersect(r, &nearestHit);
-
 
 		if (bounds == 0 || specularBounce) {
 			L += beta * nearestHit.Le(-r.direction);
@@ -46,9 +41,8 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		//TODO sample one light
 		{
-			L += UniformSampleOneLight(rng);
+			L += beta * UniformSampleOneLight(rng, nearestHit, r);
 		}
-
 
 
 		FLOAT pdf;
@@ -56,7 +50,7 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		Lambert* lam = dynamic_cast<Lambert*>(Renderer::Instance()->lambert);
 		lam->albedo = Renderer::Instance()->GetDiffuse(nearestHit.modelIndex, nearestHit.meshIndex);
-		dVec3 f = lam->Sample_f(wo, &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf);
+		dVec3 f = lam->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf);
 
 	//	std::cout << f.x << " " << f.y << " " << f.z << std::endl;
 
@@ -65,6 +59,10 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		beta *= f * std::abs(glm::dot( nearestHit.tangentToWorld * glm::normalize(wi)
 			, nearestHit.normalWS)) / pdf;
+
+		//dVec3 dir = nearestHit.tangentToWorld * glm::normalize(wi);
+		//L = glm::dot(dir, nearestHit.normalWS) > 0 ? dVec3{1, 1, 1} : dVec3{0, 0, 0};
+		//L = nearestHit.worldToTangent * nearestHit.normalWS;
 
 		//创建新射线 这里可能有误差
 		r.origin = nearestHit.t * r.direction + r.origin;
@@ -81,4 +79,28 @@ dVec3 Path::Trace(int level, Ray r) {
 	return L;
 
 
+}
+
+dVec3 Path::UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
+{
+	FLOAT lightPdf = 0;
+	int index = Geometrys::Instance()->lightDistribute.SampleDiscrete(rng.nextDouble(), &lightPdf);
+	Triangle* triangle = dynamic_cast<Triangle*>(Geometrys::Instance()->shapes[Geometrys::Instance()->lightShapeIndices[index]]);
+	FLOAT lightAreaPdf = 0;
+	IntersectPoint it = triangle->Samping(dVec2{ rng.nextDouble(), rng.nextDouble() }, &lightAreaPdf);
+
+	Ray shadowRay;
+	shadowRay.origin = point.t * r.direction + r.origin;
+	dVec3 lightPos = it.weightV * triangle->v0.vertexWS + it.weightU * triangle->v1.vertexWS + (1 - it.weightU - it.weightV) * triangle->v2.vertexWS;
+	shadowRay.direction = glm::normalize(lightPos - shadowRay.origin);
+
+	IntersectPoint nearestHit;
+	bool found = Geometrys::Instance()->Intersect(r, &nearestHit);
+	if (found) {
+		dVec3 col = nearestHit.Le(-shadowRay.direction);
+		return col;// 100.0 / (lightPdf * lightAreaPdf);
+	}
+	else {
+		return dVec3(0, 0, 0);
+	}
 }
