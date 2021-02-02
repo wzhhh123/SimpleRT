@@ -40,9 +40,9 @@ void Renderer::Run()
 		}
 
 		col /= cnt;
-		imageData[yx * CHANNEL_COUNT] = col.x < 0 ? 0 : (int)(col.x);
-		imageData[yx * CHANNEL_COUNT + 1] = col.y < 0 ? 0 : (int)(col.y);
-		imageData[yx * CHANNEL_COUNT + 2] = col.z < 0 ? 0 : (int)(col.z);
+		imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
+		imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
+		imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
 
 		++yx;
 
