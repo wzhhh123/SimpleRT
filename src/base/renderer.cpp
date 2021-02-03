@@ -27,19 +27,22 @@ void RenderTile(int tileIndex) {
 	pcg32 rng;
 	rng.seed(8, 36);
 	int yx = left;
+	float dirZ = SIZE / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离 //照顾一下aabb计算 使用左手系
 	while (yx < right) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 10; ++i) {
+		for (int i = 0; i < 1; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
 
+			//offsetY = offsetX = 0;
+
 			dVec3 dir;
-			dir.x = yx % SIZE - SIZE / 2 + offsetX;
+			dir.x = yx % SIZE - SIZE * 2 + offsetX;
 			dir.y = SIZE / 2 - yx / SIZE + offsetY;
-			dir.z = SIZE / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离 //照顾一下aabb计算 使用左手系
+			dir.z = dirZ;
 
 			Ray r = {};
 			r.origin = dVec3{ 0,0,0 };
@@ -53,8 +56,8 @@ void RenderTile(int tileIndex) {
 		}
 
 		col /= cnt;
-		col = toSRGB(col) * 255.0;
-		//col *= 255.0;
+		//col = toSRGB(col) * 255.0;
+		col *= 255.0;
 
 		Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
 		Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);

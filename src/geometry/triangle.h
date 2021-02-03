@@ -8,7 +8,9 @@ class Triangle : public Shape {
 
 public:
 	
-	Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, dMat4 model, int _modelIndex, int _meshIndex);
+	Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, 
+		dVec3 _t0, dVec3 _t1, dVec3 _t2, dVec3 _bt0, dVec3 _bt1, dVec3 _bt2,
+		dMat4 model, int _modelIndex, int _meshIndex);
 
 	bool Intersect(Ray r, IntersectPoint& p) override;
 

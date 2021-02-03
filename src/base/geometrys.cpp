@@ -40,6 +40,10 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 		models[j]->GetVertices(vertices);
 		std::vector < glm::vec3 > normals;
 		models[j]->GetNormals(normals);
+		std::vector < glm::vec3 > tangents;
+		models[j]->GetTangents(tangents);
+		std::vector < glm::vec3 > bitangents;
+		models[j]->GetBitangents(bitangents);
 		std::vector <int> indices;
 		models[j]->GetIndices(indices);
 		std::vector < glm::vec2 > uvs;
@@ -79,6 +83,14 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 				dVec2(uvs[indices[i]].x, uvs[indices[i]].y),
 				dVec2(uvs[indices[i + 1]].x, uvs[indices[i + 1]].y),
 				dVec2(uvs[indices[i + 2]].x, uvs[indices[i + 2]].y),
+
+				dVec3(tangents[indices[i]].x, tangents[indices[i]].y, tangents[indices[i]].z),
+				dVec3(tangents[indices[i + 1]].x, tangents[indices[i + 1]].y, tangents[indices[i + 1]].z),
+				dVec3(tangents[indices[i + 2]].x, tangents[indices[i + 2]].y, tangents[indices[i + 2]].z),
+
+				dVec3(bitangents[indices[i]].x, bitangents[indices[i]].y, bitangents[indices[i]].z),
+				dVec3(bitangents[indices[i + 1]].x, bitangents[indices[i + 1]].y, bitangents[indices[i + 1]].z),
+				dVec3(bitangents[indices[i + 2]].x, bitangents[indices[i + 2]].y, bitangents[indices[i + 2]].z),
 
 				objectToWorlds[j],
 				j,

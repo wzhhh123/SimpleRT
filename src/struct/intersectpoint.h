@@ -13,6 +13,9 @@ public:
 	FLOAT weightV;
 	dVec3 normalWS;
 	dVec3 normalOS;
+	dVec3 tangentWS;
+	dVec3 bitangentWS;
+	
 	dVec2 uv;
 	
 	dMat3 tangentToWorld;

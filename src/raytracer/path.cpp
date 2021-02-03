@@ -44,6 +44,9 @@ dVec3 Path::Trace(int level, Ray r) {
 		}
 
 
+		/*	L = nearestHit.tangentToWorld * dVec3{ 0,0,1 };
+			break;*/
+
 		FLOAT pdf;
 		dVec3 wo = -r.direction, wi;
 

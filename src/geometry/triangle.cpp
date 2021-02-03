@@ -28,6 +28,9 @@ IntersectPoint Triangle::Samping(dVec2 point, FLOAT* pdf) {
 
 	it.normalWS = it.weightU * v0.normalWS + it.weightV  * v1.normalWS + (1 - it.weightV - it.weightU) * v2.normalWS;
 	it.normalOS = it.weightU * v0.normalOS + it.weightV  * v1.normalOS + (1 - it.weightV - it.weightU) * v2.normalOS;
+	it.tangentWS = it.weightU * v0.tangentWS + it.weightV  * v1.tangentWS + (1 - it.weightV - it.weightU) * v2.tangentWS;
+	it.bitangentWS = it.weightU * v0.bitangentWS + it.weightV  * v1.bitangentWS + (1 - it.weightV - it.weightU) * v2.bitangentWS;
+
 	it.uv = it.weightU * v0.uv + it.weightV  * v1.uv + (1 - it.weightV - it.weightU) * v2.uv;
 
 	it.modelIndex = modelIndex;
@@ -40,7 +43,9 @@ IntersectPoint Triangle::Samping(dVec2 point, FLOAT* pdf) {
 
 
 //https://www.cnblogs.com/samen168/p/5162337.html
-Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, dMat4 model, int _modelIndex,int _meshIndex) :
+Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, 
+	dVec3 _t0, dVec3 _t1, dVec3 _t2, dVec3 _bt0, dVec3 _bt1, dVec3 _bt2,
+	dMat4 model, int _modelIndex,int _meshIndex) :
 	objectToWorld(model), modelIndex(_modelIndex), meshIndex(_meshIndex)
 {
 	//先这样hack一下  后面几个平面都是没uv的，但是又有uv的值 全是(0,1)，简直智障
@@ -51,18 +56,18 @@ Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 
 	}
 	if (Renderer::Instance()->models[modelIndex]->hasNormal) {
 
-		v0 = { _v0, _n0, _uv0, model, modelIndex };
-		v1 = { _v1, _n1, _uv1, model, modelIndex };
-		v2 = { _v2, _n2, _uv2, model, modelIndex };
+		v0 = { _v0, _n0, _uv0, _t0, _bt0, model, modelIndex };
+		v1 = { _v1, _n1, _uv1, _t1, _bt1,model, modelIndex };
+		v2 = { _v2, _n2, _uv2, _t2, _bt2,model, modelIndex };
 	}
 	else {
 		//看了一下nori 手动计算一下面法线
 		dVec3 e1 = _v1 - _v0;
 		dVec3 e2 = _v2 - _v0;
 		dVec3 nor = glm::normalize(glm::cross(e1, e2));
-		v0 = { _v0, nor, _uv0, model, modelIndex };
-		v1 = { _v1, nor, _uv1, model, modelIndex };
-		v2 = { _v2, nor, _uv2, model, modelIndex };
+		v0 = { _v0, nor, _uv0, _t0, _bt0, model, modelIndex };
+		v1 = { _v1, nor, _uv1, _t1, _bt1,model, modelIndex };
+		v2 = { _v2, nor, _uv2, _t2, _bt2,model, modelIndex };
 	}
 	boundingBox = BoundingBox(v1.vertexWS, v2.vertexWS);
 	boundingBox.Union(v0.vertexWS);
@@ -117,17 +122,18 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 		}
 
 		p.normalWS = glm::normalize(glm::cross(dpdv, dpdu));
-
-
 		dVec3 tangent = glm::normalize(dpdu);
 		dVec3 bitangent = glm::normalize(glm::cross(tangent, p.normalWS));
+
+		p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
+		tangent = v1.tangentWS *p.weightU + v2.tangentWS * p.weightV + v0.tangentWS * (1 - p.weightU - p.weightV);
+		bitangent = v1.bitangentWS *p.weightU + v2.bitangentWS * p.weightV + v0.bitangentWS * (1 - p.weightU - p.weightV);
 
 		p.tangentToWorld = { tangent, bitangent, p.normalWS };
 		p.worldToTangent = glm::inverse(p.tangentToWorld);
 
 		p.uv = v1.uv *p.weightU + v2.uv * p.weightV + v0.uv * (1 - p.weightU - p.weightV);
 
-		//p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
 		p.normalOS = v1.normalOS;
 		p.meshIndex = meshIndex;
 		p.modelIndex = modelIndex;
