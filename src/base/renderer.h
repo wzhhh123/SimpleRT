@@ -9,13 +9,14 @@
 #include "pcg32.h"
 #include "bxdf.h"
 #include "bxdf/lambert.h"
-
-
+#include <thread>
+#include <mutex>
 class Renderer {
 public:
 	
 	void Initialize();
 	void Run();
+	void RunTile(int left, int right, unsigned char* imageData);
 	void deIntialize();
 
 	unsigned char* imageData;
@@ -30,6 +31,7 @@ public:
 	glm::vec4 GetEmissive(int modelIndex, int meshIndex);
 	glm::vec4 GetShininess(int modelIndex, int meshIndex);
 
+	std::thread threads[THREAD_COUNT];
 
 	pcg32 rng;
 	BxDF* lambert;

@@ -12,17 +12,17 @@
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 
-void Renderer::Run()
-{
 
-	int yx = 0;
-	while (yx < SIZE * SIZE) {
-	
+void Renderer::RunTile(int left, int right, unsigned char* imageData) {
+	std::cout << left << " " << right << " " << "rendering!" << std::endl;
+	int yx = left;
+	while (yx < right) {
+
 		dVec3 col = { 0,0,0 };
-		
+
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 5; ++i) {
+		for (int i = 0; i < 1; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -50,9 +50,29 @@ void Renderer::Run()
 		imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
 
 		++yx;
+	}
+}
 
+void Renderer::Run()
+{
+	int left = 0;
+	int offset = SIZE * SIZE / THREAD_COUNT;
+	for (int i = 0; i < THREAD_COUNT; ++i) {
+		if (i == THREAD_COUNT - 1)
+		{
+			threads[i] = std::thread(&Renderer::RunTile, this, left, SIZE * SIZE, imageData);
+		}
+		else 
+		{
+			threads[i] = std::thread(&Renderer::RunTile, this, left, offset + left, imageData);
+			left += offset;
+		}
+		threads[i].join();
 	}
 
+
+
+	std::cout << "save" << std::endl;
 	SaveImage(SIZE, SIZE, CHANNEL_COUNT, imageData);
 
 	//DataToImage(imageData);
@@ -62,7 +82,7 @@ void Renderer::Run()
 
 void Renderer::Initialize() {
 
-	imageData = (unsigned char*) new char[SIZE*SIZE * CHANNEL_COUNT];
+	imageData = (unsigned char*) new char[SIZE * SIZE * CHANNEL_COUNT];
 
 	using namespace std;
 	using namespace rapidjson;

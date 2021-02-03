@@ -21,6 +21,7 @@
 #define CHANNEL_COUNT  3
 #define AOV 60
 #define DEPTH 5
+#define THREAD_COUNT 12
 #define dVec2 glm::dvec2
 #define dVec3 glm::dvec3
 #define dVec4 glm::dvec4
@@ -75,3 +76,8 @@ class BxDF;
 class Lambert;
 class Path;
 class Distribution1D;
+
+
+
+struct TileRenderThreadInput;
+struct TileRenderThreadOutput;
