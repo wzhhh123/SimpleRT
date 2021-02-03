@@ -76,7 +76,7 @@ class BxDF;
 class Lambert;
 class Path;
 class Distribution1D;
-
+class Timer;
 
 
 struct TileRenderThreadInput;

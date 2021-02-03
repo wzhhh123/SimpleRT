@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 add_subdirectory(ext/assimp)
+add_subdirectory(ext/tbb)
 #link_directories(${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code) 
 
 include_directories(
@@ -16,7 +17,8 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/ext/stb
   ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/include
   ${CMAKE_CURRENT_SOURCE_DIR}/ext/rapidjson/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/ext/pcg32
+  ${CMAKE_CURRENT_SOURCE_DIR}/ext/pcg32
+  ${CMAKE_CURRENT_SOURCE_DIR}/ext/tbb/include
 )
 
 # 收集所有头文件源文件，存入 ALL_FILES 变量中
@@ -43,7 +45,7 @@ endforeach()
 #add 给Tutorial添加一个可执行文件 .cpp文件
 add_executable(SimpleRT ${ALL_FILES})
 
-#target_link_libraries(SimpleRT ext/assimp)
+#target_link_libraries(SimpleRT ext/assimp)  
 
 #复制dll到工作目录
 if(CMAKE_CL_64)
@@ -58,7 +60,7 @@ else()
     $<TARGET_FILE_DIR:SimpleRT>)
 endif()
 
-target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib)
+target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib  ${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/tbb_debug.lib)
 
 
 OPTION(DEBUG_MODE "Build the project using macro" ON)

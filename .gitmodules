@@ -13,3 +13,6 @@
 [submodule "ext/pcg32"]
 	path = ext/pcg32
 	url = https://github.com/wjakob/pcg32.git
+[submodule "ext/tbb"]
+	path = ext/tbb
+	url = https://github.com/wjakob/tbb

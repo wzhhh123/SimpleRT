@@ -14,6 +14,12 @@
 
 
 
+/*
+build log:
+1、tbb的lib要改名为tbb_debug
+2、assimp要build shared
+*/
+
 int main() {
 
 	//for (int i = 0; i < 10; ++i) {

@@ -16,7 +16,6 @@ public:
 	
 	void Initialize();
 	void Run();
-	void RunTile(int left, int right, unsigned char* imageData);
 	void deIntialize();
 
 	unsigned char* imageData;

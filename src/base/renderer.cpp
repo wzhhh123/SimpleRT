@@ -11,21 +11,29 @@
 #include "tool/imagehelper.h"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/task_scheduler_init.h>
+#include "tool/timer.h"
 
+void RenderTile(int tileIndex) {
 
-void Renderer::RunTile(int left, int right, unsigned char* imageData) {
-	std::cout << left << " " << right << " " << "rendering!" << std::endl;
+	int offset = SIZE * SIZE / THREAD_COUNT;
+	int left = offset * tileIndex;
+	int right = offset * (tileIndex + 1);
+	if (tileIndex == THREAD_COUNT - 1) right = SIZE * SIZE;
+	std::string  str = std::to_string(left) + " " + std::to_string(right) + " rendering!\n";
+	std::cout << str;
+	std::cout.flush();
 	int yx = left;
 	while (yx < right) {
-
 		dVec3 col = { 0,0,0 };
-
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 1; ++i) {
+		for (int i = 0; i < 32; ++i) {
 
-			float offsetX = rng.nextDouble() - 0.5;
-			float offsetY = rng.nextDouble() - 0.5;
+			float offsetX = Renderer::Instance()->rng.nextDouble() - 0.5;
+			float offsetY = Renderer::Instance()->rng.nextDouble() - 0.5;
 
 			dVec3 dir;
 			dir.x = yx % SIZE - SIZE / 2 + offsetX;
@@ -37,7 +45,7 @@ void Renderer::RunTile(int left, int right, unsigned char* imageData) {
 			r.direction = glm::normalize(dir);
 
 
-			dVec3 temp = raytracer->Trace(DEPTH, r) * 255.0;
+			dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r) * 255.0;
 			if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
 				col += temp;
 				++cnt;
@@ -45,9 +53,9 @@ void Renderer::RunTile(int left, int right, unsigned char* imageData) {
 		}
 
 		col /= cnt;
-		imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
-		imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
-		imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
+		Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
+		Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
+		Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
 
 		++yx;
 	}
@@ -55,22 +63,39 @@ void Renderer::RunTile(int left, int right, unsigned char* imageData) {
 
 void Renderer::Run()
 {
-	int left = 0;
-	int offset = SIZE * SIZE / THREAD_COUNT;
-	for (int i = 0; i < THREAD_COUNT; ++i) {
-		if (i == THREAD_COUNT - 1)
-		{
-			threads[i] = std::thread(&Renderer::RunTile, this, left, SIZE * SIZE, imageData);
-		}
-		else 
-		{
-			threads[i] = std::thread(&Renderer::RunTile, this, left, offset + left, imageData);
-			left += offset;
-		}
-		threads[i].join();
-	}
+
+	std::thread render_thread([&] {
+		tbb::task_scheduler_init init(THREAD_COUNT);
+
+		std::cout << "Rendering .. \n";
+		std::cout.flush();
+		Timer timer;
+		tbb::blocked_range<int> range(0, THREAD_COUNT);
 
 
+		auto map = [&](const tbb::blocked_range<int> &range) {
+			/* Allocate memory for a small image block to be rendered
+			   by the current thread */
+
+			//std::cout << range.end() << std::endl;
+			//begin和end都自动叠加？？
+			RenderTile(range.begin());
+
+			/* Create a clone of the sampler for the current thread */
+			//RunTile(range.begin());
+			//for (int i = range.begin(); i < range.end(); ++i) {
+				//renderBlock(scene, sampler.get(), block);
+
+		};
+		/// Default: parallel rendering
+		tbb::parallel_for(range, map);
+
+		std::cout << "done. (took " << timer.elapsedString() << ")" << std::endl;
+	});
+
+
+	/* Shut down the user interface */
+	render_thread.join();
 
 	std::cout << "save" << std::endl;
 	SaveImage(SIZE, SIZE, CHANNEL_COUNT, imageData);
