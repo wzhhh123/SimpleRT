@@ -91,7 +91,6 @@ dVec3 Path::UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
 
 	Ray shadowRay;
 	shadowRay.origin = point.t * r.direction + r.origin;
-	static int i = 0;
 	dVec3 lightPos = it.weightV * triangle->v0.vertexWS + it.weightU * triangle->v1.vertexWS + (1 - it.weightU - it.weightV) * triangle->v2.vertexWS;
 
 	shadowRay.direction = glm::normalize(lightPos - shadowRay.origin);
@@ -104,7 +103,7 @@ dVec3 Path::UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
 		Lambert* lam = dynamic_cast<Lambert*>(Renderer::Instance()->lambert);
 		lam->albedo = Renderer::Instance()->GetDiffuse(point.modelIndex, point.meshIndex);
 		dVec3 f = lam->F(shadowRay.direction, shadowRay.direction);
-		return col * f * std::abs(glm::dot(shadowRay.direction, point.normalWS)); // (lightPdf * lightAreaPdf);
+		return col * f * std::abs(glm::dot(shadowRay.direction, point.normalWS));// / (lightPdf * lightAreaPdf);
 		return col;// / (lightPdf * lightAreaPdf);
 	}
 	else {

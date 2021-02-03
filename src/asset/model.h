@@ -17,6 +17,8 @@ struct MeshInfo {
 	glm::vec4 emissive;
 	glm::vec4 shininess;
 
+	BxDF* bxdf;
+
 	bool isAreaLight;
 	
 }; 

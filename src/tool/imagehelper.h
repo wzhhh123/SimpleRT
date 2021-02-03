@@ -6,3 +6,4 @@
 
 void SaveImage(int w, int h, int channels_num, unsigned char* imageData);
 
+dVec3 toSRGB(dVec3 col);

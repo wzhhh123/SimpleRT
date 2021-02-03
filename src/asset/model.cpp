@@ -1,5 +1,6 @@
 #include "base/header.h"
 #include "model.h"
+#include "bxdf/lambert.h"
 
 
 Model::Model()
@@ -34,6 +35,8 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 		if (aiGetMaterialColor(mat, AI_MATKEY_SHININESS, &color) == AI_SUCCESS) {
 			meshInfo.shininess = { color.r, color.g, color.b, color.a };
 		}
+
+		meshInfo.bxdf = new Lambert(meshInfo.diffuse);
 
 		meshes.push_back(meshInfo);
 

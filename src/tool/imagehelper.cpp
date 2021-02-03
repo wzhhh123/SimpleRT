@@ -17,3 +17,20 @@ void SaveImage(int w, int h, int channels_num, unsigned char* imageData)
 
 	stbi_write_jpg(OUTPUT_PATH, w, h, channels_num, imageData, w * channels_num);
 }
+
+//nori
+dVec3 toSRGB(dVec3 col)  {
+	dVec3 result;
+
+	for (int i = 0; i < 3; ++i) {
+		float value = col[i];
+
+		if (value <= 0.0031308f)
+			result[i] = 12.92f * value;
+		else
+			result[i] = (1.0f + 0.055f)
+			* std::pow(value, 1.0f / 2.4f) - 0.055f;
+	}
+
+	return result;
+}

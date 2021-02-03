@@ -17,7 +17,6 @@
 #include "tool/timer.h"
 
 void RenderTile(int tileIndex) {
-
 	int offset = SIZE * SIZE / THREAD_COUNT;
 	int left = offset * tileIndex;
 	int right = offset * (tileIndex + 1);
@@ -25,15 +24,17 @@ void RenderTile(int tileIndex) {
 	std::string  str = std::to_string(left) + " " + std::to_string(right) + " rendering!\n";
 	std::cout << str;
 	std::cout.flush();
+	pcg32 rng;
+	rng.seed(8, 36);
 	int yx = left;
 	while (yx < right) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 32; ++i) {
+		for (int i = 0; i < 10; ++i) {
 
-			float offsetX = Renderer::Instance()->rng.nextDouble() - 0.5;
-			float offsetY = Renderer::Instance()->rng.nextDouble() - 0.5;
+			float offsetX = rng.nextDouble() - 0.5;
+			float offsetY = rng.nextDouble() - 0.5;
 
 			dVec3 dir;
 			dir.x = yx % SIZE - SIZE / 2 + offsetX;
@@ -44,8 +45,7 @@ void RenderTile(int tileIndex) {
 			r.origin = dVec3{ 0,0,0 };
 			r.direction = glm::normalize(dir);
 
-
-			dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r) * 255.0;
+			dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r);
 			if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
 				col += temp;
 				++cnt;
@@ -53,6 +53,9 @@ void RenderTile(int tileIndex) {
 		}
 
 		col /= cnt;
+		col = toSRGB(col) * 255.0;
+		//col *= 255.0;
+
 		Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
 		Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
 		Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
