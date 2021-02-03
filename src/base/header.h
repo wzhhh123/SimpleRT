@@ -16,7 +16,7 @@
 
 
 #define FLOAT double
-#define  SIZE  100
+#define  SIZE  300
 #define SPP 1000
 #define CHANNEL_COUNT  3
 #define AOV 60

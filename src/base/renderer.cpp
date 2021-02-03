@@ -17,21 +17,26 @@ void Renderer::Run()
 
 	int yx = 0;
 	while (yx < SIZE * SIZE) {
-
-		dVec3 dir;
-		dir.x = yx % SIZE - SIZE / 2;
-		dir.y = SIZE / 2 - yx / SIZE;
-		dir.z = SIZE  / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离 //照顾一下aabb计算 使用左手系
-
-		Ray r = {};
-		r.origin = dVec3{ 0,0,0 };
-		r.direction = glm::normalize(dir);
 	
 		dVec3 col = { 0,0,0 };
 		
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 100; ++i) {
+		for (int i = 0; i < 5; ++i) {
+
+			float offsetX = rng.nextDouble() - 0.5;
+			float offsetY = rng.nextDouble() - 0.5;
+
+			dVec3 dir;
+			dir.x = yx % SIZE - SIZE / 2 + offsetX;
+			dir.y = SIZE / 2 - yx / SIZE + offsetY;
+			dir.z = SIZE / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离 //照顾一下aabb计算 使用左手系
+
+			Ray r = {};
+			r.origin = dVec3{ 0,0,0 };
+			r.direction = glm::normalize(dir);
+
+
 			dVec3 temp = raytracer->Trace(DEPTH, r) * 255.0;
 			if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
 				col += temp;
