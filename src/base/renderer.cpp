@@ -169,6 +169,10 @@ glm::vec4 Renderer::GetDiffuse(int modelIndex, int meshIndex) {
 }
 
 
+BxDF* Renderer::GetBxDF(int modelIndex, int meshIndex) {
+	return models[modelIndex]->meshes[meshIndex].bxdf;
+}
+
 
 glm::vec4 Renderer::GetEmissive(int modelIndex, int meshIndex) {
 	return models[modelIndex]->meshes[meshIndex].emissive;

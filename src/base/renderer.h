@@ -29,13 +29,13 @@ public:
 	glm::vec4 GetDiffuse(int modelIndex, int meshIndex);
 	glm::vec4 GetEmissive(int modelIndex, int meshIndex);
 	glm::vec4 GetShininess(int modelIndex, int meshIndex);
+	BxDF* GetBxDF(int modelIndex, int meshIndex);
 
 	std::thread threads[THREAD_COUNT];
 
 	pcg32 rng;
-	BxDF* lambert;
 
 private:
-	Renderer();
 
+	Renderer();
 };

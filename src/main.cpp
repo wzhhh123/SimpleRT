@@ -37,7 +37,6 @@ int main() {
 //	renderer.raytracer = new BusinessCard();
 	//Renderer::Instance()->raytracer = new WhiteColor();
 	Renderer::Instance()->raytracer = new Path();
-	Renderer::Instance()->lambert = new Lambert();
 	Renderer::Instance()->Run();
 	Renderer::Instance()->deIntialize();
 

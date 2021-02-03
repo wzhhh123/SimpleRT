@@ -9,7 +9,6 @@
 
 
 
-
 dVec3 Path::Trace(int level, Ray r) {
 
 	dVec3 L(0), beta(1.0);
@@ -48,9 +47,8 @@ dVec3 Path::Trace(int level, Ray r) {
 		FLOAT pdf;
 		dVec3 wo = -r.direction, wi;
 
-		Lambert* lam = dynamic_cast<Lambert*>(Renderer::Instance()->lambert);
-		lam->albedo = Renderer::Instance()->GetDiffuse(nearestHit.modelIndex, nearestHit.meshIndex);
-		dVec3 f = lam->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf);
+		BxDF* bxdf = Renderer::Instance()->GetBxDF(nearestHit.modelIndex, nearestHit.meshIndex);
+		dVec3 f = bxdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf);
 
 	//	std::cout << f.x << " " << f.y << " " << f.z << std::endl;
 
@@ -100,9 +98,7 @@ dVec3 Path::UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
 	if (found) {
 		dVec3 col = nearestHit.Le(-shadowRay.direction);
 
-		Lambert* lam = dynamic_cast<Lambert*>(Renderer::Instance()->lambert);
-		lam->albedo = Renderer::Instance()->GetDiffuse(point.modelIndex, point.meshIndex);
-		dVec3 f = lam->F(shadowRay.direction, shadowRay.direction);
+		dVec3 f = Renderer::Instance()->GetBxDF(nearestHit.modelIndex, nearestHit.meshIndex)->F(shadowRay.direction, shadowRay.direction);
 		return col * f * std::abs(glm::dot(shadowRay.direction, point.normalWS));// / (lightPdf * lightAreaPdf);
 		return col;// / (lightPdf * lightAreaPdf);
 	}
