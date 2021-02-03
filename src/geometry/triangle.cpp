@@ -125,9 +125,12 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 		dVec3 tangent = glm::normalize(dpdu);
 		dVec3 bitangent = glm::normalize(glm::cross(tangent, p.normalWS));
 
-		p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
-		tangent = v1.tangentWS *p.weightU + v2.tangentWS * p.weightV + v0.tangentWS * (1 - p.weightU - p.weightV);
-		bitangent = v1.bitangentWS *p.weightU + v2.bitangentWS * p.weightV + v0.bitangentWS * (1 - p.weightU - p.weightV);
+		//use face normal
+		if (1) {
+			p.normalWS = v1.normalWS *p.weightU + v2.normalWS * p.weightV + v0.normalWS * (1 - p.weightU - p.weightV);
+			tangent = v1.tangentWS *p.weightU + v2.tangentWS * p.weightV + v0.tangentWS * (1 - p.weightU - p.weightV);
+			bitangent = v1.bitangentWS *p.weightU + v2.bitangentWS * p.weightV + v0.bitangentWS * (1 - p.weightU - p.weightV);
+		}
 
 		p.tangentToWorld = { tangent, bitangent, p.normalWS };
 		p.worldToTangent = glm::inverse(p.tangentToWorld);

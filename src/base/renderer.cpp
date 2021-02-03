@@ -32,7 +32,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 1; ++i) {
+		for (int i = 0; i < 30; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -40,7 +40,7 @@ void RenderTile(int tileIndex) {
 			//offsetY = offsetX = 0;
 
 			dVec3 dir;
-			dir.x = yx % SIZE - SIZE * 2 + offsetX;
+			dir.x = yx % SIZE - SIZE / 2 + offsetX;
 			dir.y = SIZE / 2 - yx / SIZE + offsetY;
 			dir.z = dirZ;
 
