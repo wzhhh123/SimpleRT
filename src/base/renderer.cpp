@@ -128,6 +128,12 @@ void Renderer::Initialize() {
 	document.Parse(jsonText.c_str());
 	ifs.close();
 
+	const auto &camera = document["camera"].GetObject();
+	auto cameraPos = camera["position"].GetArray().Begin();
+	dVec3 pos = glm::vec3(cameraPos->GetFloat(), (cameraPos + 1)->GetFloat(), (cameraPos + 2)->GetFloat());
+	auto lookTarget = camera["target"].GetArray().Begin();
+	dVec3 target = glm::vec3(lookTarget->GetFloat(), (lookTarget + 1)->GetFloat(), (lookTarget + 2)->GetFloat());
+	dMat4 worldToView = getViewMatrixRTL(pos, target, dVec3{ 0,1,0 });
 
 	const auto &objs = document["scene"].GetArray();
 	models.resize(objs.Size());
@@ -150,16 +156,21 @@ void Renderer::Initialize() {
 		auto scalec = obj["scale"].GetArray().Begin();
 		dMat4 scale = glm::scale(rotation, dVec3(scalec->GetFloat(), (scalec + 1)->GetFloat(), (scalec + 2)->GetFloat()));
 
-		dMat4 worldToView = getViewMatrixRTL(dVec3{ 0,0,0 }, dVec3{ 0,0,-1 }, dVec3{ 0,1,0 });
-
-		auto res = worldToView * dVec4(0, -0.8, -2, 1);
-		 std::cout << res.x  << " " << res.y << " " << res.z << std::endl;
-
-		 //exit(0);
 		 objectToWorldMats[index] = worldToView * scale;
 
 		models[index] = new Model();
 		models[index]->Initialize(path.c_str());
+		for (int i = 0; i < models[index]->meshes.size(); ++i) {
+			if (obj.HasMember("radiance")) {
+				models[index]->meshes[i].isAreaLight = true;
+				auto radiance = obj["radiance"].GetArray().Begin();
+				models[index]->meshes[i].emissive = dVec4(radiance->GetFloat(), (radiance + 1)->GetFloat(), (radiance + 2)->GetFloat(), 0);
+			}
+			if (obj["bsdf"].GetString() == "diffuse") {
+				auto albedo = obj["albedo"].GetArray().Begin();
+				models[index]->meshes[i].bxdf = new Lambert(dVec3{ albedo->GetFloat(), (albedo + 1)->GetFloat(), (albedo + 2)->GetFloat()});
+			}
+		}
 		++index;
 	}
 

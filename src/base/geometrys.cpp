@@ -40,14 +40,14 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 		models[j]->GetVertices(vertices);
 		std::vector < glm::vec3 > normals;
 		models[j]->GetNormals(normals);
+		std::vector < glm::vec2 > uvs;
+		models[j]->GetUVs(uvs);
 		std::vector < glm::vec3 > tangents;
 		models[j]->GetTangents(tangents);
 		std::vector < glm::vec3 > bitangents;
 		models[j]->GetBitangents(bitangents);
 		std::vector <int> indices;
 		models[j]->GetIndices(indices);
-		std::vector < glm::vec2 > uvs;
-		models[j]->GetUVs(uvs);
 		std::vector <int> meshIndex;
 		models[j]->GetMeshIndices(meshIndex);
 

@@ -52,7 +52,7 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 
 		//后面六个没有uv
 
-		hasNormal &= mesh->HasNormals();
+	//	hasNormal &= mesh->HasNormals();
 
 		std::cout << std::endl;
 		/*		 mat.name
@@ -81,7 +81,7 @@ Model::~Model()
 
 void Model::Initialize(const char* path)
 {
-	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenNormals);
+	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;

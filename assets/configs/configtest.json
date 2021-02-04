@@ -1,10 +1,62 @@
 {
     "scene": [
         {
-            "path": "../assets/models/cornellbox/CornellBox-Glossy-Floor.obj",
-            "position": [ 0, -0.8, -2 ],
+            "path": "../assets/models/cbox/meshes/walls.obj",
+            "position": [ 0, 0, 0 ],
             "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ]
+            "scale": [ 1, 1, 1 ],
+            "albedo": [ 0.725, 0.71, 0.68 ],
+            "bsdf": "diffuse"
+
+        },
+        {
+            "path": "../assets/models/cbox/meshes/rightwall.obj",
+            "position": [ 0, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "albedo": [ 0.161, 0.133, 0.427 ],
+            "bsdf": "diffuse"
+
+        },
+        {
+            "path": "../assets/models/cbox/meshes/leftwall.obj",
+            "position": [ 0, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "albedo": [ 0.630, 0.065, 0.05 ],
+            "bsdf": "diffuse"
+
+        },
+        {
+            "path": "../assets/models/cbox/meshes/sphere1.obj",
+            "position": [ 0, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "albedo": [ 0.3, 0.3, 0.3 ],
+            "bsdf": "diffuse"
+
+        },
+        {
+            "path": "../assets/models/cbox/meshes/sphere2.obj",
+            "position": [ 0, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "albedo": [ 0.2, 0.6, 0.15 ],
+            "bsdf": "diffuse"
+
+        },
+        {
+            "path": "../assets/models/cbox/meshes/light.obj",
+            "position": [ 0, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "radiance": [ 40, 40, 40 ],
+            "bsdf": "diffuse"
+
         }
-    ]
+    ],
+    "camera": {
+        "position": [ 0, 0, 0 ],
+        "target": [ 0, 0, -1 ]
+    }
 }

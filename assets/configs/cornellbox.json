@@ -38,3 +38,17 @@
         }
     ]
 }
+{
+    "scene": [
+        {
+            "path": "../assets/models/cornellbox/CornellBox-Glossy-Floor.obj",
+            "position": [ 0, -0.8, -2 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ]
+        }
+    ],
+    "camera": {
+        "position": [ 0, 0, 0 ],
+        "target": [ 0, 0, -1 ]
+    }
+}
