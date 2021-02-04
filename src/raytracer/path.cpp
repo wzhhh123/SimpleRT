@@ -29,7 +29,7 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		if (bounds == 0 || specularBounce) {
 			L += beta * nearestHit.Le(-r.direction);
-			if (nearestHit.meshIndex == 7) {
+			if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) {
 				if (bounds == 0) {
 					//L = dVec3(1, 0, 1);
 				}
@@ -38,6 +38,9 @@ dVec3 Path::Trace(int level, Ray r) {
 			}
 		}
 
+		if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) {
+			break;
+		}
 
 		//TODO sample one light
 		{
@@ -46,8 +49,8 @@ dVec3 Path::Trace(int level, Ray r) {
 
 
 		//*L = nearestHit.tangentToWorld * dVec3{ 0,0,1 };
-		L = nearestHit.normalWS;
-		break;
+	/*	L = nearestHit.normalWS;
+		break;*/
 
 		FLOAT pdf;
 		dVec3 wo = -r.direction, wi;
@@ -71,9 +74,7 @@ dVec3 Path::Trace(int level, Ray r) {
 		r.origin = nearestHit.t * r.direction + r.origin;
 		r.direction = nearestHit.tangentToWorld * glm::normalize(wi);
 
-
 		if (nearestHit.meshIndex == 7)break; //灯
-
 		//这里可以加上rr
 	}
 

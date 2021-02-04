@@ -33,7 +33,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 1; ++i) {
+		for (int i = 0; i < 32; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -166,9 +166,10 @@ void Renderer::Initialize() {
 				auto radiance = obj["radiance"].GetArray().Begin();
 				models[index]->meshes[i].emissive = dVec4(radiance->GetFloat(), (radiance + 1)->GetFloat(), (radiance + 2)->GetFloat(), 0);
 			}
-			if (obj["bsdf"].GetString() == "diffuse") {
+			if (obj.HasMember("bsdf") && strcmp(obj["bsdf"].GetString(), "diffuse") == 0) {
 				auto albedo = obj["albedo"].GetArray().Begin();
-				models[index]->meshes[i].bxdf = new Lambert(dVec3{ albedo->GetFloat(), (albedo + 1)->GetFloat(), (albedo + 2)->GetFloat()});
+				models[index]->meshes[i].ambient = dVec4{ albedo->GetFloat(), (albedo + 1)->GetFloat(), (albedo + 2)->GetFloat(), 1 };
+				models[index]->meshes[i].bxdf = new Lambert(models[index]->meshes[i].ambient);
 			}
 		}
 		++index;

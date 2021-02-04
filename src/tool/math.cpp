@@ -15,3 +15,18 @@ dMat4 getViewMatrixRTL(dVec3 cameraPos, dVec3 target, dVec3 up) {
 
 	return worldToView;
 }
+
+
+
+void coordinateSystem(const dVec3 &normal, dVec3 &tangent, dVec3 &bitangent)
+{
+	if (std::abs(normal.x) > std::abs(normal.y)) {
+		float invLen = 1.0f / std::sqrt(normal.x * normal.x + normal.z * normal.z);
+		bitangent = dVec3(normal.z * invLen, 0.0f, -normal.x * invLen);
+	}
+	else {
+		float invLen = 1.0f / std::sqrt(normal.y * normal.y + normal.z * normal.z);
+		bitangent = dVec3(0.0f, normal.z * invLen, -normal.y * invLen);
+	}
+	tangent = glm::cross(bitangent, normal);
+}

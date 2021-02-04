@@ -18,26 +18,28 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 		MeshInfo meshInfo;
 		meshInfo.mesh = mesh;
 
-		aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
-		aiColor4D color;
-		if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &color) == AI_SUCCESS) {
-			meshInfo.diffuse = { color.r, color.g, color.b, color.a };
-		}	
-		if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_AMBIENT, &color) == AI_SUCCESS) {
-			meshInfo.ambient = { color.r, color.g, color.b, color.a };
-		}
-		if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_EMISSIVE, &color) == AI_SUCCESS) {
-			meshInfo.emissive = { color.r, color.g, color.b, color.a };
-		}	
-		if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_SPECULAR, &color) == AI_SUCCESS) {
-			meshInfo.specular = { color.r, color.g, color.b, color.a };
-		}
-		if (aiGetMaterialColor(mat, AI_MATKEY_SHININESS, &color) == AI_SUCCESS) {
-			meshInfo.shininess = { color.r, color.g, color.b, color.a };
-		}
+		if (0)
+		{
+			aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
+			aiColor4D color;
+			if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &color) == AI_SUCCESS) {
+				meshInfo.diffuse = { color.r, color.g, color.b, color.a };
+			}
+			if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_AMBIENT, &color) == AI_SUCCESS) {
+				meshInfo.ambient = { color.r, color.g, color.b, color.a };
+			}
+			if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_EMISSIVE, &color) == AI_SUCCESS) {
+				meshInfo.emissive = { color.r, color.g, color.b, color.a };
+			}
+			if (aiGetMaterialColor(mat, AI_MATKEY_COLOR_SPECULAR, &color) == AI_SUCCESS) {
+				meshInfo.specular = { color.r, color.g, color.b, color.a };
+			}
+			if (aiGetMaterialColor(mat, AI_MATKEY_SHININESS, &color) == AI_SUCCESS) {
+				meshInfo.shininess = { color.r, color.g, color.b, color.a };
+			}
 
-		meshInfo.bxdf = new Lambert(meshInfo.diffuse);
-
+			meshInfo.bxdf = new Lambert(meshInfo.diffuse);
+		}
 		meshes.push_back(meshInfo);
 
 		//
@@ -117,26 +119,16 @@ int Model::GetIndexCount() {
 	return indexCnt;
 }
 
-
 int Model::GetMeshCount() {
 	return (int)meshes.size();
 }
 
+aiFace *Model::GetFaces(int meshIndex) {
+	return meshes[meshIndex].mesh->mFaces;
+}
 
-void Model::GetIndices(std::vector<int>& indices) {
-
-	indices.resize(GetIndexCount());
-	int index = 0;
-	int indexOffset = 0;
-	for (auto i = 0; i < meshes.size(); ++i) {
-		for (auto j = 0; j < meshes[i].mesh->mNumFaces; ++j) {
-			indices[index++] = meshes[i].mesh->mFaces[j].mIndices[0] + indexOffset;
-			indices[index++] = meshes[i].mesh->mFaces[j].mIndices[1] + indexOffset;
-			indices[index++] = meshes[i].mesh->mFaces[j].mIndices[2] + indexOffset;
-		}
-		indexOffset += meshes[i].mesh->mNumVertices;
-	}
-
+int Model::GetFaceCount(int meshIndex) {
+	return  meshes[meshIndex].mesh->mNumFaces;
 }
 
 void Model::GetMeshIndices(std::vector<int>& meshIndices) {
@@ -152,62 +144,19 @@ void Model::GetMeshIndices(std::vector<int>& meshIndices) {
 			meshIndices[index++] = i;
 		}
 	}
-
 }
 
-
-void Model::GetUVs(std::vector<glm::vec2>&uvs) {
-	int len = GetVertexCount();
-	uvs.resize(len);
-	int index = 0;
-
-	for (auto i = 0; i < meshes.size(); ++i) {
-		//meshes[i].mesh->mNumUVComponents[0]全是2  不知道为什么 换成mNumVertices
-		for (auto j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
-			uvs[index++] = { meshes[i].mesh->mTextureCoords[0][j].x, meshes[i].mesh->mTextureCoords[0][j].y };
-			//	std::cout << uvs[index-1].x << " " << uvs[index - 1].x << std::endl;
-		}
-	}
+aiVector3D * Model::GetUVs(int meshIndex) {
+	return meshes[meshIndex].mesh->mTextureCoords[0];
 }
 
-
-
-void Model::GetTangents(std::vector<glm::vec3>&tangents) {
-	tangents.resize(GetVertexCount());
-	int index = 0;
-	for (auto i = 0; i < meshes.size(); ++i) {
-
-		if (meshes[i].mesh->HasTangentsAndBitangents()) {
-			for (int j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
-				tangents[index++] = {
-				meshes[i].mesh->mTangents[j].x,
-				meshes[i].mesh->mTangents[j].y,
-				meshes[i].mesh->mTangents[j].z
-				};
-			}
-		}
-		else {
-			std::cout << "fuckyou" << std::endl;
-		}
-	}
+aiVector3D * Model::GetTangents(int meshIndex) {
+	return meshes[meshIndex].mesh->mTangents;
 }
 
-
-
-void Model::GetBitangents(std::vector<glm::vec3>&bittangents) {
-	bittangents.resize(GetVertexCount());
-	int index = 0;
-	for (auto i = 0; i < meshes.size(); ++i) {
-		for (int j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
-			bittangents[index++] = {
-			meshes[i].mesh->mBitangents[j].x,
-			meshes[i].mesh->mBitangents[j].y,
-			meshes[i].mesh->mBitangents[j].z
-			};
-		}
-	}
+aiVector3D *  Model::GetBitangents(int meshIndex) {
+	return  meshes[meshIndex].mesh->mBitangents;
 }
-
 
 
 int Model::GetVertexCount()
@@ -219,36 +168,15 @@ int Model::GetVertexCount()
 	return verticeCnt;
 }
 
-
-void Model::GetNormals(std::vector<glm::vec3>&normals) {
-	normals.resize(GetVertexCount());
-	if (!hasNormal) {
-		std::cout << "mesh has no normal!" << std::endl;
-		return;
-	}
-
-	int index = 0;
-	for (auto i = 0; i < meshes.size(); ++i) {
-		for (auto j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
-			normals[index++] = { meshes[i].mesh->mNormals[j].x , meshes[i].mesh->mNormals[j].y, meshes[i].mesh->mNormals[j].z };
-		}
-	}
+aiVector3D * Model::GetNormals(int meshIndex) {
+	return  meshes[meshIndex].mesh->mNormals;
 }
 
 bool Model::HasNormal() {
 	return hasNormal;
 }
 
-void Model::GetVertices(std::vector<glm::vec3>&vertices)
-{
-	vertices.resize(GetVertexCount());
-
-	float div = 1;
-	int index = 0;
-	for (auto i = 0; i < meshes.size(); ++i) {
-		for (auto j = 0; j < meshes[i].mesh->mNumVertices; ++j) {
-			vertices[index++] = { meshes[i].mesh->mVertices[j].x / div, meshes[i].mesh->mVertices[j].y / div, meshes[i].mesh->mVertices[j].z / div };
-		}
-	}
-
+aiVector3D * Model::GetVertices(int meshIndex) {
+	return  meshes[meshIndex].mesh->mVertices;
 }
+

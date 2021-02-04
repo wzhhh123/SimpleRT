@@ -12,7 +12,7 @@ Geometrys* Geometrys::Instance() {
 }
 
 
-bool Geometrys::Intersect(Ray r, IntersectPoint* p){
+bool Geometrys::Intersect(Ray r, IntersectPoint* p) {
 	r.origin += 1e-6*r.direction;
 	return accelerater->Intersect(r, p);
 }
@@ -24,87 +24,53 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 	assert(isInit == false);
 	isInit = !isInit;
 
-	int triangleCnt = 0;
+	int faceCnt = 0;
 	for (auto i = 0; i < models.size(); ++i) {
-		triangleCnt += models[i]->GetIndexCount();
+		for(int j = 0; j < models[i]->meshes.size(); ++j)
+		faceCnt += models[i]->GetFaceCount(j);
 	}
-	triangleCnt /= 3;
 
 	shapes.clear();
-	shapes.resize(triangleCnt);
+	shapes.resize(faceCnt);
 
 	int cnt = 0;
 	for (auto j = 0; j < models.size(); ++j) {
 
-		std::vector < glm::vec3 > vertices;
-		models[j]->GetVertices(vertices);
-		std::vector < glm::vec3 > normals;
-		models[j]->GetNormals(normals);
-		std::vector < glm::vec2 > uvs;
-		models[j]->GetUVs(uvs);
-		std::vector < glm::vec3 > tangents;
-		models[j]->GetTangents(tangents);
-		std::vector < glm::vec3 > bitangents;
-		models[j]->GetBitangents(bitangents);
-		std::vector <int> indices;
-		models[j]->GetIndices(indices);
-		std::vector <int> meshIndex;
-		models[j]->GetMeshIndices(meshIndex);
+		for (int m = 0; m < models[j]->meshes.size(); ++m) {
+			
+			aiFace* faces = models[j]->GetFaces(m);
+			aiVector3D* vertices = models[j]->GetVertices(m);
+			int faceNum = models[j]->GetFaceCount(m);
+			for (auto i = 0; i < faceNum; ++i) {
+				//printf("(%02f,%02f,%02f) (%02f,%02f,%02f) (%02f,%02f,%02f)", 
+				//	tangents[i].x,
+				//	tangents[i].y, 
+				//	tangents[i].z, 
+				//	tangents[i].x, 
+				//	tangents[i].y, 
+				//	tangents[i].z, 
+				//	tangents[i].x, 
+				//	tangents[i].y, 
+				//	tangents[i].z );
 
-		//std::vector<glm::vec3>tangents;
-		//models[j]->GetTangents(tangents);
-
-		//std::vector<glm::vec3>bitangents;
-		//models[j]->GetBitangents(bitangents);
-
-		for (auto i = 0; i < indices.size(); i += 3) {
-
-			//printf("(%02f,%02f,%02f) (%02f,%02f,%02f) (%02f,%02f,%02f)", 
-			//	tangents[i].x,
-			//	tangents[i].y, 
-			//	tangents[i].z, 
-			//	tangents[i].x, 
-			//	tangents[i].y, 
-			//	tangents[i].z, 
-			//	tangents[i].x, 
-			//	tangents[i].y, 
-			//	tangents[i].z );
-
-			shapes[cnt] = new Triangle(
-
-				dVec3(vertices[indices[i]].x, vertices[indices[i]].y, vertices[indices[i]].z),
-				dVec3(vertices[indices[i + 1]].x, vertices[indices[i + 1]].y, vertices[indices[i + 1]].z),
-				dVec3(vertices[indices[i + 2]].x, vertices[indices[i + 2]].y, vertices[indices[i + 2]].z),
-
-				dVec3(normals[indices[i]].x, normals[indices[i]].y, normals[indices[i]].z),
-				dVec3(normals[indices[i + 1]].x, normals[indices[i + 1]].y, normals[indices[i + 1]].z),
-				dVec3(normals[indices[i + 2]].x, normals[indices[i + 2]].y, normals[indices[i + 2]].z),
-
-				dVec2(uvs[indices[i]].x, uvs[indices[i]].y),
-				dVec2(uvs[indices[i + 1]].x, uvs[indices[i + 1]].y),
-				dVec2(uvs[indices[i + 2]].x, uvs[indices[i + 2]].y),
-
-				dVec3(tangents[indices[i]].x, tangents[indices[i]].y, tangents[indices[i]].z),
-				dVec3(tangents[indices[i + 1]].x, tangents[indices[i + 1]].y, tangents[indices[i + 1]].z),
-				dVec3(tangents[indices[i + 2]].x, tangents[indices[i + 2]].y, tangents[indices[i + 2]].z),
-
-				dVec3(bitangents[indices[i]].x, bitangents[indices[i]].y, bitangents[indices[i]].z),
-				dVec3(bitangents[indices[i + 1]].x, bitangents[indices[i + 1]].y, bitangents[indices[i + 1]].z),
-				dVec3(bitangents[indices[i + 2]].x, bitangents[indices[i + 2]].y, bitangents[indices[i + 2]].z),
-
-				objectToWorlds[j],
-				j,
-				meshIndex[i]
-			); 
+				shapes[cnt] = new Triangle(
+					dVec3(vertices[faces[i].mIndices[0]].x, vertices[faces[i].mIndices[0]].y, vertices[faces[i].mIndices[0]].z),
+					dVec3(vertices[faces[i].mIndices[1]].x, vertices[faces[i].mIndices[1]].y, vertices[faces[i].mIndices[1]].z),
+					dVec3(vertices[faces[i].mIndices[2]].x, vertices[faces[i].mIndices[2]].y, vertices[faces[i].mIndices[2]].z),
+					objectToWorlds[j],
+					j,
+					m,
+					i
+				);
 
 
-			if (meshIndex[i] == 7) {
-				lights.push_back(shapes[cnt]);
-				lightShapeIndices.push_back(cnt);
+				if (models[j]->meshes[m].isAreaLight) {
+					lights.push_back(shapes[cnt]);
+					lightShapeIndices.push_back(cnt);
+				}
+
+				++cnt;
 			}
-
-			++cnt;
-
 		}
 	}
 

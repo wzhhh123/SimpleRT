@@ -8,15 +8,14 @@ class Triangle : public Shape {
 
 public:
 	
-	Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dVec3 _n0, dVec3 _n1, dVec3 _n2, dVec2 _uv0, dVec2 _uv1, dVec2 _uv2, 
-		dVec3 _t0, dVec3 _t1, dVec3 _t2, dVec3 _bt0, dVec3 _bt1, dVec3 _bt2,
-		dMat4 model, int _modelIndex, int _meshIndex);
+	Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dMat4 model, int _modelIndex, int _meshIndex, int _faceIndex);
 
 	bool Intersect(Ray r, IntersectPoint& p) override;
 
 	FLOAT Area() override;
 
 	IntersectPoint Samping(dVec2 point, FLOAT* pdf);
+	void SetData(IntersectPoint& it);
 
 	Vertex v0;
 	Vertex v1;
@@ -31,7 +30,7 @@ public:
 
 	int modelIndex;
 	int meshIndex;
-
+	int faceIndex;
 	
 	void GetUVs(dVec2 uv[3]);
 	//void TangentToObject();

@@ -29,7 +29,7 @@ dVec3 WhiteColor::Trace(int level, Ray r) {
 		glm::vec4 shininess = Renderer::Instance()->GetShininess(nearestHit.modelIndex, nearestHit.meshIndex);
 
 		//std::cout << nearestHit.uv.x << " " << nearestHit.uv.y << std::endl;
-		return { nearestHit.uv.x, nearestHit.uv.y, 0 };
+//		return { nearestHit.uv.x, nearestHit.uv.y, 0 };
 		//if(nearestHit.meshIndex!= 7)
 		//return { nearestHit.meshIndex / 8.0 ,nearestHit.meshIndex / 8.0 ,nearestHit.meshIndex / 8.0 };
 		//else {

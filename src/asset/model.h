@@ -33,7 +33,7 @@ public:
 	void deInitialize();
 
 	int GetIndexCount();
-	void GetIndices(std::vector<int>&);
+
 
 	int GetMeshCount();
 
@@ -42,12 +42,16 @@ public:
 	std::vector<MeshInfo> meshes;
 
 	int GetVertexCount();
-	void GetVertices(std::vector<glm::vec3>&vertices);
-	void GetNormals(std::vector<glm::vec3>&normals);
-	void GetUVs(std::vector<glm::vec2>&uvs);
+
 	void GetMeshIndices(std::vector<int>&);
-	void GetTangents(std::vector<glm::vec3>&tangents);
-	void GetBitangents(std::vector<glm::vec3>&bittangents);
+
+	int Model::GetFaceCount(int meshIndex);
+	aiFace* GetFaces(int meshIndex);
+	aiVector3D * Model::GetVertices(int meshIndex);
+	aiVector3D * Model::GetNormals(int meshIndex);
+	aiVector3D * Model::GetUVs(int meshIndex);
+	aiVector3D * Model::GetTangents(int meshIndex);
+	aiVector3D *  Model::GetBitangents(int meshIndex);
 
 
 	Assimp::Importer importer;
