@@ -44,8 +44,9 @@ dVec3 Path::Trace(int level, Ray r) {
 		}
 
 
-		/*	L = nearestHit.tangentToWorld * dVec3{ 0,0,1 };
-			break;*/
+		/*L = nearestHit.tangentToWorld * dVec3{ 0,0,1 };
+		L = nearestHit.normalWS;
+		break;*/
 
 		FLOAT pdf;
 		dVec3 wo = -r.direction, wi;
@@ -101,7 +102,7 @@ dVec3 Path::UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
 		dVec3 col = nearestHit.Le(-shadowRay.direction);
 
 		dVec3 f = Renderer::Instance()->GetBxDF(point.modelIndex, point.meshIndex)->F(shadowRay.direction, shadowRay.direction);
-		return col * f * std::abs(glm::dot(shadowRay.direction, point.normalWS));// / (lightPdf * lightAreaPdf);
+		return col * f * std::abs(glm::dot(shadowRay.direction, point.normalWS)) / (lightPdf * lightAreaPdf);
 		return col;// / (lightPdf * lightAreaPdf);
 	}
 	else {

@@ -32,7 +32,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 30; ++i) {
+		for (int i = 0; i < 1; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -56,8 +56,8 @@ void RenderTile(int tileIndex) {
 		}
 
 		col /= cnt;
-		//col = toSRGB(col) * 255.0;
-		col *= 255.0;
+		col = toSRGB(col) * 255.0;
+		//col *= 255.0;
 
 		Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
 		Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
