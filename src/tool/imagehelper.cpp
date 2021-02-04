@@ -34,3 +34,10 @@ dVec3 toSRGB(dVec3 col)  {
 
 	return result;
 }
+
+
+dVec3 fastToneMap(dVec3 col) {
+
+	return 1.0 / (col + 1.0);
+
+}

@@ -25,6 +25,8 @@ dVec3 Path::Trace(int level, Ray r) {
 		IntersectPoint nearestHit;
 		found = Geometrys::Instance()->Intersect(r, &nearestHit);
 
+		if (!found || bounds >= level) break;
+
 		if (bounds == 0 || specularBounce) {
 			L += beta * nearestHit.Le(-r.direction);
 			if (nearestHit.meshIndex == 7) {
@@ -36,7 +38,6 @@ dVec3 Path::Trace(int level, Ray r) {
 			}
 		}
 
-		if (!found || bounds >= level) break;
 
 		//TODO sample one light
 		{
@@ -44,9 +45,9 @@ dVec3 Path::Trace(int level, Ray r) {
 		}
 
 
-		/*L = nearestHit.tangentToWorld * dVec3{ 0,0,1 };
+		//*L = nearestHit.tangentToWorld * dVec3{ 0,0,1 };
 		L = nearestHit.normalWS;
-		break;*/
+		break;
 
 		FLOAT pdf;
 		dVec3 wo = -r.direction, wi;

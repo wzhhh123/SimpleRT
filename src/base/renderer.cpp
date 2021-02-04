@@ -15,6 +15,7 @@
 #include <tbb/blocked_range.h>
 #include <tbb/task_scheduler_init.h>
 #include "tool/timer.h"
+#include "tool/math.h"
 
 void RenderTile(int tileIndex) {
 	int offset = SIZE * SIZE / THREAD_COUNT;
@@ -37,7 +38,7 @@ void RenderTile(int tileIndex) {
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
 
-			//offsetY = offsetX = 0;
+			offsetY = offsetX = 0;
 
 			dVec3 dir;
 			dir.x = yx % SIZE - SIZE / 2 + offsetX;
@@ -148,7 +149,14 @@ void Renderer::Initialize() {
 
 		auto scalec = obj["scale"].GetArray().Begin();
 		dMat4 scale = glm::scale(rotation, dVec3(scalec->GetFloat(), (scalec + 1)->GetFloat(), (scalec + 2)->GetFloat()));
-		objectToWorldMats[index] = scale;
+
+		dMat4 worldToView = getViewMatrixRTL(dVec3{ 0,0,0 }, dVec3{ 0,0,-1 }, dVec3{ 0,1,0 });
+
+		auto res = worldToView * dVec4(0, -0.8, -2, 1);
+		 std::cout << res.x  << " " << res.y << " " << res.z << std::endl;
+
+		 //exit(0);
+		 objectToWorldMats[index] = worldToView * scale;
 
 		models[index] = new Model();
 		models[index]->Initialize(path.c_str());
