@@ -28,5 +28,6 @@ void coordinateSystem(const dVec3 &normal, dVec3 &tangent, dVec3 &bitangent)
 		float invLen = 1.0f / std::sqrt(normal.y * normal.y + normal.z * normal.z);
 		bitangent = dVec3(0.0f, normal.z * invLen, -normal.y * invLen);
 	}
-	tangent = glm::cross(bitangent, normal);
+	tangent = glm::normalize(glm::cross(bitangent, normal));
+	bitangent = glm::normalize(glm::cross(normal, tangent));
 }

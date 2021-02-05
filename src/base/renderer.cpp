@@ -38,7 +38,7 @@ void RenderTile(int tileIndex) {
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
 
-			offsetY = offsetX = 0;
+			//offsetY = offsetX = 0;
 
 			dVec3 dir;
 			dir.x = yx % SIZE - SIZE / 2 + offsetX;
@@ -220,6 +220,5 @@ void Renderer::deIntialize() {
 Renderer::Renderer() {
 
 	rng.seed(2, 56);
-
 
 }

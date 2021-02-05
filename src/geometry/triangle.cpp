@@ -33,11 +33,12 @@ void Triangle::SetData(IntersectPoint& it) {
 		dVec3 worldNormal0 = objectToWorld * dVec4{ normal[idx0].x, normal[idx0].y, normal[idx0].z, 0 };
 		dVec3 worldNormal1 = objectToWorld * dVec4{ normal[idx1].x, normal[idx1].y, normal[idx1].z, 0 };
 		dVec3 worldNormal2 = objectToWorld * dVec4{ normal[idx2].x, normal[idx2].y, normal[idx2].z, 0 };
-	
-		it.normalWS = 
-			it.weightU * worldNormal1 +
-			it.weightV * worldNormal2 +
-			(1 - it.weightV - it.weightU) * worldNormal0;
+
+		it.normalWS =
+			glm::normalize(
+				it.weightU * worldNormal1 +
+				it.weightV * worldNormal2 +
+				(1 - it.weightV - it.weightU) * worldNormal0);
 
 		coordinateSystem(it.normalWS, it.tangentWS, it.bitangentWS);
 

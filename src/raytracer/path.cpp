@@ -18,6 +18,7 @@ dVec3 Path::Trace(int level, Ray r) {
 	FLOAT etaScale = 1;
 
 	pcg32& rng = Renderer::Instance()->rng;
+	float rrThreshold = 1;
 
 	for (bounds;; ++bounds) {
 
@@ -25,32 +26,23 @@ dVec3 Path::Trace(int level, Ray r) {
 		IntersectPoint nearestHit;
 		found = Geometrys::Instance()->Intersect(r, &nearestHit);
 
+		if (bounds == 0 || specularBounce) {
+			if(found)
+				L += beta * nearestHit.Le(-r.direction);
+		}
+
 		if (!found || bounds >= level) break;
 
-		if (bounds == 0 || specularBounce) {
-			L += beta * nearestHit.Le(-r.direction);
-			if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) {
-				if (bounds == 0) {
-					//L = dVec3(1, 0, 1);
-				}
-				//L = { 1,1,1 };
-				break; //灯
-			}
-		}
+		if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) break;
 
-		if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) {
-			break;
-		}
-
-		//TODO sample one light
+		//if() not specular
 		{
 			L += beta * UniformSampleOneLight(rng, nearestHit, r);
 		}
 
-
 		//*L = nearestHit.tangentToWorld * dVec3{ 0,0,1 };
-	/*	L = nearestHit.normalWS;
-		break;*/
+		//L = nearestHit.normalWS;
+		//break;
 
 		FLOAT pdf;
 		dVec3 wo = -r.direction, wi;
@@ -74,13 +66,17 @@ dVec3 Path::Trace(int level, Ray r) {
 		r.origin = nearestHit.t * r.direction + r.origin;
 		r.direction = nearestHit.tangentToWorld * glm::normalize(wi);
 
-		if (nearestHit.meshIndex == 7)break; //灯
 		//这里可以加上rr
+		dVec3 rrBeta = beta;
+		FLOAT maxComponent = std::max(std::max(rrBeta.x, rrBeta.y), rrBeta.z);
+		if ((maxComponent < rrThreshold) && bounds >= 3) {
+			FLOAT q = std::max((FLOAT).05, 1 - maxComponent);
+			if (rng.nextDouble() < q) break;
+			beta /= 1 - q;
+		}
 	}
 
-
 	return L;
-
 
 }
 
@@ -95,8 +91,11 @@ dVec3 Path::UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
 	Ray shadowRay;
 	shadowRay.origin = point.t * r.direction + r.origin;
 	dVec3 lightPos = it.weightV * triangle->v0.vertexWS + it.weightU * triangle->v1.vertexWS + (1 - it.weightU - it.weightV) * triangle->v2.vertexWS;
-
 	shadowRay.direction = glm::normalize(lightPos - shadowRay.origin);
+
+
+	//灯光面积pdf转立体角pdf
+	lightAreaPdf *= glm::distance(lightPos, shadowRay.origin) / abs(glm::dot(glm::normalize(it.normalWS), -shadowRay.direction));
 
 	IntersectPoint nearestHit;
 	bool found = Geometrys::Instance()->Intersect(shadowRay, &nearestHit);

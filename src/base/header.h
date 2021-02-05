@@ -20,7 +20,7 @@
 #define SPP 1000
 #define CHANNEL_COUNT  3
 #define AOV 60
-#define DEPTH 5
+#define DEPTH 8
 #define THREAD_COUNT 12
 #define dVec2 glm::dvec2
 #define dVec3 glm::dvec3

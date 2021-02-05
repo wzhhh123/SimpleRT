@@ -63,7 +63,6 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 					i
 				);
 
-
 				if (models[j]->meshes[m].isAreaLight) {
 					lights.push_back(shapes[cnt]);
 					lightShapeIndices.push_back(cnt);
@@ -75,11 +74,11 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 	}
 
 
-	std::vector<FLOAT> lightDis;
-	for (int i = 0; i < lights.size(); ++i) {
-		lightDis.push_back(dynamic_cast<Triangle*>(shapes[i])->Area());
-	}
-
+	//pbrt3用的light的数量来采样
+	std::vector<FLOAT> lightDis(lights.size(), 1);
+	//for (int i = 0; i < lights.size(); ++i) {
+	//	lightDis.push_back(dynamic_cast<Triangle*>(shapes[i])->Area());
+	//}
 	lightDistribute = Distribution1D(lightDis.data(), lightDis.size());
 
 	accelerater->Initialize(&shapes);
