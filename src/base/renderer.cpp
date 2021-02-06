@@ -50,10 +50,10 @@ void RenderTile(int tileIndex) {
 			r.direction = glm::normalize(dir);
 
 			dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r);
-			if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
+			//if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
 				col += temp;
 				++cnt;
-			}
+			//}
 		}
 
 		col /= cnt;
