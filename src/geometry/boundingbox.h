@@ -16,6 +16,9 @@ public:
 
 	void Intersect(BoundingBox& a);
 
+	void IntersectTest(Ray r, float& t0, float& t1);
+
+
 	void Union(BoundingBox& a);
 
 	void Union(dVec3& p);

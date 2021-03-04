@@ -21,6 +21,16 @@ build log:
 */
 
 int main() {
+	using namespace std;
+
+	//BoundingBox aabb = BoundingBox({ -1,-1,-1 }, { 1,1,1 });
+	//Ray r;
+	//r.origin = { 0,0,0 };
+	//r.direction = { 0,0,1 };
+	//float t0, t1;
+	//aabb.IntersectTest(r, t0, t1);
+	//cout << t0 << " " << t1 << endl;
+	//return 0;
 
 	//for (int i = 0; i < 10; ++i) {
 	//	for (int j = 0; j < 10; ++j) {

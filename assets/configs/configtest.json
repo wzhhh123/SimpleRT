@@ -32,7 +32,7 @@
             "position": [ 0, 0, 0 ],
             "euler": [ 0, 0, 0 ],
             "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.3, 0.3, 0.5 ],
+            "albedo": [ 0.725, 0.71, 0.68 ],
             "bsdf": "diffuse"
 
         },
@@ -41,7 +41,7 @@
             "position": [ 0, 0, 0 ],
             "euler": [ 0, 0, 0 ],
             "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.2, 0.5, 0.15 ],
+            "albedo": [ 0.725, 0.71, 0.68 ],
             "bsdf": "diffuse"
 
         },

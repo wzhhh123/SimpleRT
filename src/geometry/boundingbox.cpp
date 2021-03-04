@@ -109,6 +109,30 @@ bool BoundingBox::Intersect(Ray r, IntersectPoint& p)
 	return true;
 }
 
+void BoundingBox::IntersectTest(Ray r, float& input_t0, float& input_t1) {
+	
+	dVec3 d = r.direction;
+
+	for (int i = 0; i < 3; i++)
+	{
+		const float ood = 1.0f / d[i];
+		// 计算参数t 并令 t1为较小值 t2为较大值
+		float t1 = (amin[i] - r.origin[i]) * ood;
+		float t2 = (amax[i] - r.origin[i]) * ood;
+		if (t1 > t2) { float tmp = t1; t1 = t2; t2 = tmp; }
+
+		if (i == 0) {
+			input_t0 = t1;
+			input_t1 = t2;
+		}
+		else {
+			if (t1 > input_t0) input_t0 = t1;
+			if (t2 < input_t1) input_t1 = t2;
+		}
+	}
+
+}
+
 
 
 BoundingBox Union(const BoundingBox& a, const BoundingBox& b) {
