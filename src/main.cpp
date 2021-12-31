@@ -20,6 +20,11 @@ build log:
 2、assimp要build shared
 */
 
+/*
+系统信息:
+1、右手坐标系
+*/
+
 int main() {
 	using namespace std;
 
