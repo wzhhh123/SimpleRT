@@ -16,7 +16,7 @@
 
 /*
 build log:
-1、tbb的lib要改名为tbb_debug
+1、tbb的lib要改名为tbb_debug，然后把tbbd.dll复制到debug下面
 2、assimp要build shared
 */
 
