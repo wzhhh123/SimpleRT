@@ -44,9 +44,13 @@ const FLOAT Sqrt2 = 1.41421356237309504880;
 
 #define RAY_LENGTH 1000
 
+#if __APPLE__
+#define OUTPUT_PATH "../../assets/image/result_apple.jpg"
+#define CONFIG_PATH "../../assets/configs/configtest_apple.json"
+#else
 #define OUTPUT_PATH "../assets/image/result.jpg"
 #define CONFIG_PATH "../assets/configs/configtest.json"
-
+#endif
 
 
 #define EULER_TO_RADIUS 0.0174532925199438  // pi/180

@@ -8,7 +8,7 @@ class BoundingBox : public Shape {
 
 public:
 	
-	BoundingBox::BoundingBox();
+    BoundingBox();
 
 	BoundingBox(dVec3 a, dVec3 b);
 

@@ -45,13 +45,13 @@ public:
 
 	void GetMeshIndices(std::vector<int>&);
 
-	int Model::GetFaceCount(int meshIndex);
+    int GetFaceCount(int meshIndex);
 	aiFace* GetFaces(int meshIndex);
-	aiVector3D * Model::GetVertices(int meshIndex);
-	aiVector3D * Model::GetNormals(int meshIndex);
-	aiVector3D * Model::GetUVs(int meshIndex);
-	aiVector3D * Model::GetTangents(int meshIndex);
-	aiVector3D *  Model::GetBitangents(int meshIndex);
+    aiVector3D * GetVertices(int meshIndex);
+    aiVector3D * GetNormals(int meshIndex);
+    aiVector3D * GetUVs(int meshIndex);
+    aiVector3D * GetTangents(int meshIndex);
+    aiVector3D *  GetBitangents(int meshIndex);
 
 
 	Assimp::Importer importer;

@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 3.0)
 
 project(SimpleRT)
 
@@ -47,6 +47,12 @@ add_executable(SimpleRT ${ALL_FILES})
 
 #target_link_libraries(SimpleRT ext/assimp)  
 
+IF (APPLE)
+add_custom_command(TARGET SimpleRT POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/libassimpd.dylib"              
+    $<TARGET_FILE_DIR:SimpleRT>)
+ELSE()
 #复制dll到工作目录
 if(CMAKE_CL_64)
    add_custom_command(TARGET SimpleRT POST_BUILD 
@@ -59,9 +65,13 @@ else()
     "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/assimp-vc141-mtd.dll"              
     $<TARGET_FILE_DIR:SimpleRT>)
 endif()
+ENDIF()
 
+IF (APPLE)
+target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/libassimpd.dylib  ${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/libtbbd.dylib)
+ELSE()
 target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib  ${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/tbb_debug.lib)
-
+ENDIF()
 
 OPTION(DEBUG_MODE "Build the project using macro" ON)
 IF(DEBUG_MODE)
