@@ -11,6 +11,8 @@
 #include "bxdf/lambert.h"
 #include <thread>
 #include <mutex>
+
+
 class Renderer {
 public:
 	
@@ -18,7 +20,7 @@ public:
 	void Run();
 	void deIntialize();
 
-	unsigned char* imageData;
+    float* imageData;
 	RayTracer* raytracer;
 	std::vector<Model*>models;
 	std::vector<dMat4> objectToWorldMats;

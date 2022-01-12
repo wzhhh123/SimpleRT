@@ -16,3 +16,9 @@
 [submodule "ext/tbb"]
 	path = ext/tbb
 	url = https://github.com/wjakob/tbb
+[submodule "ext/openexr-1"]
+	path = ext/openexr-1
+	url = https://github.com/wzhhh123/openexr-1
+[submodule "ext/openexr"]
+	path = ext/openexr
+	url = https://github.com/wjakob/openexr

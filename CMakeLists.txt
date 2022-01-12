@@ -2,12 +2,43 @@ cmake_minimum_required (VERSION 3.0)
 
 project(SimpleRT)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 
 
 add_subdirectory(ext/assimp)
 add_subdirectory(ext/tbb)
+#add_subdirectory(ext/openexr-1)
 #link_directories(${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code) 
+
+
+###########################################################################
+# OpenEXR
+
+SET(ILMBASE_NAMESPACE_VERSIONING OFF CACHE BOOL " " FORCE)
+SET(OPENEXR_NAMESPACE_VERSIONING OFF CACHE BOOL " " FORCE)
+SET(OPENEXR_BUILD_SHARED_LIBS    OFF CACHE BOOL " " FORCE)
+SET(ILMBASE_BUILD_SHARED_LIBS    OFF CACHE BOOL " " FORCE)
+
+ADD_SUBDIRECTORY(ext/openexr)
+
+SET_PROPERTY(TARGET IexMath eLut toFloat b44ExpLogTable dwaLookups IlmThread Half Iex Imath IlmImf PROPERTY FOLDER "ext")
+
+INCLUDE_DIRECTORIES (
+  ext/openexr/IlmBase/Imath
+  ext/openexr/IlmBase/Half
+  ext/openexr/IlmBase/Iex
+  ext/openexr/OpenEXR/IlmImf
+  ${CMAKE_BINARY_DIR}/ext/openexr/IlmBase/config
+  ${CMAKE_BINARY_DIR}/ext/openexr/OpenEXR/config
+)
+IF(WIN32)
+  SET(OPENEXR_LIBS IlmImf Imath Half ${ZLIB_LIBRARY})
+ELSE()
+  SET(OPENEXR_LIBS IlmImf Imath Half)
+ENDIF()
+
+###########################################################################
+
 
 include_directories(
 
@@ -68,7 +99,12 @@ endif()
 ENDIF()
 
 IF (APPLE)
-target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/libassimpd.dylib  ${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/libtbbd.dylib)
+target_link_libraries(SimpleRT 
+${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/libassimpd.dylib  
+${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/libtbbd.dylib
+#${CMAKE_CURRENT_BINARY_DIR}/ext/openexr-1/build/src/lib/OpenEXR/libOpenEXR-3_1.dylib
+${OPENEXR_LIBS}
+)
 ELSE()
 target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib  ${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/tbb_debug.lib)
 ENDIF()

@@ -16,24 +16,27 @@
 #include <tbb/task_scheduler_init.h>
 #include "tool/timer.h"
 #include "tool/math.h"
-
+#include "tool/exrhelper.h"
+//#include "ImfRgbaFile.h"
+//#include "ImfArray.h"
+//#include "namespaceAlias.h"
 void RenderTile(int tileIndex) {
-	int offset = SIZE * SIZE / THREAD_COUNT;
+	int offset = IMG_SIZE * IMG_SIZE / THREAD_COUNT;
 	int left = offset * tileIndex;
 	int right = offset * (tileIndex + 1);
-	if (tileIndex == THREAD_COUNT - 1) right = SIZE * SIZE;
+	if (tileIndex == THREAD_COUNT - 1) right = IMG_SIZE * IMG_SIZE;
 	std::string  str = std::to_string(left) + " " + std::to_string(right) + " rendering!\n";
 	std::cout << str;
 	std::cout.flush();
 	pcg32 rng;
 	rng.seed(8, 36);
 	int yx = left;
-	float dirZ = SIZE / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离 //照顾一下aabb计算 使用左手系
+	float dirZ = IMG_SIZE / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离 //照顾一下aabb计算 使用左手系
 	while (yx < right) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 88; ++i) {
+		for (int i = 0; i < 16; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -41,8 +44,8 @@ void RenderTile(int tileIndex) {
 			//offsetY = offsetX = 0;
 
 			dVec3 dir;
-			dir.x = yx % SIZE - SIZE / 2 + offsetX;
-			dir.y = SIZE / 2 - yx / SIZE + offsetY;
+			dir.x = yx % IMG_SIZE - IMG_SIZE / 2 + offsetX;
+			dir.y = IMG_SIZE / 2 - yx / IMG_SIZE + offsetY;
 			dir.z = dirZ;
 
 			Ray r = {};
@@ -57,14 +60,18 @@ void RenderTile(int tileIndex) {
 		}
 
 		col /= cnt;
-		col = toSRGB(col) * 255.0;
+		//col = toSRGB(col) * 255.0;
 		//col *= 255.0;
 		
 
-		Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
-		Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
-		Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
-
+		//Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
+		//Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
+		//Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
+            
+        Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = col.x;
+        Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = col.y;
+        Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 2] = col.z;
+        
 		++yx;
 	}
 }
@@ -106,7 +113,13 @@ void Renderer::Run()
 	render_thread.join();
 
 	std::cout << "save" << std::endl;
-	SaveImage(SIZE, SIZE, CHANNEL_COUNT, imageData);
+	//SaveImage(IMG_SIZE, IMG_SIZE, CHANNEL_COUNT, imageData);
+    
+    EXR_HELPER::SaveAsExrFile(IMG_SIZE, IMG_SIZE, imageData);
+    
+    //IMF::Rgba r;
+    //r.r = 1;
+    
 
 	//DataToImage(imageData);
 
@@ -115,8 +128,9 @@ void Renderer::Run()
 
 void Renderer::Initialize() {
 
-	imageData = (unsigned char*) new char[SIZE * SIZE * CHANNEL_COUNT];
-
+	//imageData = (unsigned char*) new char[IMG_SIZE * IMG_SIZE * CHANNEL_COUNT];
+    imageData = new float[IMG_SIZE * IMG_SIZE * CHANNEL_COUNT];
+    
 	using namespace std;
 	using namespace rapidjson;
 

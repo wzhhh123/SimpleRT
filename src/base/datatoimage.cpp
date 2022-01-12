@@ -11,11 +11,11 @@ void DataToImage(const dVec3* data) {
 	fp = fopen("../assets/image/test.ppm", "w");
 
 	fprintf(fp, "P3\n");
-	fprintf(fp, "%d %d\n", SIZE, SIZE);
+	fprintf(fp, "%d %d\n", IMG_SIZE, IMG_SIZE);
 	fprintf(fp, "255\n");
-	for (int i = 0; i < SIZE; ++i) {
-		for (int j = 0; j < SIZE; ++j) {
-			fprintf(fp, "%.0f %.0f %.0f\n", data[SIZE*i + j].x, data[SIZE*i + j].y, data[SIZE*i + j].z);
+	for (int i = 0; i < IMG_SIZE; ++i) {
+		for (int j = 0; j < IMG_SIZE; ++j) {
+			fprintf(fp, "%.0f %.0f %.0f\n", data[IMG_SIZE*i + j].x, data[IMG_SIZE*i + j].y, data[IMG_SIZE*i + j].z);
 		}
 	}
 
