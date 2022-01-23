@@ -15,7 +15,7 @@ void SaveImage(int w, int h, int channels_num, unsigned char* imageData)
 	//	}
 	//}
 
-	stbi_write_jpg(OUTPUT_PATH, w, h, channels_num, imageData, w * channels_num);
+	stbi_write_jpg(OUTPUT_PATH_JPG, w, h, channels_num, imageData, w * channels_num);
 }
 
 //nori

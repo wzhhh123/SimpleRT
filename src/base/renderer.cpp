@@ -36,7 +36,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 16; ++i) {
+		for (int i = 0; i < 1; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -115,7 +115,7 @@ void Renderer::Run()
 	std::cout << "save" << std::endl;
 	//SaveImage(IMG_SIZE, IMG_SIZE, CHANNEL_COUNT, imageData);
     
-    EXR_HELPER::SaveAsExrFile(IMG_SIZE, IMG_SIZE, imageData);
+    EXR_HELPER::SaveAsExrFile(OUTPUT_PATH_EXR ,IMG_SIZE, IMG_SIZE, imageData);
     
     //IMF::Rgba r;
     //r.r = 1;

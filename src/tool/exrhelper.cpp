@@ -10,10 +10,11 @@ namespace EXR_HELPER
 static void WriteImageEXR(const std::string &name, const float *pixels,
                           int width, int height);
 
-void SaveAsExrFile(int width, int height, float* pixels)
+void SaveAsExrFile(const char* path, int width, int height, float* pixels)
 {
     //namespace IMF = OPENEXR_IMF_NAMESPACE;
-    WriteImageEXR("../../assets/image/result_apple.exr", pixels, width, height);
+	//WriteImageEXR("../../assets/image/result_apple.exr", pixels, width, height);
+	WriteImageEXR(path, pixels, width, height);
 }
 
 static void WriteImageEXR(const std::string &name, const float *pixels,

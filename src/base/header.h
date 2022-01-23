@@ -45,10 +45,12 @@ const FLOAT Sqrt2 = 1.41421356237309504880;
 #define RAY_LENGTH 1000
 
 #if __APPLE__
-#define OUTPUT_PATH "../../assets/image/result_apple.jpg"
+#define OUTPUT_PATH_JPG "../../assets/image/result_apple.jpg"
+#define OUTPUT_PATH_EXR "../../assets/image/result_apple.exr"
 #define CONFIG_PATH "../../assets/configs/configtest_apple.json"
 #else
-#define OUTPUT_PATH "../assets/image/result.jpg"
+#define OUTPUT_PATH_JPG "../assets/image/result.jpg"
+#define OUTPUT_PATH_EXR "../assets/image/result.exr"
 #define CONFIG_PATH "../assets/configs/configtest.json"
 #endif
 

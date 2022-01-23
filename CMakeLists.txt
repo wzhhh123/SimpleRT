@@ -11,6 +11,25 @@ add_subdirectory(ext/tbb)
 #link_directories(${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/code) 
 
 
+
+
+###########################################################################
+# zlib
+
+FIND_PACKAGE ( ZLIB )
+IF(NOT ZLIB_FOUND)
+  # Build zlib
+  SET(ZLIB_BUILD_STATIC_LIBS ON CACHE BOOL " " FORCE)
+  SET(ZLIB_BUILD_SHARED_LIBS OFF CACHE BOOL " " FORCE)
+  ADD_SUBDIRECTORY(ext/zlib)
+
+  SET(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/zlib")
+  SET(ZLIB_LIBRARY zlibstatic)
+  SET_PROPERTY(TARGET zlibstatic PROPERTY FOLDER "ext")
+  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR} "${CMAKE_CURRENT_BINARY_DIR}/ext/zlib")
+ENDIF()
+INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIRS})
+
 ###########################################################################
 # OpenEXR
 
@@ -106,7 +125,11 @@ ${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/libtbbd.dylib
 ${OPENEXR_LIBS}
 )
 ELSE()
-target_link_libraries(SimpleRT ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib  ${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/tbb_debug.lib)
+target_link_libraries(SimpleRT 
+${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib  
+${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/tbb_debug.lib
+${OPENEXR_LIBS}
+)
 ENDIF()
 
 OPTION(DEBUG_MODE "Build the project using macro" ON)
