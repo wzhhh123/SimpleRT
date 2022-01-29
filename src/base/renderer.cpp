@@ -180,11 +180,12 @@ void Renderer::Initialize() {
 				models[index]->meshes[i].isAreaLight = true;
 				auto radiance = obj["radiance"].GetArray().Begin();
 				models[index]->meshes[i].emissive = dVec4(radiance->GetFloat(), (radiance + 1)->GetFloat(), (radiance + 2)->GetFloat(), 0);
+                models[index]->meshes[i].AreaLight = CreateAreaLight(models[index]->meshes[i].emissive);
 			}
 			if (obj.HasMember("bsdf") && strcmp(obj["bsdf"].GetString(), "diffuse") == 0) {
 				auto albedo = obj["albedo"].GetArray().Begin();
 				models[index]->meshes[i].ambient = dVec4{ albedo->GetFloat(), (albedo + 1)->GetFloat(), (albedo + 2)->GetFloat(), 1 };
-				models[index]->meshes[i].bxdf = new Lambert(models[index]->meshes[i].ambient);
+				models[index]->meshes[i].bxdf = new LambertianRefrection(models[index]->meshes[i].ambient);
 			}
 		}
 		++index;

@@ -28,7 +28,7 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		if (bounds == 0 || specularBounce) {
 			if(found)
-				L += beta * nearestHit.Le(-r.direction);
+				L += beta * nearestHit.Le(-r.direction, nearestHit);
 		}
 
 		if (!found || bounds >= level) break;
@@ -100,7 +100,7 @@ dVec3 Path::UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
 	IntersectPoint nearestHit;
 	bool found = Geometrys::Instance()->Intersect(shadowRay, &nearestHit);
 	if (found) {
-		dVec3 col = nearestHit.Le(-shadowRay.direction);
+		dVec3 col = nearestHit.Le(-shadowRay.direction, nearestHit);
 
 		dVec3 f = Renderer::Instance()->GetBxDF(point.modelIndex, point.meshIndex)->F(shadowRay.direction, shadowRay.direction);
 		return col * f * std::abs(glm::dot(shadowRay.direction, point.normalWS)) / (lightPdf * lightAreaPdf);

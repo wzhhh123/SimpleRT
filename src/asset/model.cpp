@@ -1,7 +1,7 @@
 #include "base/header.h"
 #include "model.h"
 #include "bxdf/lambert.h"
-
+#include "lights/diffuse.h"
 
 Model::Model()
 {
@@ -38,7 +38,7 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 				meshInfo.shininess = { color.r, color.g, color.b, color.a };
 			}
 
-			meshInfo.bxdf = new Lambert(meshInfo.diffuse);
+			meshInfo.bxdf = new LambertianRefrection(meshInfo.diffuse);
 		}
 		meshes.push_back(meshInfo);
 

@@ -26,5 +26,5 @@ public:
 	int meshIndex;
 	int faceIndex;
 
-	dVec3 Le(dVec3 direction);
+	dVec3 Le(const dVec3& direction, const IntersectPoint& it);
 };

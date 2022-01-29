@@ -4,6 +4,7 @@
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
+#include "lights/diffuse.h"
 //AABB BoundingBox
 
 
@@ -20,7 +21,9 @@ struct MeshInfo {
 	BxDF* bxdf;
 
 	bool isAreaLight;
-	
+    
+    std::shared_ptr<AreaLight> AreaLight;
+    
 }; 
 
 class Model {

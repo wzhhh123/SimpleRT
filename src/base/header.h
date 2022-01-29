@@ -77,12 +77,15 @@ class WhiteColor;
 class Vertex;
 class Accelerate;
 class Linear;
-class  Bvh;
+class Bvh;
 class BxDF;
 class Lambert;
 class Path;
 class Distribution1D;
 class Timer;
+class Light;
+class AreaLight;
+class DiffuseAreaLight;
 
 
 struct TileRenderThreadInput;
