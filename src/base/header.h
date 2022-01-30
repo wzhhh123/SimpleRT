@@ -54,7 +54,6 @@ const FLOAT Sqrt2 = 1.41421356237309504880;
 #define CONFIG_PATH "../assets/configs/configtest.json"
 #endif
 
-
 #define EULER_TO_RADIUS 0.0174532925199438  // pi/180
 
 

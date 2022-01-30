@@ -21,3 +21,9 @@ dVec3 IntersectPoint::Le(const dVec3& direction, const IntersectPoint& it) {
 	return { 0,0,0 };
 
 }
+
+
+bool IntersectPoint::IsHitAreaLight()
+{
+    return Renderer::Instance()->models[modelIndex]->meshes[meshIndex].isAreaLight;
+}

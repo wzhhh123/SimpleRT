@@ -5,7 +5,7 @@
 #include "base/geometrys.h"
 #include "geometry/sphere.h"
 #include "base/renderer.h"
-#include "pcg32.h"
+
 
 
 
@@ -33,7 +33,7 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		if (!found || bounds >= level) break;
 
-		if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) break;
+		//if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) break;
 
 		//if() not specular
 		{
@@ -52,7 +52,18 @@ dVec3 Path::Trace(int level, Ray r) {
 
 	//	std::cout << f.x << " " << f.y << " " << f.z << std::endl;
 
-		if (f.x == 0.0 &&f.y == 0.0 &&f.z == 0.0) break;
+		if (f.x < 1e-6 && f.y < 1e-6 && f.z < 1e-6)
+        {
+#if DEBUG_MODE
+            if(nearestHit.IsHitAreaLight())
+            {
+//                std::string str = "ray hit arealight and end trace!\n";
+//                std::cout << str;
+//                std::cout.flush();
+            }
+#endif
+            break;
+        }
 		if (pdf == 0.f) break;//不用追踪下去了，这条路径没用了
 
 		beta *= f * std::abs(glm::dot( nearestHit.tangentToWorld * glm::normalize(wi)
@@ -62,11 +73,10 @@ dVec3 Path::Trace(int level, Ray r) {
 		//L = glm::dot(dir, nearestHit.normalWS) > 0 ? dVec3{1, 1, 1} : dVec3{0, 0, 0};
 		//L = nearestHit.worldToTangent * nearestHit.normalWS;
 
-		//创建新射线 这里可能有误差
 		r.origin = nearestHit.t * r.direction + r.origin;
 		r.direction = nearestHit.tangentToWorld * glm::normalize(wi);
 
-		//这里可以加上rr
+        //rr from pbrt
 		dVec3 rrBeta = beta;
 		FLOAT maxComponent = std::max(std::max(rrBeta.x, rrBeta.y), rrBeta.z);
 		if ((maxComponent < rrThreshold) && bounds >= 3) {
@@ -80,33 +90,3 @@ dVec3 Path::Trace(int level, Ray r) {
 
 }
 
-dVec3 Path::UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
-{
-	FLOAT lightPdf = 0;
-	int index = Geometrys::Instance()->lightDistribute.SampleDiscrete(rng.nextDouble(), &lightPdf);
-	Triangle* triangle = dynamic_cast<Triangle*>(Geometrys::Instance()->shapes[Geometrys::Instance()->lightShapeIndices[index]]);
-	FLOAT lightAreaPdf = 0;
-	IntersectPoint it = triangle->Samping(dVec2{ rng.nextDouble(), rng.nextDouble() }, &lightAreaPdf);
-
-	Ray shadowRay;
-	shadowRay.origin = point.t * r.direction + r.origin;
-	dVec3 lightPos = it.weightV * triangle->v0.vertexWS + it.weightU * triangle->v1.vertexWS + (1 - it.weightU - it.weightV) * triangle->v2.vertexWS;
-	shadowRay.direction = glm::normalize(lightPos - shadowRay.origin);
-
-
-	//灯光面积pdf转立体角pdf
-	lightAreaPdf *= glm::distance(lightPos, shadowRay.origin) / abs(glm::dot(glm::normalize(it.normalWS), -shadowRay.direction));
-
-	IntersectPoint nearestHit;
-	bool found = Geometrys::Instance()->Intersect(shadowRay, &nearestHit);
-	if (found) {
-		dVec3 col = nearestHit.Le(-shadowRay.direction, nearestHit);
-
-		dVec3 f = Renderer::Instance()->GetBxDF(point.modelIndex, point.meshIndex)->F(shadowRay.direction, shadowRay.direction);
-		return col * f * std::abs(glm::dot(shadowRay.direction, point.normalWS)) / (lightPdf * lightAreaPdf);
-		return col;// / (lightPdf * lightAreaPdf);
-	}
-	else {
-		return dVec3(0, 0, 0);
-	}
-}

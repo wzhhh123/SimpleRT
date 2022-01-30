@@ -1,4 +1,4 @@
-﻿
+
 #include "triangle.h"
 #include "base/renderer.h"
 #include "tool/math.h"
@@ -53,6 +53,7 @@ void Triangle::SetData(IntersectPoint& it) {
 
 }
 
+//Triangle::Sample
 IntersectPoint Triangle::Samping(dVec2 point, FLOAT* pdf) {
 
 	IntersectPoint it;

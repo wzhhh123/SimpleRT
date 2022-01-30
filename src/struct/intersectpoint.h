@@ -27,4 +27,7 @@ public:
 	int faceIndex;
 
 	dVec3 Le(const dVec3& direction, const IntersectPoint& it);
+    
+    //for debug
+    bool IsHitAreaLight();
 };
