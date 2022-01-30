@@ -20,7 +20,7 @@
 #define SPP 1000
 #define CHANNEL_COUNT  3
 #define AOV 60
-#define DEPTH 8
+#define DEPTH 16
 #define THREAD_COUNT 64
 #define dVec2 glm::dvec2
 #define dVec3 glm::dvec3
@@ -59,6 +59,13 @@ const FLOAT Sqrt2 = 1.41421356237309504880;
 
 inline FLOAT eulerToRadius(float euler) {
 	return (EULER_TO_RADIUS * euler);
+}
+
+inline FLOAT clamp(FLOAT a, FLOAT l, FLOAT r)
+{
+    if(a < l) return l;
+    if(a > r) return r;
+    return a;
 }
 
 class Model;

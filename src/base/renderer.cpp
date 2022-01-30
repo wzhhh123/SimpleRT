@@ -17,6 +17,7 @@
 #include "tool/timer.h"
 #include "tool/math.h"
 #include "tool/exrhelper.h"
+#include "bxdf/glass.h"
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
@@ -36,7 +37,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 16; ++i) {
+		for (int i = 0; i < 5; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -182,10 +183,18 @@ void Renderer::Initialize() {
 				models[index]->meshes[i].emissive = dVec4(radiance->GetFloat(), (radiance + 1)->GetFloat(), (radiance + 2)->GetFloat(), 0);
                 models[index]->meshes[i].AreaLight = CreateAreaLight(models[index]->meshes[i].emissive);
 			}
-			if (obj.HasMember("bsdf") && strcmp(obj["bsdf"].GetString(), "diffuse") == 0) {
-				auto albedo = obj["albedo"].GetArray().Begin();
-				models[index]->meshes[i].ambient = dVec4{ albedo->GetFloat(), (albedo + 1)->GetFloat(), (albedo + 2)->GetFloat(), 1 };
-                models[index]->meshes[i].material = CreateMatteMaterial(models[index]->meshes[i].ambient);
+			if (obj.HasMember("bsdf"))
+            {
+                auto albedo = obj["albedo"].GetArray().Begin();
+                models[index]->meshes[i].ambient = dVec4{ albedo->GetFloat(), (albedo + 1)->GetFloat(), (albedo + 2)->GetFloat(), 1 };
+                if(strcmp(obj["bsdf"].GetString(), "diffuse") == 0)
+                {
+                    models[index]->meshes[i].material = CreateMatteMaterial(models[index]->meshes[i].ambient);
+                }
+                else if(strcmp(obj["bsdf"].GetString(), "glass") == 0)
+                {
+                    models[index]->meshes[i].material = CreateGlassMaterial(dVec3(1,1,1), dVec3(1,1,1), obj["index"].GetFloat());
+                }
 			}
 		}
 		++index;

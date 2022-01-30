@@ -33,7 +33,8 @@
             "euler": [ 0, 0, 0 ],
             "scale": [ 1, 1, 1 ],
             "albedo": [ 1, 1, 1 ],
-            "bsdf": "diffuse"
+            "bsdf": "glass",
+            "index": 1.5
 
         },
         {

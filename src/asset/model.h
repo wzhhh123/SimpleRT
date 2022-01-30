@@ -19,7 +19,6 @@ struct MeshInfo {
 	glm::vec4 emissive;
 	glm::vec4 shininess;
     
-	BSDF* bsdf;
     Material* material;
 
 	bool isAreaLight;
@@ -28,13 +27,13 @@ struct MeshInfo {
     
     MeshInfo()
     {
-        bsdf = nullptr;
+        //bsdf = nullptr;
         material = nullptr;
     }
     
     ~MeshInfo()
     {
-        if(bsdf) delete bsdf;
+        //if(bsdf) delete bsdf;
         if(material) delete material;
     }
     

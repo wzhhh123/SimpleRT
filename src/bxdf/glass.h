@@ -17,4 +17,4 @@ private:
 };
 
 
-GlassMaterial* CreateGlassMaterial(const dVec3 Kr, const dVec3 Kt, const float Index);
+Material* CreateGlassMaterial(const dVec3 Kr, const dVec3 Kt, const float Index);

@@ -39,9 +39,8 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 			}
             
             meshInfo.material = CreateMatteMaterial(meshInfo.diffuse);
-			meshInfo.bsdf = new BSDF();
             //meshInfo.bsdf->Add(std::make_shared<LambertianRefrection>(meshInfo.diffuse));
-            meshInfo.bsdf->Add(new LambertianRefrection(meshInfo.diffuse));
+            //meshInfo.bsdf->Add(new LambertianRefrection(meshInfo.diffuse));
 		}
 		meshes.push_back(meshInfo);
 

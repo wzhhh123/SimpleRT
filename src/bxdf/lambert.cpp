@@ -2,7 +2,7 @@
 #include "lambert.h"
 
 
-LambertianRefrection::LambertianRefrection(dVec3 albedo) {
+LambertianRefrection::LambertianRefrection(dVec3 albedo): BxDF((BxDFType)(BSDF_DIFFUSE)){
 	this->albedo = albedo;
 }
 

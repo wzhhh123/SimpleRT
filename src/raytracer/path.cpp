@@ -83,7 +83,7 @@ dVec3 Path::Trace(int level, Ray r) {
         //rr from pbrt
 		dVec3 rrBeta = beta;
 		FLOAT maxComponent = std::max(std::max(rrBeta.x, rrBeta.y), rrBeta.z);
-		if ((maxComponent < rrThreshold) && bounds >= 3) {
+		if (bounds >= 5 && (maxComponent < rrThreshold)) {
 			FLOAT q = std::max((FLOAT).05, 1 - maxComponent);
 			if (rng.nextDouble() < q) break;
 			beta /= 1 - q;
