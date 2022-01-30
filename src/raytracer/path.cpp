@@ -35,6 +35,10 @@ dVec3 Path::Trace(int level, Ray r) {
 
 		//if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) break;
 
+        
+        //BxDF* bxdf = Renderer::Instance()->GetBxDF(nearestHit.modelIndex, nearestHit.meshIndex);
+        nearestHit.ComputeScatteringFunctions(Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex]);
+     
 		//if() not specular
 		{
 			L += beta * UniformSampleOneLight(rng, nearestHit, r);
@@ -47,8 +51,8 @@ dVec3 Path::Trace(int level, Ray r) {
 		FLOAT pdf;
 		dVec3 wo = -r.direction, wi;
 
-		BxDF* bxdf = Renderer::Instance()->GetBxDF(nearestHit.modelIndex, nearestHit.meshIndex);
-		dVec3 f = bxdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf);
+	   
+		dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf);
 
 	//	std::cout << f.x << " " << f.y << " " << f.z << std::endl;
 

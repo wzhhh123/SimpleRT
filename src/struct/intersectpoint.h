@@ -2,8 +2,7 @@
 
 
 #include "base/header.h"
-
-
+#include "base/bxdf.h"
 
 class IntersectPoint {
 public:
@@ -30,4 +29,12 @@ public:
     
     //for debug
     bool IsHitAreaLight();
+    
+    BSDF* bsdf;
+    
+    
+    IntersectPoint(){bsdf = nullptr;}
+    ~IntersectPoint(){if(bsdf)delete bsdf;}
+    
+    void ComputeScatteringFunctions(MeshInfo& meshInfo);
 };

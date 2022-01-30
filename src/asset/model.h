@@ -5,6 +5,7 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 #include "lights/diffuse.h"
+#include "base/material.h"
 //AABB BoundingBox
 
 
@@ -17,12 +18,25 @@ struct MeshInfo {
 	glm::vec4 specular;
 	glm::vec4 emissive;
 	glm::vec4 shininess;
-
-	BxDF* bxdf;
+    
+	BSDF* bsdf;
+    Material* material;
 
 	bool isAreaLight;
     
     std::shared_ptr<AreaLight> AreaLight;
+    
+    MeshInfo()
+    {
+        bsdf = nullptr;
+        material = nullptr;
+    }
+    
+    ~MeshInfo()
+    {
+        if(bsdf) delete bsdf;
+        if(material) delete material;
+    }
     
 }; 
 

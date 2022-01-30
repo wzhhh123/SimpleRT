@@ -13,9 +13,11 @@ inline bool SameHemisphere(const dVec3 &w, const dVec3 &wp) {
 }
 
 
-FLOAT BxDF::Pdf(const dVec3 &wo, const dVec3 &wi)  {
+FLOAT BxDF::Pdf(const dVec3 &wo, const dVec3 &wi)
+{
 	return SameHemisphere(wo, wi) ? CosineHemispherePdf(AbsCosTheta(wi)) : 0;
 }
+
 
 dVec3 BxDF::Sample_f(const dVec3 &wo, dVec3* wi,
 	const dVec2& sample, FLOAT* pdf)  {
@@ -27,3 +29,35 @@ dVec3 BxDF::Sample_f(const dVec3 &wo, dVec3* wi,
 }
 
 
+BxDF::~BxDF()
+{
+    
+}
+
+
+void BSDF::Add(BxDF* b)
+{
+    BxDFs[NumBxDF++] = b;
+}
+
+
+dVec3 BSDF::Sample_f(const dVec3 &wo, dVec3* wi,
+    const dVec2& sample, FLOAT* pdf)
+{
+    return BxDFs[0]->Sample_f(wo, wi, sample, pdf);
+}
+
+
+dVec3 BSDF::F(const dVec3& wo, const dVec3& wi)
+{
+    return BxDFs[0]->F(wo,wi);
+}
+
+
+BSDF::~BSDF()
+{
+    for(int i = 0; i < NumBxDF; ++i)
+    {
+        delete BxDFs[i];
+    }
+}

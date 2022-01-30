@@ -2,6 +2,7 @@
 #include "header.h"
 #include "glm.hpp"
 #include "ray.h"
+#include "pcg32.h"
 
 class RayTracer {
 	

@@ -2,6 +2,7 @@
 
 #include "base/header.h"
 #include "base/bxdf.h"
+#include "base/material.h"
 
 class LambertianRefrection : public BxDF{
 
@@ -12,3 +13,21 @@ public:
 	dVec3 albedo;
 
 };
+
+
+class MatteMaterial: public Material{
+
+public:
+    
+    MatteMaterial(const dVec3 Kd);
+    virtual void ComputeScatteringFunctions(IntersectPoint& si) const;
+
+    ~MatteMaterial();
+        
+private:
+    dVec3 Kd;
+    //LambertianRefrection* LambertRefractionPtr;
+};
+
+
+Material* CreateMatteMaterial(const dVec3 Kd);

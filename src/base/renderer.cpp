@@ -36,7 +36,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 1; ++i) {
+		for (int i = 0; i < 16; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -185,7 +185,7 @@ void Renderer::Initialize() {
 			if (obj.HasMember("bsdf") && strcmp(obj["bsdf"].GetString(), "diffuse") == 0) {
 				auto albedo = obj["albedo"].GetArray().Begin();
 				models[index]->meshes[i].ambient = dVec4{ albedo->GetFloat(), (albedo + 1)->GetFloat(), (albedo + 2)->GetFloat(), 1 };
-				models[index]->meshes[i].bxdf = new LambertianRefrection(models[index]->meshes[i].ambient);
+                models[index]->meshes[i].material = CreateMatteMaterial(models[index]->meshes[i].ambient);
 			}
 		}
 		++index;
@@ -209,7 +209,8 @@ glm::vec4 Renderer::GetDiffuse(int modelIndex, int meshIndex) {
 
 
 BxDF* Renderer::GetBxDF(int modelIndex, int meshIndex) {
-	return models[modelIndex]->meshes[meshIndex].bxdf;
+    return nullptr;
+	//return models[modelIndex]->meshes[meshIndex].bxdf;
 }
 
 

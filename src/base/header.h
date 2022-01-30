@@ -85,6 +85,10 @@ class Timer;
 class Light;
 class AreaLight;
 class DiffuseAreaLight;
+class Material;
+class GlassMaterial;
+class BSDF;
+class MeshInfo;
 
 
 struct TileRenderThreadInput;

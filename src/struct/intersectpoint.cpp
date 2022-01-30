@@ -3,7 +3,6 @@
 #include "intersectpoint.h"
 #include "base/renderer.h"
 
-
 dVec3 IntersectPoint::Le(const dVec3& direction, const IntersectPoint& it) {
 
 
@@ -26,4 +25,15 @@ dVec3 IntersectPoint::Le(const dVec3& direction, const IntersectPoint& it) {
 bool IntersectPoint::IsHitAreaLight()
 {
     return Renderer::Instance()->models[modelIndex]->meshes[meshIndex].isAreaLight;
+}
+
+
+
+void IntersectPoint::ComputeScatteringFunctions(MeshInfo& meshInfo)
+{
+    Material* material = meshInfo.material;
+    if(material)
+    {
+        material->ComputeScatteringFunctions(*this);
+    }
 }

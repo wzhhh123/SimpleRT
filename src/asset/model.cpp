@@ -37,8 +37,11 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 			if (aiGetMaterialColor(mat, AI_MATKEY_SHININESS, &color) == AI_SUCCESS) {
 				meshInfo.shininess = { color.r, color.g, color.b, color.a };
 			}
-
-			meshInfo.bxdf = new LambertianRefrection(meshInfo.diffuse);
+            
+            meshInfo.material = CreateMatteMaterial(meshInfo.diffuse);
+			meshInfo.bsdf = new BSDF();
+            //meshInfo.bsdf->Add(std::make_shared<LambertianRefrection>(meshInfo.diffuse));
+            meshInfo.bsdf->Add(new LambertianRefrection(meshInfo.diffuse));
 		}
 		meshes.push_back(meshInfo);
 
