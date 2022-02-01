@@ -37,3 +37,14 @@ void IntersectPoint::ComputeScatteringFunctions(MeshInfo& meshInfo)
         material->ComputeScatteringFunctions(*this);
     }
 }
+
+
+BxDFType IntersectPoint::GetBxDFType()
+{
+    BxDFType type = (BxDFType)0;
+    if(bsdf)
+    {
+        return bsdf->GetBxDFType();
+    }
+    return type;
+}

@@ -32,9 +32,10 @@ public:
     
     BSDF* bsdf;
     
-    
     IntersectPoint(){bsdf = nullptr;}
     ~IntersectPoint(){if(bsdf)delete bsdf;}
     
     void ComputeScatteringFunctions(MeshInfo& meshInfo);
+    
+    BxDFType GetBxDFType(); 
 };

@@ -30,7 +30,7 @@ public:
 	virtual dVec3 F(const dVec3& wo, const dVec3& wi) = 0;
 
 	virtual dVec3 Sample_f(const dVec3 &wo, dVec3* wi,
-		const dVec2& sample, FLOAT* pdf);
+		const dVec2& sample, FLOAT* pdf, BxDFType& type);
 
 
 	FLOAT Pdf(const dVec3 &wo, const dVec3 &wi);
@@ -54,7 +54,7 @@ public:
     virtual dVec3 F(const dVec3& wo, const dVec3& wi);
     
     virtual dVec3 Sample_f(const dVec3 &wo, dVec3* wi,
-        const dVec2& sample, FLOAT* pdf);
+        const dVec2& sample, FLOAT* pdf, BxDFType& sampleType);
     
 private:
     dVec3 R, T;
@@ -69,8 +69,10 @@ public:
   
     void Add(BxDF* b);
     virtual dVec3 Sample_f(const dVec3 &wo, dVec3* wi,
-        const dVec2& sample, FLOAT* pdf);
+        const dVec2& sample, FLOAT* pdf, BxDFType& sampleType);
     
+    
+    BxDFType GetBxDFType();
     
     virtual dVec3 F(const dVec3& wo, const dVec3& wi);
     

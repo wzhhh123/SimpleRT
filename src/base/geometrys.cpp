@@ -13,7 +13,7 @@ Geometrys* Geometrys::Instance() {
 
 
 bool Geometrys::Intersect(Ray r, IntersectPoint* p) {
-	r.origin += 1e-6*r.direction;
+	//r.origin += 1e-6*r.direction;
 	return accelerater->Intersect(r, p);
 }
 

@@ -39,7 +39,10 @@ inline bool Refract(const dVec3 &wi, const dVec3 &n, FLOAT eta,
     
     // Handle total internal reflection for transmission
     // internal reflection accur when sin2thetaT is equal or grater than 1
-    if (sin2ThetaT >= 1) return false;
+    if (sin2ThetaT >= 1)
+    {
+        return false;
+    }
     FLOAT cosThetaT = std::sqrt(1 - sin2ThetaT);
     *wt = eta * -wi + (eta * cosThetaI - cosThetaT) * dVec3(n);
     return true;
@@ -57,8 +60,9 @@ FLOAT BxDF::Pdf(const dVec3 &wo, const dVec3 &wi)
 
 
 dVec3 BxDF::Sample_f(const dVec3 &wo, dVec3* wi,
-	const dVec2& sample, FLOAT* pdf)  {
+	const dVec2& sample, FLOAT* pdf, BxDFType& type)  {
 
+    type = (BxDFType)(BSDF_DIFFUSE | BSDF_REFLECTION);
 	*wi = CosineSampleHemisphere(sample);
 	if (wo.z < 0)wi->z *= -1;
 	*pdf = Pdf(wo, *wi);
@@ -86,15 +90,15 @@ dVec3 FresnelSpecular::F(const dVec3& wo, const dVec3& wi)
 
 
 dVec3 FresnelSpecular::Sample_f(const dVec3 &wo, dVec3* wi,
-    const dVec2& sample, FLOAT* pdf)
+    const dVec2& sample, FLOAT* pdf, BxDFType& sampleType)
 {
     FLOAT Fr = FrDielectric(CosTheta(wo), etaA, etaB);
-    if(sample.x < Fr)
+     if(Fr > sample.x)
     {
         //specular refrection term
         *wi = dVec3(-wo.x, -wo.y, wo.z);
         // if (sampledType)
-        //     *sampledType = BxDFType(BSDF_SPECULAR | BSDF_REFLECTION);
+        sampleType = BxDFType(BSDF_SPECULAR | BSDF_REFLECTION);
         *pdf = Fr;
         // the expect rendering equation of delta distribution is Lo = Fr*Li when wi is equal to the refrection direction of w0,
         // the native rendering equation is L0 = Fr*Li*costheta, so we should divide costheta here for the correct purpose.
@@ -103,7 +107,7 @@ dVec3 FresnelSpecular::Sample_f(const dVec3 &wo, dVec3* wi,
     else
     {
         //specular transimission
-        bool entering = CosTheta(wo);
+        bool entering = CosTheta(wo) > 0;
         float etaI = entering ? etaA : etaB;
         float etaT = entering ? etaB : etaA;
         
@@ -118,13 +122,12 @@ dVec3 FresnelSpecular::Sample_f(const dVec3 &wo, dVec3* wi,
         //if (mode == TransportMode::Radiance)
             ft *= (etaI * etaI) / (etaT * etaT);
         //if (sampledType)
-        //    *sampledType = BxDFType(BSDF_SPECULAR | BSDF_TRANSMISSION);
+        sampleType = BxDFType(BSDF_SPECULAR | BSDF_TRANSMISSION);
         *pdf = 1 - Fr;
         //also divide costheta here to get the expected rendering equation of delta distribution
+
         return ft / AbsCosTheta(*wi);
     }
-    
-    return dVec3(0,0,0);
 }
 
 
@@ -135,9 +138,9 @@ void BSDF::Add(BxDF* b)
 
 
 dVec3 BSDF::Sample_f(const dVec3 &wo, dVec3* wi,
-    const dVec2& sample, FLOAT* pdf)
+    const dVec2& sample, FLOAT* pdf, BxDFType& type)
 {
-    return BxDFs[0]->Sample_f(wo, wi, sample, pdf);
+    return BxDFs[0]->Sample_f(wo, wi, sample, pdf, type);
 }
 
 
@@ -153,4 +156,15 @@ BSDF::~BSDF()
     {
         delete BxDFs[i];
     }
+}
+
+
+BxDFType BSDF::GetBxDFType()
+{
+    int type = 0;
+    for(int i = 0; i < NumBxDF; ++i)
+    {
+        type |= BxDFs[i]->type;
+    }
+    return (BxDFType)type;
 }

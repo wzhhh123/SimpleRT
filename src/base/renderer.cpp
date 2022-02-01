@@ -37,7 +37,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 5; ++i) {
+		for (int i = 0; i < 128; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -79,7 +79,33 @@ void RenderTile(int tileIndex) {
 
 void Renderer::Run()
 {
-
+    
+    //FresnelSpecular specular(dVec3(1),dVec3(1),1,1.5);
+    //dVec3 wi;
+    //double pdf;
+    //BxDFType type;
+    //dVec3 f = specular.Sample_f(dVec3(0.3,0.3,0.91), &wi, {0,0}, &pdf, type);
+    //std::cout << f.x <<" " << f.y <<" " << f.z <<", " << wi.x <<" " << wi.y <<" " << wi.z <<"\n";
+    //std::cout.flush();
+    //return;
+    
+    //dMat4 mat(0);
+    //mat[0][0] = 1;
+    //mat[1][1] = 1;
+    //mat[2][2] = 1;
+    //mat[3][3] = 1;
+    
+    //Triangle tri(dVec3(-1,-1,1), dVec3(1,-1,1), dVec3(1,5,1), mat,0,0,0);
+    //Triangle tri(dVec3(-1,-1,1), dVec3(1,5,1), dVec3(1,-1,1), mat,0,0,0);
+    //Ray r;
+    //r.origin = dVec3(0,0,0);
+    //r.direction = dVec3(0,0,1);
+    //IntersectPoint p;
+    //bool a = tri.Intersect(r, p);
+    //std::cout << a <<"\n";
+    //std::cout.flush();
+    //return;
+    
 	std::thread render_thread([&] {
 		tbb::task_scheduler_init init(THREAD_COUNT);
 
