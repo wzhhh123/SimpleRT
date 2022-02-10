@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.0)
 
-project(SimpleRT)
+project(DemoTP)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -93,39 +93,39 @@ foreach(_source IN ITEMS ${ALL_FILES})
 endforeach()
 
 #add 给Tutorial添加一个可执行文件 .cpp文件
-add_executable(SimpleRT ${ALL_FILES})
+add_executable(DemoTP ${ALL_FILES})
 
 #target_link_libraries(SimpleRT ext/assimp)  
 
 IF (APPLE)
-add_custom_command(TARGET SimpleRT POST_BUILD 
+add_custom_command(TARGET DemoTP POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/libassimpd.dylib"              
-    $<TARGET_FILE_DIR:SimpleRT>)
+    $<TARGET_FILE_DIR:DemoTP>)
 ELSE()
 #复制dll到工作目录
 if(CMAKE_CL_64)
-   add_custom_command(TARGET SimpleRT POST_BUILD 
+   add_custom_command(TARGET DemoTP POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/assimp-vc141-mtd.dll"              
-    $<TARGET_FILE_DIR:SimpleRT>)
+    $<TARGET_FILE_DIR:DemoTP>)
 else()
-   add_custom_command(TARGET SimpleRT POST_BUILD 
+   add_custom_command(TARGET DemoTP POST_BUILD 
    COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/assimp-vc141-mtd.dll"              
-    $<TARGET_FILE_DIR:SimpleRT>)
+    $<TARGET_FILE_DIR:DemoTP>)
 endif()
 ENDIF()
 
 IF (APPLE)
-target_link_libraries(SimpleRT 
+target_link_libraries(DemoTP 
 ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/libassimpd.dylib  
 ${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/libtbbd.dylib
 #${CMAKE_CURRENT_BINARY_DIR}/ext/openexr-1/build/src/lib/OpenEXR/libOpenEXR-3_1.dylib
 ${OPENEXR_LIBS}
 )
 ELSE()
-target_link_libraries(SimpleRT 
+target_link_libraries(DemoTP 
 ${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/lib/Debug/assimp-vc141-mtd.lib  
 ${CMAKE_CURRENT_BINARY_DIR}/ext/tbb/Debug/tbb_debug.lib
 ${OPENEXR_LIBS}
