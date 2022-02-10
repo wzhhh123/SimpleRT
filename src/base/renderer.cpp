@@ -37,7 +37,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 128; ++i) {
+		for (int i = 0; i < 2; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -184,6 +184,11 @@ void Renderer::Initialize() {
 	for (const auto &obj : objs)
 	{
 		std::string path = obj["path"].GetString();
+#if __APPLE__
+
+#else
+		path = path.substr(path.find_first_of('/')+1);
+#endif 
 
 		auto position = obj["position"].GetArray().Begin();
 		dMat4 trans = glm::translate(dMat4(1.0f), dVec3(position->GetFloat(), (position + 1)->GetFloat(), (position + 2)->GetFloat()));
