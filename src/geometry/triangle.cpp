@@ -103,6 +103,7 @@ Triangle::Triangle(dVec3 _v0, dVec3 _v1, dVec3 _v2, dMat4 model, int _modelIndex
 //https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
 //Möller–Trumbore intersection algorithm
 //克莱姆法则+向量混合积
+//
 bool Triangle::Intersect(Ray r, IntersectPoint& p)
 {
 	const float EPSILON = 0.0000001;
@@ -169,8 +170,8 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 	}
 	else // This means that there is a line intersection but not a ray intersection.
 		return false;
-}
 
+}
 
 //用到法线贴图再上这个
 //void Triangle::TangentToObject() {
