@@ -18,6 +18,7 @@
 #include "tool/math.h"
 #include "tool/exrhelper.h"
 #include "bxdf/glass.h"
+#include "camera.h"
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
@@ -32,7 +33,7 @@ void RenderTile(int tileIndex) {
 	pcg32 rng;
 	rng.seed(8, 36);
 	int yx = left;
-	float dirZ = IMG_SIZE / (tan(AOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离 //照顾一下aabb计算 使用左手系
+	Camera Cam;
 	while (yx < right) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
@@ -44,14 +45,8 @@ void RenderTile(int tileIndex) {
 
 			//offsetY = offsetX = 0;
 
-			dVec3 dir;
-			dir.x = yx % IMG_SIZE - IMG_SIZE / 2 + offsetX;
-			dir.y = IMG_SIZE / 2 - yx / IMG_SIZE + offsetY;
-			dir.z = dirZ;
-
 			Ray r = {};
-			r.origin = dVec3{ 0,0,0 };
-			r.direction = glm::normalize(dir);
+			Cam.GenerateRay(yx, dVec2{offsetX, offsetY}, r);
 
 			dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r);
 			//if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {

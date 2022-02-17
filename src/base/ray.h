@@ -11,3 +11,14 @@ public:
 	dVec3 direction;
 
 };
+
+
+class RayDifferential : public Ray
+{
+public:
+	RayDifferential();
+
+	bool bHasDifferentials;
+	dVec3 rxOrigin, ryOrigin;
+	dVec3 rxDirection, ryDirection;
+};

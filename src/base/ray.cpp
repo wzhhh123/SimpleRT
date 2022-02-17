@@ -5,3 +5,9 @@
 
 
 
+RayDifferential::RayDifferential()
+{
+	bHasDifferentials = false;
+}
+
+

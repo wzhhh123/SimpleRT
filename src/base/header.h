@@ -96,6 +96,7 @@ class Material;
 class GlassMaterial;
 class BSDF;
 class MeshInfo;
+class Camera;
 
 
 struct TileRenderThreadInput;
