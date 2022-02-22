@@ -48,6 +48,15 @@ void Triangle::SetData(IntersectPoint& it) {
 	else {
 		std::cout << "no normals???" << std::endl;
 	}
+    aiVector3D* uv = Renderer::Instance()->models[it.modelIndex]->GetUVs(meshIndex);
+    if(uv)
+    {
+        
+    }
+    else
+    {
+        std::cout << "no uvs???" << std::endl;
+    }
 
 	//it.uv = it.weightU * v0.uv + it.weightV  * v1.uv + (1 - it.weightV - it.weightU) * v2.uv;
 

@@ -71,6 +71,7 @@ inline FLOAT clamp(FLOAT a, FLOAT l, FLOAT r)
 class Model;
 class Geometrys;
 class Ray;
+class RayDifferential;
 class RayTracer;
 class Renderer;
 class Shape;
@@ -97,7 +98,10 @@ class GlassMaterial;
 class BSDF;
 class MeshInfo;
 class Camera;
-
+class TexInfo;
+template <typename TMem, typename TReturn> class ImageTexture;
+template <typename T>class Texture;
+template <typename T>class MipMap;
 
 struct TileRenderThreadInput;
 struct TileRenderThreadOutput;

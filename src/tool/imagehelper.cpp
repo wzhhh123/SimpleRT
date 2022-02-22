@@ -41,3 +41,11 @@ dVec3 fastToneMap(dVec3 col) {
 	return 1.0 / (col + 1.0);
 
 }
+
+
+unsigned char* LoadImage(std::string filepath, int &w, int &h)
+{
+    int bpp;
+    unsigned char* pixels = stbi_load(filepath, &w, &h, &bpp, 0);
+    return pixels;
+}

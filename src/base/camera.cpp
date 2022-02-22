@@ -16,7 +16,7 @@ Camera::Camera()
 
 }
 
-void Camera::GenerateRay(int Idx, dVec2 Sample,  Ray& R)
+void Camera::GenerateRay(int Idx, dVec2 Sample, Ray& R)
 {
 	dVec3 dir;
 	dir.x = Idx % IMG_SIZE - IMG_SIZE / 2 + Sample.x;
@@ -26,4 +26,25 @@ void Camera::GenerateRay(int Idx, dVec2 Sample,  Ray& R)
 	R.direction = glm::normalize(dir);
 }
 
-
+void Camera::GenerateRayDifferential(int Idx, dVec2& Sample, RayDifferential *Rd)
+{
+    GenerateRay(Idx, Sample, *Rd);
+    {
+        Ray rx;
+        dVec2 SampleX = Sample;
+        SampleX.x += 1;
+        GenerateRay(Idx, SampleX, rx);
+        Rd->rxOrigin = Rd->origin + (rx.origin - Rd->origin)/1.0;
+        Rd->rxDirection = Rd->direction + (rx.direction - Rd->direction)/1.0;
+    }
+    {
+        Ray ry;
+        dVec2 SampleY = Sample;
+        SampleY.y += 1;
+        GenerateRay(Idx, SampleY, ry);
+        Rd->ryOrigin = Rd->origin + (ry.origin - Rd->origin)/1.0;
+        Rd->ryDirection = Rd->direction + (ry.direction - Rd->direction)/1.0;
+    }
+    Rd->bHasDifferentials = true;
+    return;
+}
