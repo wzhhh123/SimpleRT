@@ -31,7 +31,7 @@ dVec3 UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
             dVec3 col = nearestHit.Le(-shadowRay.direction, nearestHit);
             
             //dVec3 f = Renderer::Instance()->GetBxDF(point.modelIndex, point.meshIndex)->F(shadowRay.direction, shadowRay.direction);
-            dVec3 f = point.bsdf->F(shadowRay.direction, shadowRay.direction);
+            dVec3 f = point.bsdf->F(shadowRay.direction, shadowRay.direction, nearestHit);
             L += col * f * std::abs(glm::dot(shadowRay.direction, point.normalWS)) / (lightAreaToSolidAnglePdf);
         }
         else

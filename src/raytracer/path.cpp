@@ -51,7 +51,7 @@ dVec3 Path::Trace(int level, Ray r) {
                 
             }
 		}
-        
+		
         if (!found || bounds >= level) break;
 
         nearestHit.ComputeScatteringFunctions(Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex]);
@@ -62,15 +62,15 @@ dVec3 Path::Trace(int level, Ray r) {
         
         if((nearestHit.GetBxDFType() & BSDF_SPECULAR) == 0)
         {
-            L += beta * UniformSampleOneLight(rng, nearestHit, r);
+            //L += beta * UniformSampleOneLight(rng, nearestHit, r);
         }
         
 		FLOAT pdf;
 		dVec3 wo = -r.direction, wi;
 
         BxDFType type = (BxDFType)0;
-		dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf, type);
-        
+		dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf, type, nearestHit);
+		return f;
         //return glm::normalize(nearestHit.worldToTangent * nearestHit.normalWS);
         //return glm::normalize(nearestHit.tangentToWorld * dVec3(0,0,1));
         //return dVec3(1,1,1);

@@ -22,14 +22,14 @@ dVec2 UniformSampleTriangle(const dVec2 &u) {
 void Triangle::SetData(IntersectPoint& it) {
 
 	aiVector3D* normal = Renderer::Instance()->models[it.modelIndex]->GetNormals(meshIndex);
-	if (normal) {
+	aiFace* face = Renderer::Instance()->models[it.modelIndex]->GetFaces(meshIndex);
 
-		aiFace* face = Renderer::Instance()->models[it.modelIndex]->GetFaces(meshIndex);
+	int idx0 = face[it.faceIndex].mIndices[0];
+	int idx1 = face[it.faceIndex].mIndices[1];
+	int idx2 = face[it.faceIndex].mIndices[2];
 
-		int idx0 = face[it.faceIndex].mIndices[0];
-		int idx1 = face[it.faceIndex].mIndices[1];
-		int idx2 = face[it.faceIndex].mIndices[2];
-
+	if (normal) 
+	{
 		dVec3 worldNormal0 = objectToWorld * dVec4{ normal[idx0].x, normal[idx0].y, normal[idx0].z, 0 };
 		dVec3 worldNormal1 = objectToWorld * dVec4{ normal[idx1].x, normal[idx1].y, normal[idx1].z, 0 };
 		dVec3 worldNormal2 = objectToWorld * dVec4{ normal[idx2].x, normal[idx2].y, normal[idx2].z, 0 };
@@ -51,11 +51,19 @@ void Triangle::SetData(IntersectPoint& it) {
     aiVector3D* uv = Renderer::Instance()->models[it.modelIndex]->GetUVs(meshIndex);
     if(uv)
     {
-        
+		dVec2 uv0=  dVec2{ uv[idx0].x, uv[idx0].y};
+		dVec2 uv1 = dVec2{ uv[idx1].x, uv[idx1].y};
+		dVec2 uv2 = dVec2{ uv[idx2].x, uv[idx2].y};
+
+		it.uv =
+			glm::normalize(
+				it.weightU * uv1 +
+				it.weightV * uv2 +
+				(1 - it.weightV - it.weightU) * uv0);
     }
     else
     {
-        std::cout << "no uvs???" << std::endl;
+       // std::cout << "no uvs???" << std::endl;
     }
 
 	//it.uv = it.weightU * v0.uv + it.weightV  * v1.uv + (1 - it.weightV - it.weightU) * v2.uv;

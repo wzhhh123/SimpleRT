@@ -19,6 +19,8 @@
 #include "tool/exrhelper.h"
 #include "bxdf/glass.h"
 #include "camera.h"
+#include "tool/platform.h"
+#include "texture.h"
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
@@ -38,7 +40,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 2; ++i) {
+		for (int i = 0; i < 1; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -147,7 +149,6 @@ void Renderer::Run()
 
 }
 
-
 void Renderer::Initialize() {
 
 	//imageData = (unsigned char*) new char[IMG_SIZE * IMG_SIZE * CHANNEL_COUNT];
@@ -178,12 +179,7 @@ void Renderer::Initialize() {
 	int index = 0;
 	for (const auto &obj : objs)
 	{
-		std::string path = obj["path"].GetString();
-#if __APPLE__
-
-#else
-		path = path.substr(path.find_first_of('/')+1);
-#endif 
+		std::string path = ConvertRelativePath(obj["path"].GetString());
 
 		auto position = obj["position"].GetArray().Begin();
 		dMat4 trans = glm::translate(dMat4(1.0f), dVec3(position->GetFloat(), (position + 1)->GetFloat(), (position + 2)->GetFloat()));
@@ -213,15 +209,22 @@ void Renderer::Initialize() {
             {
                 auto albedo = obj["albedo"].GetArray().Begin();
                 models[index]->meshes[i].ambient = dVec4{ albedo->GetFloat(), (albedo + 1)->GetFloat(), (albedo + 2)->GetFloat(), 1 };
+				ImageTexture<dVec3, dVec3> *tex = nullptr;
+				if (obj.HasMember("test_tex"))
+				{
+					std::string texPath = ConvertRelativePath(obj["test_tex"].GetString());
+					tex = new ImageTexture<dVec3, dVec3>(texPath);
+				}
                 if(strcmp(obj["bsdf"].GetString(), "diffuse") == 0)
                 {
-                    models[index]->meshes[i].material = CreateMatteMaterial(models[index]->meshes[i].ambient);
+                    models[index]->meshes[i].material = CreateMatteMaterial(models[index]->meshes[i].ambient, tex);
                 }
                 else if(strcmp(obj["bsdf"].GetString(), "glass") == 0)
                 {
                     models[index]->meshes[i].material = CreateGlassMaterial(dVec3(1,1,1), dVec3(1,1,1), obj["index"].GetFloat());
                 }
 			}
+
 		}
 		++index;
 	}

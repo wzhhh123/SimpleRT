@@ -19,6 +19,8 @@ struct MeshInfo {
 	glm::vec4 emissive;
 	glm::vec4 shininess;
     
+	Texture<dVec3>* albedoTex;
+
     Material* material;
 
 	bool isAreaLight;

@@ -9,6 +9,13 @@ class TexInfo
 {
 public:
     std::string name;
+	int h, w;
+	bool operator<(const TexInfo &b) const
+	{
+		if (name != b.name) return name < b.name;
+		if (w != b.w) return w < b.w;
+		return h < b.w;
+	}
 };
 
 template <typename T>
@@ -22,7 +29,14 @@ class Texture {
 
 template <typename T>
 class MipMap{
-    
+public:
+	MipMap(int w, int h, T* data);
+
+	T Evaluate(const IntersectPoint& it);
+
+private:
+	int width, height;
+	std::unique_ptr<T[]> pixels;
 };
 
 
@@ -33,11 +47,13 @@ public:
     
     ImageTexture(std::string fileName);
     
+	TReturn Evaluate(const IntersectPoint &) const override;
+
 private:
     
     MipMap<TMem> *mipmap;
     static std::map<TexInfo, std::unique_ptr<MipMap<TMem>>> textures;
-    static MipMap<TMen>* GetTexture(std::string fileName);
+    static MipMap<TMem>* GetTexture(std::string fileName);
 };
 
 

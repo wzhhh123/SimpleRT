@@ -38,7 +38,7 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 				meshInfo.shininess = { color.r, color.g, color.b, color.a };
 			}
             
-            meshInfo.material = CreateMatteMaterial(meshInfo.diffuse);
+            meshInfo.material = CreateMatteMaterial(meshInfo.diffuse, nullptr);
             //meshInfo.bsdf->Add(std::make_shared<LambertianRefrection>(meshInfo.diffuse));
             //meshInfo.bsdf->Add(new LambertianRefrection(meshInfo.diffuse));
 		}

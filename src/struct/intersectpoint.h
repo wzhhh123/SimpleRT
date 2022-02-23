@@ -14,6 +14,7 @@ public:
 	//dVec3 normalOS;
 	dVec3 tangentWS;
 	dVec3 bitangentWS;
+	dVec2 uv;
 	
 	//dVec2 uv;
 	

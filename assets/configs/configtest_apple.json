@@ -7,7 +7,6 @@
             "scale": [ 1, 1, 1 ],
             "albedo": [ 0.725, 0.71, 0.68 ],
             "bsdf": "diffuse"
-
         },
         {
             "path": "../../assets/models/cbox/meshes/rightwall.obj",
@@ -16,7 +15,6 @@
             "scale": [ 1, 1, 1 ],
             "albedo": [ 0.161, 0.133, 0.427 ],
             "bsdf": "diffuse"
-
         },
         {
             "path": "../../assets/models/cbox/meshes/leftwall.obj",
@@ -24,27 +22,8 @@
             "euler": [ 0, 0, 0 ],
             "scale": [ 1, 1, 1 ],
             "albedo": [ 0.630, 0.065, 0.05 ],
-            "bsdf": "diffuse"
-
-        },
-        {
-            "path": "../../assets/models/cbox/meshes/sphere1.obj",
-            "position": [ 0, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.725, 0.71, 0.68 ],
-            "bsdf": "diffuse"
-
-        },
-        {
-            "path": "../../assets/models/cbox/meshes/sphere2.obj",
-            "position": [ 0, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.725, 0.71, 0.68 ],
-            "bsdf": "glass",
-            "index": 1.5
-
+            "bsdf": "diffuse",
+            "test_tex": "../../assets/scenes/testtex.png"
         },
         {
             "path": "../../assets/models/cbox/meshes/light.obj",
@@ -52,8 +31,17 @@
             "euler": [ 0, 0, 0 ],
             "scale": [ 1, 1, 1 ],
             "bsdf": "diffuse",
-            "albedo": [0,0,0],
+            "albedo": [ 0, 0, 0 ],
             "radiance": [ 40, 40, 40 ]
+        },
+        {
+            "path": "../../assets/models/cbox/meshes/quad.obj",
+            "position": [ 0, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "bsdf": "diffuse",
+            "albedo": [ 1, 0, 0 ],
+            "test_tex": "../../assets/scenes/testtex.png"
         }
     ],
     "camera": {

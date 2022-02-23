@@ -27,10 +27,10 @@ class BxDF {
 
 public:
 	
-	virtual dVec3 F(const dVec3& wo, const dVec3& wi) = 0;
+	virtual dVec3 F(const dVec3& wo, const dVec3& wi, IntersectPoint& is) = 0;
 
 	virtual dVec3 Sample_f(const dVec3 &wo, dVec3* wi,
-		const dVec2& sample, FLOAT* pdf, BxDFType& type);
+		const dVec2& sample, FLOAT* pdf, BxDFType& type, IntersectPoint& is);
 
 
 	FLOAT Pdf(const dVec3 &wo, const dVec3 &wi);
@@ -45,36 +45,19 @@ public:
 };
 
 
-class FresnelSpecular: public BxDF
-{
-public:
-    
-    FresnelSpecular(dVec3 R, dVec3 T, float etaA, float etaB);
-    
-    virtual dVec3 F(const dVec3& wo, const dVec3& wi);
-    
-    virtual dVec3 Sample_f(const dVec3 &wo, dVec3* wi,
-        const dVec2& sample, FLOAT* pdf, BxDFType& sampleType);
-    
-private:
-    dVec3 R, T;
-    float etaA, etaB;
-    
-};
 
-
-
+//container of bxdf
 class BSDF{
 public:
   
     void Add(BxDF* b);
     virtual dVec3 Sample_f(const dVec3 &wo, dVec3* wi,
-        const dVec2& sample, FLOAT* pdf, BxDFType& sampleType);
+        const dVec2& sample, FLOAT* pdf, BxDFType& sampleType, IntersectPoint& is);
     
     
     BxDFType GetBxDFType();
     
-    virtual dVec3 F(const dVec3& wo, const dVec3& wi);
+    virtual dVec3 F(const dVec3& wo, const dVec3& wi, IntersectPoint& is);
     
     virtual ~BSDF();
         
