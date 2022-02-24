@@ -1,6 +1,7 @@
 
 #include "imagehelper.h"
 #include "stb_image.h"
+#include "exrhelper.h"
 
 void SaveImage(int w, int h, int channels_num, unsigned char* imageData)
 {
@@ -43,9 +44,9 @@ dVec3 fastToneMap(dVec3 col)
 }
 
 
-unsigned char* LoadImage(std::string filepath, int &w, int &h)
+unsigned char* LoadImage(std::string filepath, int &w, int &h, int &bpp)
 {
-    int bpp;
+    stbi_set_flip_vertically_on_load(true);
     unsigned char* pixels = stbi_load(filepath.c_str(), &w, &h, &bpp, 0);
     return pixels;
 }
@@ -53,15 +54,30 @@ unsigned char* LoadImage(std::string filepath, int &w, int &h)
 
 dVec3* LoadImageVec(std::string filepath, int &w, int &h)
 {
-	unsigned char* pixels = LoadImage(filepath, w, h);
+    int bpp;
+	unsigned char* pixels = LoadImage(filepath, w, h, bpp);
+    assert(bpp >= 3);
 	dVec3* res = new dVec3[w*h];
-	for(int i = 0; i < w; ++i)
+	for(int i = 0; i < h; ++i)
 	{
-		for(int j = 0; j < h; ++j)
+		for(int j = 0; j < w; ++j)
 		{
-			res[i*h + j] = dVec3{ pixels[i*h + j], pixels[i*h + j + 1], pixels[i*h + j + 2] };
+            res[i*w + j] = dVec3{ pixels[(i*w + j)*bpp], pixels[(i*w + j)*bpp + 1], pixels[(i*w + j)*bpp + 2] };
 		}
 	}
+    //float* pixels2 = new float[w*h*3];
+    //for(int i = 0; i < h; ++i)
+    //{
+    //    for(int j = 0; j < w; ++j)
+    //    {
+    //        pixels2[i*w*3+j*3] = pixels[i*w*4+j*4] / 255.0;
+    //        pixels2[i*w*3+j*3+1] = pixels[i*w*4+j*4+1] / 255.0;
+    //        pixels2[i*w*3+j*3+2] = pixels[i*w*4+j*4+2] / 255.0;
+    //    }
+    //}
+    //EXR_HELPER::SaveAsExrFile("../../assets/scenes/testtex.exr", w,h, pixels2);
+    
+    std::cout << res[0].x <<" " << res[0].y <<" " << res[0].z << std::endl;
 	free(pixels);
 	return res;
 }

@@ -54,16 +54,15 @@ void Triangle::SetData(IntersectPoint& it) {
 		dVec2 uv0=  dVec2{ uv[idx0].x, uv[idx0].y};
 		dVec2 uv1 = dVec2{ uv[idx1].x, uv[idx1].y};
 		dVec2 uv2 = dVec2{ uv[idx2].x, uv[idx2].y};
-
+  
 		it.uv =
-			glm::normalize(
 				it.weightU * uv1 +
 				it.weightV * uv2 +
-				(1 - it.weightV - it.weightU) * uv0);
+				(1 - it.weightV - it.weightU) * uv0;
     }
     else
     {
-       // std::cout << "no uvs???" << std::endl;
+        //std::cout << "no uvs???" << std::endl;
     }
 
 	//it.uv = it.weightU * v0.uv + it.weightV  * v1.uv + (1 - it.weightV - it.weightU) * v2.uv;
@@ -152,8 +151,12 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 		p.weightU = u;
 		p.weightV = v;
 
+        p.meshIndex = meshIndex;
+        p.modelIndex = modelIndex;
+        p.faceIndex = faceIndex;
+        
 		dVec2 uv[3];
-		GetUVs(uv);
+		GetUVs(uv, p);
 		dVec2 duv02 = uv[0] - uv[2], duv12 = uv[1] - uv[2];
 		dVec3 dp02 = v0.vertexWS - v2.vertexWS, dp12 = v1.vertexWS - v2.vertexWS;
 		FLOAT determinant = duv02[0] * duv12[1] - duv02[1] * duv12[0];
@@ -177,9 +180,6 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 		//	bitangent = v1.bitangentWS *p.weightU + v2.bitangentWS * p.weightV + v0.bitangentWS * (1 - p.weightU - p.weightV);
 		//}
 
-		p.meshIndex = meshIndex;
-		p.modelIndex = modelIndex;
-		p.faceIndex = faceIndex;
 
 		SetData(p);
 
@@ -215,11 +215,22 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 //}
 
 
-void Triangle::GetUVs(dVec2 uv[3]) {
+void Triangle::GetUVs(dVec2 uv[3],IntersectPoint& it) {
 
-	uv[0] = dVec2(0, 0);
-	uv[1] = dVec2(1, 1);
-	uv[2] = dVec2(1, 0);
+    aiFace* face = Renderer::Instance()->models[it.modelIndex]->GetFaces(meshIndex);
+
+    int idx0 = face[it.faceIndex].mIndices[0];
+    int idx1 = face[it.faceIndex].mIndices[1];
+    int idx2 = face[it.faceIndex].mIndices[2];
+
+    aiVector3D* uva = Renderer::Instance()->models[it.modelIndex]->GetUVs(meshIndex);
+    if(uva)
+    {
+        uv[0] =  dVec2{ uva[idx0].x, uva[idx0].y};
+        uv[1]  = dVec2{ uva[idx1].x, uva[idx1].y};
+        uv[2]  = dVec2{ uva[idx2].x, uva[idx2].y};
+    }
+    return;
 	/*	uv[0] = v0.uv;
 		uv[1] = v1.uv;
 		uv[2] = v2.uv;*/

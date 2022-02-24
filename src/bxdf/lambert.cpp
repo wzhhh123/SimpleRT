@@ -11,10 +11,8 @@ LambertianRefrection::LambertianRefrection(dVec3 albedo, ImageTexture<dVec3, dVe
 dVec3 LambertianRefrection::F(const dVec3& wo, const dVec3& wi, IntersectPoint& si) {
 	if(tex)
 	{
-		return tex->Evaluate(si);
 		return tex->Evaluate(si)*InvPi;
 	}
-	return albedo;
 	return albedo * InvPi;
 }
 

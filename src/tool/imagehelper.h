@@ -10,7 +10,7 @@ dVec3 fastToneMap(dVec3 col);
 
 dVec3 toSRGB(dVec3 col);
 
-unsigned char* LoadImage(std::string filepath, int &w, int &h);
+unsigned char* LoadImage(std::string filepath, int &w, int &h, int& bpp);
 
 dVec3* LoadImageVec(std::string filepath, int &w, int &h);
 

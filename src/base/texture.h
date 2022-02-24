@@ -58,4 +58,4 @@ private:
 
 
 
-template class ImageTexture<dVec3, dVec3>;
+extern template class ImageTexture<dVec3, dVec3>;

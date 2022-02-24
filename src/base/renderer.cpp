@@ -40,7 +40,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 1; ++i) {
+		for (int i = 0; i < 8; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -49,6 +49,7 @@ void RenderTile(int tileIndex) {
 
 			Ray r = {};
 			Cam.GenerateRay(yx, dVec2{offsetX, offsetY}, r);
+            //Cam.GenerateRay(yx, dVec2{0.0, 0.0}, r);
 
 			dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r);
 			//if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {

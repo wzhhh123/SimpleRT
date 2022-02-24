@@ -86,7 +86,8 @@ Model::~Model()
 
 void Model::Initialize(const char* path)
 {
-	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
+	//const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs |// aiProcess_GenNormals | aiProcess_CalcTangentSpace);
+    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
@@ -100,6 +101,29 @@ void Model::Initialize(const char* path)
 	}
 
 	ProcessNode(aiObj->mRootNode, aiObj);
+    
+    //for(int i = 0; i < meshes.size(); ++i)
+    //{
+    //    int faceNum = meshes[i].mesh->mNumFaces;
+    //    for(int j = 0; j < faceNum; ++j)
+    //    {
+    //        aiFace face = meshes[i].mesh->mFaces[j];
+    //        std::cout << "indexnum: " << face.mNumIndices << std::endl;
+    //        std::cout
+    //        << face.mIndices[0] << " "
+    //        << face.mIndices[1] << " "
+    //        << face.mIndices[2] << " "
+    //        << std::endl;
+    //
+    //        aiVector3D* uv = meshes[i].mesh->mTextureCoords[0];
+    //        std::cout
+    //        << uv[face.mIndices[0]].x << " "<< uv[face.mIndices[0]].y << " "<< uv[face.mIndices[0]].z << " "
+    //        << uv[face.mIndices[1]].x << " "<< uv[face.mIndices[1]].y << " "<< uv[face.mIndices[1]].z << " "
+    //        << uv[face.mIndices[2]].x << " "<< uv[face.mIndices[2]].y << " "<< uv[face.mIndices[2]].z << " "
+    //        << std::endl;
+    //    }
+    //}
+    
 }
 
 void Model::deInitialize()

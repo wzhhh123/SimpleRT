@@ -74,8 +74,9 @@ T MipMap<T>::Evaluate(const IntersectPoint& it)
 	int u = ((int)std::floor(width*it.uv.x)) % width;
 	int v = ((int)std::floor(height*(it.uv.y)))% height;
 	int index = v * width + u;
-	return { it.uv.x, it.uv.y,0 };
+	//return { it.uv.x, it.uv.y,0 };
 	//std::cout << pixels[index].x << " " << pixels[index].y << " " << pixels[index].z << std::endl;
 	return pixels[index];
 }
 
+template class ImageTexture<dVec3, dVec3>;

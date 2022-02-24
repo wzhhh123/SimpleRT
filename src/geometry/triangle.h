@@ -32,7 +32,7 @@ public:
 	int meshIndex;
 	int faceIndex;
 	
-	void GetUVs(dVec2 uv[3]);
+	void GetUVs(dVec2 uv[3], IntersectPoint& it);
 	//void TangentToObject();
 
 

@@ -27,7 +27,6 @@ build log:
 
 int main() {
 	using namespace std;
-
 	//BoundingBox aabb = BoundingBox({ -1,-1,-1 }, { 1,1,1 });
 	//Ray r;
 	//r.origin = { 0,0,0 };
