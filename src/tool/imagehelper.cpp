@@ -43,6 +43,11 @@ dVec3 fastToneMap(dVec3 col)
 	return 1.0 / (col + 1.0);
 }
 
+float fastToneMap(float c)
+{
+    return 1.0 / (c + 1.0);
+}
+
 
 unsigned char* LoadImage(std::string filepath, int &w, int &h, int &bpp)
 {

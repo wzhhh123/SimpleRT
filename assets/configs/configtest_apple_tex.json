@@ -1,36 +1,26 @@
 {
     "scene": [
         {
-            "path": "../../assets/models/cbox/meshes/walls.obj",
+            "path": "../../assets/models/cbox/meshes/quad.obj",
             "position": [ 0, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.725, 0.71, 0.68 ],
+            "euler": [ -90, 0, 0 ],
+            "scale": [ 30, 30, 30 ],
+            "albedo": [ 0.7, 0.6, 0.5 ],
             "bsdf": "diffuse"
-
         },
         {
-            "path": "../../assets/models/cbox/meshes/rightwall.obj",
-            "position": [ 0, 0, 0 ],
+            "path": "../../assets/models/cbox/meshes/quad.obj",
+            "position": [ 0, 0.3, -10 ],
             "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.161, 0.133, 0.427 ],
-            "bsdf": "diffuse"
-
-        },
-        {
-            "path": "../../assets/models/cbox/meshes/leftwall.obj",
-            "position": [ 0, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.630, 0.065, 0.05 ],
+            "scale": [ 30, 30, 30 ],
+            "albedo": [ 0.7, 0.6, 0.5 ],
             "bsdf": "diffuse"
         },
         {
             "path": "../../assets/models/cbox/meshes/light.obj",
-            "position": [ 0, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
+            "position": [ 30, 30, 30],
+            "euler": [ 45, 45, 0 ],
+            "scale": [ 6, 6, 6 ],
             "bsdf": "diffuse",
             "albedo": [ 0, 0, 0 ],
             "radiance": [ 40, 40, 40 ]
@@ -52,6 +42,14 @@
             "bsdf": "diffuse",
             "albedo": [ 1, 0, 0 ],
             "test_tex": "../../assets/scenes/kabar_obj/kabar_basecolor.tga"
+        },
+        {
+            "path": "../../assets/models/cbox/meshes/sphere1.obj",
+            "position": [ -0.3, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "albedo": [ 0.5, 0.9, 0.9 ],
+            "bsdf": "diffuse"
         }
     ],
     "camera": {

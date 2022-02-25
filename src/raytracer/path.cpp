@@ -32,14 +32,10 @@ dVec3 Path::Trace(int level, Ray r) {
 				L += beta * nearestHit.Le(-r.direction, nearestHit);
 		}
 
-
-
 		//if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) break;
 
-        
         //BxDF* bxdf = Renderer::Instance()->GetBxDF(nearestHit.modelIndex, nearestHit.meshIndex);
         
-     
 		if(bounds == 0 || specularBound)
 		{
             if(found)
@@ -60,16 +56,11 @@ dVec3 Path::Trace(int level, Ray r) {
 		//L = nearestHit.normalWS;
 		//break;
         
-        if((nearestHit.GetBxDFType() & BSDF_SPECULAR) == 0)
-        {
-            L += beta * UniformSampleOneLight(rng, nearestHit, r);
-        }
-        
-		FLOAT pdf;
-		dVec3 wo = -r.direction, wi;
+        FLOAT pdf;
+        dVec3 wo = -r.direction, wi;
 
         BxDFType type = (BxDFType)0;
-		dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf, type, nearestHit);
+        dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf, type, nearestHit);
 
         //return glm::normalize(nearestHit.worldToTangent * nearestHit.normalWS);
         //return glm::normalize(nearestHit.tangentToWorld * dVec3(0,0,1));
@@ -78,16 +69,23 @@ dVec3 Path::Trace(int level, Ray r) {
         
         specularBound = (type & BSDF_SPECULAR) != 0;
         
-        //	std::cout << f.x << " " << f.y << " " << f.z << std::endl;
+        //    std::cout << f.x << " " << f.y << " " << f.z << std::endl;
 
-        if((f.x < 1e-6 && f.y < 1e-6 && f.z < 1e-6) || pdf < 1e-6)
+        if((f.x == 0.0 && f.y == 0.0 && f.z == 0.0) || pdf == 0.0)
         {
             break;
         }
         
-		beta *= f * std::abs(glm::dot( nearestHit.tangentToWorld * glm::normalize(wi)
-			, nearestHit.normalWS)) / pdf;
+        beta *= f * std::abs(glm::dot( nearestHit.tangentToWorld * glm::normalize(wi)
+            , nearestHit.normalWS)) / pdf;
         
+    
+        if((nearestHit.GetBxDFType() & ~BSDF_SPECULAR) > 0)
+        {
+            L += beta * UniformSampleOneLight(rng, nearestHit, r);
+        }
+        
+
         //beta *= f * std::abs(glm::dot(glm::normalize(wi), dVec3(0,0,1))) / pdf;
 
 		//dVec3 dir = nearestHit.tangentToWorld * glm::normalize(wi);

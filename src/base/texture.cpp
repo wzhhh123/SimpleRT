@@ -76,6 +76,7 @@ T MipMap<T>::Evaluate(const IntersectPoint& it)
 	int index = v * width + u;
 	//return { it.uv.x, it.uv.y,0 };
 	//std::cout << pixels[index].x << " " << pixels[index].y << " " << pixels[index].z << std::endl;
+    //return {0.3,0.6,0.4};
 	return pixels[index];
 }
 

@@ -19,7 +19,7 @@
 #define  IMG_SIZE  480
 #define SPP 1000
 #define CHANNEL_COUNT  3
-#define AOV 60
+#define AOV 45
 #define DEPTH 16
 #define THREAD_COUNT 64
 #define dVec2 glm::dvec2
@@ -47,7 +47,8 @@ const FLOAT Sqrt2 = 1.41421356237309504880;
 #if __APPLE__
 #define OUTPUT_PATH_JPG "../../assets/image/result_apple.jpg"
 #define OUTPUT_PATH_EXR "../../assets/image/result_apple.exr"
-#define CONFIG_PATH "../../assets/configs/configtest_apple.json"
+//#define CONFIG_PATH "../../assets/configs/configtest_apple.json"
+#define CONFIG_PATH "../../assets/configs/configtest_apple_tex.json"
 #else
 #define OUTPUT_PATH_JPG "../assets/image/result.jpg"
 #define OUTPUT_PATH_EXR "../assets/image/result.exr"

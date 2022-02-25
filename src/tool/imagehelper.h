@@ -8,6 +8,8 @@ void SaveImage(int w, int h, int channels_num, unsigned char* imageData);
 
 dVec3 fastToneMap(dVec3 col);
 
+float fastToneMap(float c);
+
 dVec3 toSRGB(dVec3 col);
 
 unsigned char* LoadImage(std::string filepath, int &w, int &h, int& bpp);

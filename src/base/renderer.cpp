@@ -40,7 +40,7 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 8; ++i) {
+		for (int i = 0; i < 32; ++i) {
 
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
@@ -138,7 +138,14 @@ void Renderer::Run()
 	render_thread.join();
 
 	std::cout << "save" << std::endl;
-	//SaveImage(IMG_SIZE, IMG_SIZE, CHANNEL_COUNT, imageData);
+    
+    //unsigned char* pixels = new unsigned char[IMG_SIZE*IMG_SIZE*CHANNEL_COUNT];
+    //for(int i = 0; i < IMG_SIZE*IMG_SIZE*CHANNEL_COUNT; ++i)
+    //{
+    //    pixels[i] = (char)std::floor(fastToneMap(imageData[i]) * 255);
+    //}
+	//SaveImage(IMG_SIZE, IMG_SIZE, CHANNEL_COUNT, pixels);
+    //delete []pixels;
     
     EXR_HELPER::SaveAsExrFile(OUTPUT_PATH_EXR ,IMG_SIZE, IMG_SIZE, imageData);
     
