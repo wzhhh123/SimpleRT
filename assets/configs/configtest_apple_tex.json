@@ -18,7 +18,7 @@
         },
         {
             "path": "../../assets/models/cbox/meshes/light.obj",
-            "position": [ 30, 30, 30],
+            "position": [ 10, 10, 10],
             "euler": [ 45, 45, 0 ],
             "scale": [ 6, 6, 6 ],
             "bsdf": "diffuse",
@@ -50,6 +50,24 @@
             "scale": [ 1, 1, 1 ],
             "albedo": [ 0.5, 0.9, 0.9 ],
             "bsdf": "diffuse"
+        },
+        {
+            "path": "../../assets/models/cbox/meshes/sphere2.obj",
+            "position": [ 0.3, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "albedo": [ 0.725, 0.71, 0.68 ],
+            "bsdf": "glass",
+            "index": 1.5
+        },
+        {
+            "path": "../../assets/models/cbox/meshes/sphere2.obj",
+            "position": [ -0.23, 0, 0.6 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 0.66, 0.66, 0.66 ],
+            "albedo": [ 0.725, 0.71, 0.68 ],
+            "bsdf": "glass",
+            "index": 1.5
         }
     ],
     "camera": {

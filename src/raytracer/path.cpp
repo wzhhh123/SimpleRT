@@ -26,28 +26,20 @@ dVec3 Path::Trace(int level, Ray r) {
 		IntersectPoint nearestHit;
 		found = Geometrys::Instance()->Intersect(r, &nearestHit);
 
-		if (bounds == 0 || specularBounce)
-        {
-			if(found)
-				L += beta * nearestHit.Le(-r.direction, nearestHit);
-		}
-
 		//if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) break;
 
         //BxDF* bxdf = Renderer::Instance()->GetBxDF(nearestHit.modelIndex, nearestHit.meshIndex);
-        
 		if(bounds == 0 || specularBound)
 		{
             if(found)
             {
-                L += beta * nearestHit.Le(-r.direction, nearestHit);
+                L += beta * nearestHit.Le(-r.direction, nearestHit);;
             }
             else
             {
                 
             }
 		}
-		
         if (!found || bounds >= level) break;
 
         nearestHit.ComputeScatteringFunctions(Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex]);
@@ -61,10 +53,11 @@ dVec3 Path::Trace(int level, Ray r) {
 
         BxDFType type = (BxDFType)0;
         dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf, type, nearestHit);
-
+        
         //return glm::normalize(nearestHit.worldToTangent * nearestHit.normalWS);
         //return glm::normalize(nearestHit.tangentToWorld * dVec3(0,0,1));
         //return dVec3(1,1,1);
+        //return {nearestHit.uv.x,nearestHit.uv.y,0};
         //return nearestHit.normalWS;
         
         specularBound = (type & BSDF_SPECULAR) != 0;
@@ -79,13 +72,11 @@ dVec3 Path::Trace(int level, Ray r) {
         beta *= f * std::abs(glm::dot( nearestHit.tangentToWorld * glm::normalize(wi)
             , nearestHit.normalWS)) / pdf;
         
-    
         if((nearestHit.GetBxDFType() & ~BSDF_SPECULAR) > 0)
         {
             L += beta * UniformSampleOneLight(rng, nearestHit, r);
         }
         
-
         //beta *= f * std::abs(glm::dot(glm::normalize(wi), dVec3(0,0,1))) / pdf;
 
 		//dVec3 dir = nearestHit.tangentToWorld * glm::normalize(wi);

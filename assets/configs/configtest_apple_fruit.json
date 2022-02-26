@@ -1,0 +1,38 @@
+{
+    "scene": [
+        {
+            "path": "../../assets/models/cbox/meshes/quad.obj",
+            "position": [ 0, 0.01625, 0 ],
+            "euler": [ -90, 0, 0 ],
+            "scale": [ 88, 88, 88 ],
+            "albedo": [ 0.7, 0.6, 0.5 ],
+            "bsdf": "diffuse"
+        },
+        {
+            "path": "../../assets/models/cbox/meshes/light.obj",
+            "position": [ 40, 40, 40],
+            "euler": [ 45, 45, 0 ],
+            "scale": [ 6, 6, 6 ],
+            "bsdf": "diffuse",
+            "albedo": [ 0, 0, 0 ],
+            "radiance": [ 40, 40, 40 ]
+        },
+        {
+            "path": "../../assets/scenes/lime/lime.obj",
+            "position": [ 0,0,0 ],
+            "euler": [ -90,0,0 ],
+            "scale": [ 0.2, 0.2, 0.2 ],
+            "bsdf": "diffuse",
+            "albedo": [ 1, 0, 0 ],
+            "test_tex": "../../assets/scenes/lime/lime_diffuse.tga"
+        }
+    ],
+    "camera": {
+        "position": [ 0, 1.5, 2.5 ],
+        "target": [ 0, 0, 0 ]
+    }
+}
+
+
+
+

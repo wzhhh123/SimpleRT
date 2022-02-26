@@ -36,22 +36,21 @@
             "radiance": [ 40, 40, 40 ]
         },
         {
-            "path": "../../assets/scenes/kabar_obj/kabar.obj",
-            "position": [ -0.3, 0.6, 0.2 ],
-            "euler": [ 30, 30, 30 ],
-            "scale": [ 0.2, 0.2, 0.2 ],
-            "bsdf": "diffuse",
-            "albedo": [ 1, 0, 0 ],
-            "test_tex": "../../assets/scenes/kabar_obj/kabar_basecolor.tga"
+            "path": "../../assets/models/cbox/meshes/sphere1.obj",
+            "position": [ -0.3, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "albedo": [ 0.5, 0.9, 0.9 ],
+            "bsdf": "diffuse"
         },
         {
-            "path": "../../assets/scenes/kabar_obj/kabar.obj",
-            "position": [ 0.3, 0.6, 0.2 ],
-            "euler": [ -30, -30, -30 ],
-            "scale": [ 0.2, 0.2, 0.2 ],
-            "bsdf": "diffuse",
-            "albedo": [ 1, 0, 0 ],
-            "test_tex": "../../assets/scenes/kabar_obj/kabar_basecolor.tga"
+            "path": "../../assets/models/cbox/meshes/sphere2.obj",
+            "position": [ 0.3, 0, 0 ],
+            "euler": [ 0, 0, 0 ],
+            "scale": [ 1, 1, 1 ],
+            "albedo": [ 0.725, 0.71, 0.68 ],
+            "bsdf": "glass",
+            "index": 1.5
         }
     ],
     "camera": {

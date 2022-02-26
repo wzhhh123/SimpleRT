@@ -44,19 +44,6 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene)
 		}
 		meshes.push_back(meshInfo);
 
-		//
-		//第七个是区域光
-		if (meshes.size() == 8) {
-			meshes[meshes.size() - 1].isAreaLight = true;
-			meshes[meshes.size() - 1].emissive = { 1 ,1, 1, 1};
-            meshes[meshes.size() - 1].AreaLight = CreateAreaLight(dVec3(1,1,1));
-		}
-		else {
-			meshes[meshes.size()-1].isAreaLight = false;
-		}
-
-		//后面六个没有uv
-
 	//	hasNormal &= mesh->HasNormals();
 
 		std::cout << std::endl;

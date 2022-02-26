@@ -31,6 +31,7 @@ struct MeshInfo {
     {
         //bsdf = nullptr;
         material = nullptr;
+        isAreaLight = false;
     }
     
     ~MeshInfo()
