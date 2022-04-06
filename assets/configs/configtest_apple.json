@@ -1,62 +1,66 @@
 {
-    "scene": [
-        {
-            "path": "../../assets/models/cbox/meshes/walls.obj",
-            "position": [ 0, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.725, 0.71, 0.68 ],
-            "bsdf": "diffuse"
+  "scene": [
+    {
+      "path": "../../assets/models/cbox/meshes/walls.obj",
+      "position": [ 0, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "albedo": [ 0.725, 0.71, 0.68 ],
+      "bsdf": "diffuse"
 
-        },
-        {
-            "path": "../../assets/models/cbox/meshes/rightwall.obj",
-            "position": [ 0, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.161, 0.133, 0.427 ],
-            "bsdf": "diffuse"
+    },
+    {
+      "path": "../../assets/models/cbox/meshes/rightwall.obj",
+      "position": [ 0, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "albedo": [ 0.161, 0.133, 0.427 ],
+      "bsdf": "diffuse"
 
-        },
-        {
-            "path": "../../assets/models/cbox/meshes/leftwall.obj",
-            "position": [ 0, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.630, 0.065, 0.05 ],
-            "bsdf": "diffuse"
-        },
-        {
-            "path": "../../assets/models/cbox/meshes/light.obj",
-            "position": [ 0, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "bsdf": "diffuse",
-            "albedo": [ 0, 0, 0 ],
-            "radiance": [ 40, 40, 40 ]
-        },
-        {
-            "path": "../../assets/models/cbox/meshes/sphere1.obj",
-            "position": [ -0.3, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.5, 0.9, 0.9 ],
-            "bsdf": "diffuse"
-        },
-        {
-            "path": "../../assets/models/cbox/meshes/sphere2.obj",
-            "position": [ 0.3, 0, 0 ],
-            "euler": [ 0, 0, 0 ],
-            "scale": [ 1, 1, 1 ],
-            "albedo": [ 0.725, 0.71, 0.68 ],
-            "bsdf": "glass",
-            "index": 1.5
-        }
-    ],
-    "camera": {
-        "position": [ 0, 0.65, 3 ],
-        "target": [ 0, 0.65, 0 ]
+    },
+    {
+      "path": "../../assets/models/cbox/meshes/leftwall.obj",
+      "position": [ 0, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "albedo": [ 0.630, 0.065, 0.05 ],
+      "bsdf": "diffuse"
+
+    },
+    {
+      "path": "../../assets/models/cbox/meshes/sphere1.obj",
+      "position": [ 0, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "albedo": [ 0.725, 0.71, 0.68 ],
+      "bsdf": "diffuse"
+
+    },
+    {
+      "path": "../../assets/models/cbox/meshes/sphere2.obj",
+      "position": [ 0, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "albedo": [ 0.725, 0.71, 0.68 ],
+      "bsdf": "glass",
+      "index": 1.5
+
+    },
+    {
+      "path": "../../assets/models/cbox/meshes/light.obj",
+      "position": [ 0, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "bsdf": "diffuse",
+      "albedo": [ 0, 0, 0 ],
+      "radiance": [ 40, 40, 40 ]
     }
+  ],
+  "camera": {
+    "position": [ 0, 0.65, 2.1 ],
+    "target": [ 0, 0.65, 0 ],
+    "fov":  60
+  }
 }
 
 

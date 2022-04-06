@@ -20,6 +20,9 @@ public:
 	void Run();
 	void deIntialize();
 
+
+	void RunHaltonSample();
+
     float* imageData;
 	RayTracer* raytracer;
 	std::vector<Model*>models;

@@ -26,11 +26,13 @@
 //#include "namespaceAlias.h"
 
 
+float FOV = 45.0f;
+
 
 float Halton(int index, int radix)
 {
    float result = 0;
-   float fraction = 1 / radix;
+   float fraction = 1.0 / radix;
 
    while (index > 0)
    {
@@ -39,7 +41,6 @@ float Halton(int index, int radix)
        index /= radix;
        fraction /= radix;
    }
-
    return result;
 }
 
@@ -60,12 +61,12 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 2; ++i) {
+		for (int i = 0; i < 64; ++i) {
             
-			float offsetX = rng.nextDouble() - 0.5;
-			float offsetY = rng.nextDouble() - 0.5;
-            //float offsetX = Halton(i, 2) - 0.5;
-            //float offsetY = Halton(i, 3) - 0.5;
+			//float offsetX = rng.nextDouble() - 0.5;
+			//float offsetY = rng.nextDouble() - 0.5;
+            float offsetX = Halton(i, 2) - 0.5;
+            float offsetY = Halton(i, 3) - 0.5;
 			//offsetY = offsetX = 0;
 
 			Ray r = {};
@@ -94,6 +95,21 @@ void RenderTile(int tileIndex) {
         
 		++yx;
 	}
+}
+
+void Renderer::RunHaltonSample()
+{
+	for (int i = 0; i < 100000; ++i)
+	{
+		float x = Halton(i, 2);
+		float y = Halton(i, 3);
+		int index = (int)(x*IMG_SIZE)*IMG_SIZE + (int)(y*IMG_SIZE);
+		Renderer::Instance()->imageData[index * CHANNEL_COUNT] = 1;
+		Renderer::Instance()->imageData[index * CHANNEL_COUNT + 1] = 1;
+		Renderer::Instance()->imageData[index * CHANNEL_COUNT + 2] = 1;
+	}
+
+	EXR_HELPER::SaveAsExrFile(OUTPUT_PATH_EXR, IMG_SIZE, IMG_SIZE, imageData);
 }
 
 void Renderer::Run()
@@ -200,6 +216,8 @@ void Renderer::Initialize() {
 	dVec3 pos = glm::vec3(cameraPos->GetFloat(), (cameraPos + 1)->GetFloat(), (cameraPos + 2)->GetFloat());
 	auto lookTarget = camera["target"].GetArray().Begin();
 	dVec3 target = glm::vec3(lookTarget->GetFloat(), (lookTarget + 1)->GetFloat(), (lookTarget + 2)->GetFloat());
+	FOV = camera["fov"].GetFloat();
+
 	dMat4 worldToView = getViewMatrixRTL(pos, target, dVec3{ 0,1,0 });
 
 	const auto &objs = document["scene"].GetArray();

@@ -15,11 +15,13 @@
 #include <math.h>
 
 
+extern float FOV;
+
+
 #define FLOAT double
 #define  IMG_SIZE  480
 #define SPP 1000
 #define CHANNEL_COUNT  3
-#define AOV 45
 #define DEPTH 16
 #define THREAD_COUNT 64
 #define dVec2 glm::dvec2
@@ -53,7 +55,8 @@ const FLOAT Sqrt2 = 1.41421356237309504880;
 #else
 #define OUTPUT_PATH_JPG "../assets/image/result.jpg"
 #define OUTPUT_PATH_EXR "../assets/image/result.exr"
-#define CONFIG_PATH "../assets/configs/configtest_apple.json"
+//#define CONFIG_PATH "../assets/configs/configtest_apple.json"
+#define CONFIG_PATH "../assets/configs/configtest_apple_fruit.json"
 #endif
 
 #define EULER_TO_RADIUS 0.0174532925199438  // pi/180

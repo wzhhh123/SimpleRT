@@ -95,7 +95,7 @@ dVec3 Path::Trace(int level, Ray r) {
 			if (rng.nextDouble() < q) break;
 			beta /= 1 - q;
 		}
-        return L;
+        //return L;
 	}
 
 	return L;

@@ -52,6 +52,7 @@ int main() {
 	//Renderer::Instance()->raytracer = new WhiteColor();
 	Renderer::Instance()->raytracer = new Path();
 	Renderer::Instance()->Run();
+	//Renderer::Instance()->RunHaltonSample();
 	Renderer::Instance()->deIntialize();
 
 }
