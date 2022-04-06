@@ -24,6 +24,26 @@
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
+
+
+
+float Halton(int index, int radix)
+{
+   float result = 0;
+   float fraction = 1 / radix;
+
+   while (index > 0)
+   {
+       result += (index % radix) * fraction;
+
+       index /= radix;
+       fraction /= radix;
+   }
+
+   return result;
+}
+
+
 void RenderTile(int tileIndex) {
 	int offset = IMG_SIZE * IMG_SIZE / THREAD_COUNT;
 	int left = offset * tileIndex;
@@ -40,11 +60,12 @@ void RenderTile(int tileIndex) {
 		dVec3 col = { 0,0,0 };
 		int cnt = 0;
 		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 1; ++i) {
-
+		for (int i = 0; i < 2; ++i) {
+            
 			float offsetX = rng.nextDouble() - 0.5;
 			float offsetY = rng.nextDouble() - 0.5;
-
+            //float offsetX = Halton(i, 2) - 0.5;
+            //float offsetY = Halton(i, 3) - 0.5;
 			//offsetY = offsetX = 0;
 
 			Ray r = {};

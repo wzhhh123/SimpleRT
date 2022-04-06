@@ -30,3 +30,9 @@ public:
 	std::vector<FLOAT>func, cdf, pdf;
 	FLOAT  totalCnt;
 };
+
+
+
+
+
+

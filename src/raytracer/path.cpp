@@ -86,6 +86,7 @@ dVec3 Path::Trace(int level, Ray r) {
 		r.origin = nearestHit.t * r.direction + r.origin;
         r.direction = glm::normalize(nearestHit.tangentToWorld * glm::normalize(wi));
 
+        
         //rr from pbrt
 		dVec3 rrBeta = beta;
 		FLOAT maxComponent = std::max(std::max(rrBeta.x, rrBeta.y), rrBeta.z);
@@ -94,6 +95,7 @@ dVec3 Path::Trace(int level, Ray r) {
 			if (rng.nextDouble() < q) break;
 			beta /= 1 - q;
 		}
+        return L;
 	}
 
 	return L;
