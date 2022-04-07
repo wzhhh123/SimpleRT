@@ -14,13 +14,11 @@
 #include "gtc/matrix_transform.hpp"
 #include <math.h>
 
-
 extern float FOV;
-
+extern int SPP;
 
 #define FLOAT double
 #define  IMG_SIZE  480
-#define SPP 1000
 #define CHANNEL_COUNT  3
 #define DEPTH 16
 #define THREAD_COUNT 64
@@ -35,6 +33,9 @@ extern float FOV;
 #define Mat2 glm::mat2
 #define Vec3 glm::vec3
 #define Vec4 glm::vec4
+
+#define Point2i glm::ivec2
+
 
 const FLOAT Pi = 3.14159265358979323846;
 const FLOAT InvPi = 0.31830988618379067154;
@@ -56,7 +57,7 @@ const FLOAT Sqrt2 = 1.41421356237309504880;
 #define OUTPUT_PATH_JPG "../assets/image/result.jpg"
 #define OUTPUT_PATH_EXR "../assets/image/result.exr"
 //#define CONFIG_PATH "../assets/configs/configtest_apple.json"
-#define CONFIG_PATH "../assets/configs/configtest_apple_fruit.json"
+#define CONFIG_PATH "../assets/configs/configtest_apple_cbox.json"
 #endif
 
 #define EULER_TO_RADIUS 0.0174532925199438  // pi/180

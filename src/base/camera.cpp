@@ -19,12 +19,23 @@ Camera::Camera()
 void Camera::GenerateRay(int Idx, dVec2 Sample, Ray& R)
 {
 	dVec3 dir;
-	dir.x = Idx % IMG_SIZE - IMG_SIZE / 2 + Sample.x;
-	dir.y = IMG_SIZE / 2 - Idx / IMG_SIZE + Sample.y;
+	dir.x = Idx % IMG_SIZE - IMG_SIZE / 2 + Sample.x + 0.5;
+	dir.y = IMG_SIZE / 2 - Idx / IMG_SIZE + Sample.y + 0.5;
 	dir.z = dirZ;
 	R.origin = dVec3{ 0,0,0 };
 	R.direction = glm::normalize(dir);
 }
+
+void Camera::GenerateRay(Point2i pFilm, dVec2 Sample, Ray& R)
+{
+    dVec3 dir;
+    dir.x = float(pFilm.x - IMG_SIZE / 2) + Sample.x + 0.5;
+    dir.y = float(IMG_SIZE / 2 - pFilm.y) + Sample.y + 0.5;
+    dir.z = dirZ;
+    R.origin = dVec3{ 0,0,0 };
+    R.direction = glm::normalize(dir);
+}
+
 
 void Camera::GenerateRayDifferential(int Idx, dVec2& Sample, RayDifferential *Rd)
 {

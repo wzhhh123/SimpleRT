@@ -8,6 +8,7 @@ class Camera
 public:
 	Camera();
 	void GenerateRay(int Idx, dVec2 Sample, Ray& R);
+	void GenerateRay(Point2i pFilm, dVec2 Sample, Ray& R);
     void GenerateRayDifferential(int Idx, dVec2& Samples, RayDifferential *Rd);
     
 private:

@@ -27,6 +27,7 @@
 
 
 float FOV = 45.0f;
+int SPP = 2;
 
 
 float Halton(int index, int radix)
@@ -45,55 +46,52 @@ float Halton(int index, int radix)
 }
 
 
-void RenderTile(int tileIndex) {
-	int offset = IMG_SIZE * IMG_SIZE / THREAD_COUNT;
-	int left = offset * tileIndex;
-	int right = offset * (tileIndex + 1);
-	if (tileIndex == THREAD_COUNT - 1) right = IMG_SIZE * IMG_SIZE;
-	std::string  str = std::to_string(left) + " " + std::to_string(right) + " rendering!\n";
+void RenderTile(Point2i tileMin, Point2i tileMax) {
+
+	std::string  str = std::to_string(tileMin.x) + " " + std::to_string(tileMin.y) + "," + std::to_string(tileMax.x) + " " + std::to_string(tileMax.y) + " rendering!\n";
 	std::cout << str;
 	std::cout.flush();
 	pcg32 rng;
 	rng.seed(8, 36);
-	int yx = left;
+
 	Camera Cam;
-	while (yx < right) {
-		dVec3 col = { 0,0,0 };
-		int cnt = 0;
-		//for (int i = 0; i < SPP; ++i) {
-		for (int i = 0; i < 64; ++i) {
+	int localSPP = SPP;
+	for (int i = tileMin.x; i < tileMax.x; ++i)
+	{
+		for (int j = tileMin.y; j < tileMax.y; ++j)
+		{
+			dVec3 col = { 0,0,0 };
+			int cnt = 0;
+			for (int p = 0; p < localSPP; ++p) {
             
-			//float offsetX = rng.nextDouble() - 0.5;
-			//float offsetY = rng.nextDouble() - 0.5;
-            float offsetX = Halton(i, 2) - 0.5;
-            float offsetY = Halton(i, 3) - 0.5;
-			//offsetY = offsetX = 0;
+				float offsetX = rng.nextDouble() - 0.5;
+				float offsetY = rng.nextDouble() - 0.5;
+				//float offsetX = Halton(i, 2) - 0.5;
+				//float offsetY = Halton(i, 3) - 0.5;
+				//offsetY = offsetX = 0;
 
-			Ray r = {};
-			Cam.GenerateRay(yx, dVec2{offsetX, offsetY}, r);
-            //Cam.GenerateRay(yx, dVec2{0.0, 0.0}, r);
+				Ray r = {};
+				Cam.GenerateRay(Point2i(i,j), dVec2{offsetX, offsetY}, r);
+				//Cam.GenerateRay(yx, dVec2{0.0, 0.0}, r);
 
-			dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r);
-			//if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
-				col += temp;
-				++cnt;
-			//}
-		}
+				dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r);
+				//if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
+					col += temp;
+					++cnt;
+				//}
+			}
 
-		col /= cnt;
-		//col = toSRGB(col) * 255.0;
-		//col *= 255.0;
-		
+			col /= cnt;
 
-		//Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
-		//Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
-		//Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
-            
-        Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = col.x;
-        Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = col.y;
-        Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 2] = col.z;
+			//Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
+			//Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
+			//Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
+			int Idx = i + j * IMG_SIZE;
+			Renderer::Instance()->imageData[Idx * CHANNEL_COUNT] = col.x;
+			Renderer::Instance()->imageData[Idx * CHANNEL_COUNT + 1] = col.y;
+			Renderer::Instance()->imageData[Idx * CHANNEL_COUNT + 2] = col.z;
         
-		++yx;
+		}
 	}
 }
 
@@ -147,7 +145,13 @@ void Renderer::Run()
 		std::cout << "Rendering .. \n";
 		std::cout.flush();
 		Timer timer;
-		tbb::blocked_range<int> range(0, THREAD_COUNT);
+
+
+		const int tileSize = 64;
+
+		Point2i nTiles((IMG_SIZE + tileSize - 1) / tileSize, (IMG_SIZE + tileSize - 1) / tileSize);
+
+		tbb::blocked_range<int> range(0, nTiles.x* nTiles.y);
 
 
 		auto map = [&](const tbb::blocked_range<int> &range) {
@@ -156,7 +160,12 @@ void Renderer::Run()
 
 			//std::cout << range.end() << std::endl;
 			//begin和end都自动叠加？？
-			RenderTile(range.begin());
+
+			int tileIdx = range.begin();
+			Point2i tileMin = Point2i(tileIdx % nTiles.y, tileIdx / nTiles.y) * tileSize;
+			Point2i tileMax = Point2i(std::min(tileMin.x + tileSize, IMG_SIZE), std::min(tileMin.y + tileSize, IMG_SIZE));
+
+			RenderTile(tileMin, tileMax);
 
 			/* Create a clone of the sampler for the current thread */
 			//RunTile(range.begin());
@@ -218,8 +227,10 @@ void Renderer::Initialize() {
 	dVec3 target = glm::vec3(lookTarget->GetFloat(), (lookTarget + 1)->GetFloat(), (lookTarget + 2)->GetFloat());
 	FOV = camera["fov"].GetFloat();
 
-	dMat4 worldToView = getViewMatrixRTL(pos, target, dVec3{ 0,1,0 });
+	const auto& renderer = document["renderer"].GetObject();
+	SPP = renderer["spp"].GetInt();
 
+	dMat4 worldToView = getViewMatrixRTL(pos, target, dVec3{ 0,1,0 });
 	const auto &objs = document["scene"].GetArray();
 	models.resize(objs.Size());
 	objectToWorldMats.resize(objs.Size());
