@@ -107,12 +107,12 @@ ELSE()
 if(CMAKE_CL_64)
    add_custom_command(TARGET DemoTP POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/assimp-vc141-mtd.dll"              
+    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/assimp-vc142-mtd.dll"              
     $<TARGET_FILE_DIR:DemoTP>)
 else()
    add_custom_command(TARGET DemoTP POST_BUILD 
    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/assimp-vc141-mtd.dll"              
+    "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/bin/Debug/assimp-vc142-mtd.dll"              
     $<TARGET_FILE_DIR:DemoTP>)
 endif()
 ENDIF()

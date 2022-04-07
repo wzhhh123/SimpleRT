@@ -105,6 +105,7 @@ class BSDF;
 class MeshInfo;
 class Camera;
 class TexInfo;
+class Sampler;
 template <typename TMem, typename TReturn> class ImageTexture;
 template <typename T>class Texture;
 template <typename T>class MipMap;
