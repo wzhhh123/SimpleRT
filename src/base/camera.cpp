@@ -29,8 +29,8 @@ void Camera::GenerateRay(int Idx, dVec2 Sample, Ray& R)
 void Camera::GenerateRay(Point2i pFilm, dVec2 Sample, Ray& R)
 {
     dVec3 dir;
-    dir.x = float(pFilm.x - IMG_SIZE / 2) + Sample.x + 0.5;
-    dir.y = float(IMG_SIZE / 2 - pFilm.y) + Sample.y + 0.5;
+    dir.x = float(pFilm.x - IMG_SIZE / 2) + Sample.x;
+    dir.y = float(IMG_SIZE / 2 - pFilm.y) + Sample.y;
     dir.z = dirZ;
     R.origin = dVec3{ 0,0,0 };
     R.direction = glm::normalize(dir);

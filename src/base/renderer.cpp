@@ -21,6 +21,7 @@
 #include "camera.h"
 #include "tool/platform.h"
 #include "texture.h"
+#include "samplers/halton.h"
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
@@ -45,6 +46,13 @@ float Halton(int index, int radix)
    return result;
 }
 
+inline void WriteToBuffer(Point2i& p, dVec3& col)
+{
+	int Idx = p.x + p.y * IMG_SIZE;
+	Renderer::Instance()->imageData[Idx * CHANNEL_COUNT] = col.x;
+	Renderer::Instance()->imageData[Idx * CHANNEL_COUNT + 1] = col.y;
+	Renderer::Instance()->imageData[Idx * CHANNEL_COUNT + 2] = col.z;
+}
 
 void RenderTile(Point2i tileMin, Point2i tileMax) {
 
@@ -56,47 +64,63 @@ void RenderTile(Point2i tileMin, Point2i tileMax) {
 
 	Camera Cam;
 	int localSPP = SPP;
+
+	GlobalSampler* sampler = new HaltonSampler(localSPP, tileMin, tileMax);
+
 	for (int i = tileMin.x; i < tileMax.x; ++i)
 	{
 		for (int j = tileMin.y; j < tileMax.y; ++j)
 		{
+			sampler->StartPixel({ i,j });
 			dVec3 col = { 0,0,0 };
 			int cnt = 0;
-			for (int p = 0; p < localSPP; ++p) {
-            
-				float offsetX = rng.nextDouble() - 0.5;
-				float offsetY = rng.nextDouble() - 0.5;
-				//float offsetX = Halton(i, 2) - 0.5;
-				//float offsetY = Halton(i, 3) - 0.5;
-				//offsetY = offsetX = 0;
-
+			do{
 				Ray r = {};
-				Cam.GenerateRay(Point2i(i,j), dVec2{offsetX, offsetY}, r);
-				//Cam.GenerateRay(yx, dVec2{0.0, 0.0}, r);
+
+				//dVec2 offset = sampler->Get2D();
+				//Cam.GenerateRay(Point2i(i, j), offset, r);
+
+				float offsetX = rng.nextDouble();
+				float offsetY = rng.nextDouble();
+				Cam.GenerateRay(Point2i(i, j), {offsetX, offsetY}, r);
 
 				dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r);
 				//if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
 					col += temp;
 					++cnt;
 				//}
-			}
-
+			} while (sampler->StartNextSample());
 			col /= cnt;
-
-			//Renderer::Instance()->imageData[yx * CHANNEL_COUNT] = glm::clamp(col.x, 0.0, 255.0);
-			//Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 1] = glm::clamp(col.y, 0.0, 255.0);
-			//Renderer::Instance()->imageData[yx * CHANNEL_COUNT + 2] = glm::clamp(col.z, 0.0, 255.0);
-			int Idx = i + j * IMG_SIZE;
-			Renderer::Instance()->imageData[Idx * CHANNEL_COUNT] = col.x;
-			Renderer::Instance()->imageData[Idx * CHANNEL_COUNT + 1] = col.y;
-			Renderer::Instance()->imageData[Idx * CHANNEL_COUNT + 2] = col.z;
-        
+			WriteToBuffer(Point2i(i,j), col);
 		}
 	}
 }
 
 void Renderer::RunHaltonSample()
 {
+	GlobalSampler* sampler = new HaltonSampler(30, { 0,0 }, { IMG_SIZE/10, IMG_SIZE / 10 });
+	for (int i = 0; i < IMG_SIZE / 10; ++i)
+	{
+		for (int j =  0; j < IMG_SIZE / 10; ++j)
+		{
+			sampler->StartPixel({ i,j });
+			dVec3 col = { 1,1,1 };
+			int cnt = 0;
+			do {
+				dVec2 offset = sampler->Get2D();
+			//	std::cout << offset.x << " " << offset.y << std::endl;
+			//	std::cout << std::flush;
+				float x = i * 1.0f + offset.x;
+				float y = j * 1.0f + offset.y;
+				WriteToBuffer(Point2i(x*10, y*10), col);
+
+			} while (sampler->StartNextSample());
+		}
+	}
+	EXR_HELPER::SaveAsExrFile(OUTPUT_PATH_EXR, IMG_SIZE, IMG_SIZE, imageData);
+	return;
+
+
 	for (int i = 0; i < 100000; ++i)
 	{
 		float x = Halton(i, 2);
@@ -145,7 +169,6 @@ void Renderer::Run()
 		std::cout << "Rendering .. \n";
 		std::cout.flush();
 		Timer timer;
-
 
 		const int tileSize = 64;
 

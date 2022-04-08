@@ -12,6 +12,7 @@ void Sampler::StartPixel(const Point2i& p)
 	currentPixel = p;
 	currentPixelSampleIndex = 0;
 	array1DOffset = array2DOffset = 0;
+
 }
 
 bool Sampler::StartNextSample()
@@ -34,17 +35,21 @@ bool Sampler::SetSampleNumber(int64_t sampleNum)
 
 bool GlobalSampler::StartNextSample()
 {
-    return false;
+    dimension = 0;
+    intervalSampleIndex = GetIndexForSample(currentPixelSampleIndex + 1);
+    return Sampler::StartNextSample();
 }
 
 void GlobalSampler::StartPixel(const Point2i& p)
 {
-
+    Sampler::StartPixel(p);
+    dimension = 0;
+    intervalSampleIndex = GetIndexForSample(0);
 }
 
 FLOAT GlobalSampler::Get1D()
 {
-    return† SampleDimension(intervalSampleIndex, dimension++);
+    return SampleDimension(intervalSampleIndex, dimension++);
 }
 
 dVec2 GlobalSampler::Get2D()
@@ -58,5 +63,5 @@ bool GlobalSampler::SetSampleNumber(int64_t sampleNum)
 {
     dimension = 0;
     intervalSampleIndex = GetIndexForSample(sampleNum);
-    return Sampler::SetSampleNumber(<#sampleNum#>);
+    return Sampler::SetSampleNumber(sampleNum);
 }

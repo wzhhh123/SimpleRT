@@ -36,6 +36,9 @@ extern int SPP;
 
 #define Point2i glm::ivec2
 
+static const double DoubleOneMinusEpsilon = 0x1.fffffffffffffp-1;
+static const float FloatOneMinusEpsilon = 0x1.fffffep-1;
+static const FLOAT OneMinusEpsilon = DoubleOneMinusEpsilon;
 
 const FLOAT Pi = 3.14159265358979323846;
 const FLOAT InvPi = 0.31830988618379067154;
@@ -113,3 +116,10 @@ template <typename T>class MipMap;
 
 struct TileRenderThreadInput;
 struct TileRenderThreadOutput;
+
+
+template <typename T>
+inline T Mod(T a, T b) {
+    T result = a - (a / b) * b;
+    return (T)((result < 0) ? result + b : result);
+}
