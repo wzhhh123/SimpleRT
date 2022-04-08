@@ -19,6 +19,8 @@ public:
 	virtual void StartPixel(const Point2i& p);
 
 	virtual bool StartNextSample();
+    
+    virtual bool SetSampleNumber(int64_t sampleNum);
 
 	const int64_t samplesPerPixel;
 	Point2i currentPixel;
@@ -33,6 +35,7 @@ class GlobalSampler : public Sampler
 {
 public:
 	bool StartNextSample();
+    bool SetSampleNumber(int64_t sampleNum);
 	void StartPixel(const Point2i& p);
 	FLOAT Get1D();
 	dVec2 Get2D();

@@ -28,3 +28,6 @@ private:
 	Geometrys();
 	bool isInit;
 };
+
+
+
