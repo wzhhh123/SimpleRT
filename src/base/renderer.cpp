@@ -77,12 +77,12 @@ void RenderTile(Point2i tileMin, Point2i tileMax) {
 			do{
 				Ray r = {};
 
-				//dVec2 offset = sampler->Get2D();
-				//Cam.GenerateRay(Point2i(i, j), offset, r);
+				dVec2 offset = sampler->Get2D();
+				Cam.GenerateRay(Point2i(i, j), offset, r);
 
-				float offsetX = rng.nextDouble();
-				float offsetY = rng.nextDouble();
-				Cam.GenerateRay(Point2i(i, j), {offsetX, offsetY}, r);
+				//float offsetX = rng.nextDouble();
+				//float offsetY = rng.nextDouble();
+				//Cam.GenerateRay(Point2i(i, j), {offsetX, offsetY}, r);
 
 				dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r);
 				//if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
@@ -91,7 +91,8 @@ void RenderTile(Point2i tileMin, Point2i tileMax) {
 				//}
 			} while (sampler->StartNextSample());
 			col /= cnt;
-			WriteToBuffer(Point2i(i,j), col);
+            Point2i p = Point2i(i,j);
+			WriteToBuffer(p, col);
 		}
 	}
 }
@@ -112,7 +113,8 @@ void Renderer::RunHaltonSample()
 			//	std::cout << std::flush;
 				float x = i * 1.0f + offset.x;
 				float y = j * 1.0f + offset.y;
-				WriteToBuffer(Point2i(x*10, y*10), col);
+                Point2i p = Point2i(x*10, y*10);
+				WriteToBuffer(p, col);
 
 			} while (sampler->StartNextSample());
 		}
