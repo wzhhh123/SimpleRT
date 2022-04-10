@@ -16,7 +16,7 @@ private:
     const FLOAT alpha;
     const FLOAT expX, expY;
     
-    FLOAT Guassian(FLOAT d,FLOAT expv) const
+    FLOAT Gaussian(FLOAT d,FLOAT expv) const
     {
         return std::max((FLOAT)0, FLOAT(std::exp(-alpha * d * d) - expv));
     }

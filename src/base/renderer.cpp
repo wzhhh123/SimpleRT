@@ -22,6 +22,7 @@
 #include "tool/platform.h"
 #include "texture.h"
 #include "samplers/halton.h"
+#include "filters/gaussian.h"
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
@@ -65,7 +66,9 @@ void RenderTile(Point2i tileMin, Point2i tileMax) {
 	Camera Cam;
 	int localSPP = SPP;
 
-	GlobalSampler* sampler = new HaltonSampler(localSPP, tileMin, tileMax);
+	std::shared_ptr<HaltonSampler> sampler = std::shared_ptr<HaltonSampler>(new HaltonSampler(localSPP, tileMin, tileMax));
+
+	std::shared_ptr<GaussianFilter> filter = std::shared_ptr<GaussianFilter>(new GaussianFilter({ 1,1 }, 1));
 
 	for (int i = tileMin.x; i < tileMax.x; ++i)
 	{
@@ -74,6 +77,7 @@ void RenderTile(Point2i tileMin, Point2i tileMax) {
 			sampler->StartPixel({ i,j });
 			dVec3 col = { 0,0,0 };
 			int cnt = 0;
+			FLOAT weightSum = 0;
 			do{
 				Ray r = {};
 
@@ -84,14 +88,19 @@ void RenderTile(Point2i tileMin, Point2i tileMax) {
 				//float offsetY = rng.nextDouble();
 				//Cam.GenerateRay(Point2i(i, j), {offsetX, offsetY}, r);
 
-				dVec3 temp = Renderer::Instance()->raytracer->Trace(DEPTH, r);
+				dVec3 L = Renderer::Instance()->raytracer->Trace(DEPTH, r);
+				dVec2 rayOffset = offset - dVec2{0.5, 0.5};
+				FLOAT weight = filter->Evaluate(rayOffset);
 				//if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
-					col += temp;
+					//col += weight * L;
+					col += L;
+					weightSum += weight;
 					++cnt;
 				//}
 			} while (sampler->StartNextSample());
 			col /= cnt;
             Point2i p = Point2i(i,j);
+			// WriteToBuffer(p, col / weightSum);
 			WriteToBuffer(p, col);
 		}
 	}

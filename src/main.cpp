@@ -11,9 +11,10 @@
 #include "raytracer/path.h"
 #include "bxdf/lambert.h"
 #include "base/sampling.h"
+#include "filters/gaussian.h"
 
-
-
+#include "cstdio"
+#include "cstdlib"
 /*
 build log:
 1、tbb的lib要改名为tbb_debug，然后把tbbd.dll复制到debug下面
@@ -24,6 +25,27 @@ build log:
 系统信息:
 1、右手坐标系
 */
+
+
+void FIlterTest()
+{
+	using namespace std;
+
+	GaussianFilter* filter = new GaussianFilter({ 1,1 }, 1);
+
+	FLOAT totalVal = 0;
+	for (int i = 0; i <= 30; ++i) {
+		for (int j = 0; j <= 30; ++j) {
+			dVec2 p = { (i - 15) / 7.5f, (j - 15) / 7.5f };
+			FLOAT val = (filter->Evaluate(p));
+			totalVal += val;
+			printf("%f ", val);
+		}
+		cout << endl;
+	}
+	printf("%f ", totalVal);
+
+}
 
 int main() {
 	using namespace std;
@@ -44,6 +66,9 @@ int main() {
 	//	}
 	//}
 
+	//FIlterTest();
+	//return 0;
+	// 
 	//Geometrys::Instance()->accelerater = new Linear();
 	Geometrys::Instance()->accelerater = new Bvh();
 

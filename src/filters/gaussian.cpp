@@ -3,7 +3,7 @@
 
 FLOAT GaussianFilter::Evaluate(const dVec2 &p) const
 {
-    return 0;
+    return Gaussian(p.x, expX) * Gaussian(p.y, expY);
 }
 
 
