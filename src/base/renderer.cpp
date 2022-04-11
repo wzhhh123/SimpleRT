@@ -23,6 +23,7 @@
 #include "texture.h"
 #include "samplers/halton.h"
 #include "filters/gaussian.h"
+#include "film.h"
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
@@ -174,6 +175,10 @@ void Renderer::Run()
     //std::cout.flush();
     //return;
     
+    
+    std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new GaussianFilter({ 2,2 }, 2));
+    std::shared_ptr<Film> film = std::shared_ptr<Film>(new Film(Point2i(IMG_SIZE, IMG_SIZE), std::move(filter), OUTPUT_PATH_EXR));
+    
 	std::thread render_thread([&] {
 		tbb::task_scheduler_init init(THREAD_COUNT);
 
@@ -182,24 +187,26 @@ void Renderer::Run()
 		Timer timer;
 
 		const int tileSize = 64;
-
-		Point2i nTiles((IMG_SIZE + tileSize - 1) / tileSize, (IMG_SIZE + tileSize - 1) / tileSize);
-
+        
+        Bound2i sampleBound = film->GetSampleBound();
+        Point2i sampleBoundExtent = {sampleBound.max.x - sampleBound.min.x, sampleBound.max.y - sampleBound.min.y};
+		Point2i nTiles((sampleBoundExtent.x + tileSize - 1) / tileSize, (sampleBoundExtent.y + tileSize - 1) / tileSize);
+        Point2i offset = {0-sampleBound.min.x, 0-sampleBound.min.y};
+        
 		tbb::blocked_range<int> range(0, nTiles.x* nTiles.y);
-
-
+        
 		auto map = [&](const tbb::blocked_range<int> &range) {
-			/* Allocate memory for a small image block to be rendered
-			   by the current thread */
-
-			//std::cout << range.end() << std::endl;
-			//begin和end都自动叠加？？
-
+		
 			int tileIdx = range.begin();
 			Point2i tileMin = Point2i(tileIdx % nTiles.y, tileIdx / nTiles.y) * tileSize;
-			Point2i tileMax = Point2i(std::min(tileMin.x + tileSize, IMG_SIZE), std::min(tileMin.y + tileSize, IMG_SIZE));
-
-			RenderTile(tileMin, tileMax);
+			Point2i tileMax = Point2i(std::min(tileMin.x + tileSize, sampleBoundExtent.x), std::min(tileMin.y + tileSize, sampleBoundExtent.y));
+            
+            tileMin -= offset;
+            tileMax -= offset;
+                
+            std::shared_ptr<FilmTile>filmTile = film->GetFilmTile();
+            
+            RenderTile(tileMin, tileMax);
 
 			/* Create a clone of the sampler for the current thread */
 			//RunTile(range.begin());

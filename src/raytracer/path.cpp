@@ -95,6 +95,7 @@ dVec3 Path::Trace(int level, Ray r) {
 			beta /= 1 - q;
 		}
 	}
+    
 
 	return L;
 

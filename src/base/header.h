@@ -113,6 +113,9 @@ class GlobalSampler;
 class HaltonSampler;
 class Filter;
 class GaussianFilter;
+class Film;
+class FilmTile;
+
 template <typename TMem, typename TReturn> class ImageTexture;
 template <typename T>class Texture;
 template <typename T>class MipMap;
@@ -120,9 +123,14 @@ template <typename T>class MipMap;
 struct TileRenderThreadInput;
 struct TileRenderThreadOutput;
 
+struct Bound2i;
+struct Bound2f;
 
 template <typename T>
 inline T Mod(T a, T b) {
     T result = a - (a / b) * b;
     return (T)((result < 0) ? result + b : result);
 }
+
+
+
