@@ -5,7 +5,8 @@
 #include "filter.h"
 #include "header.h"
 #include "struct/common.h"
-
+#include <thread>
+#include <mutex>
 
 struct TilePixel
 {
@@ -25,16 +26,24 @@ public:
         
     std::unique_ptr<FilmTile> GetFilmTile(const Bound2i &sampleBound);
 
+    void MergeTile(std::shared_ptr<FilmTile> tile);
+
+    void SaveFilm();
+
 private:
     
     Point2i resolution;
     Bound2i sampleBound;
-    
+    Bound2i filePixelBound;
+
     std::string fileName;
     std::unique_ptr<float>imageData;
     std::unique_ptr<Filter>filter;
     
-    
+    static const int filterTableWidth = 16;
+    FLOAT filterTable[filterTableWidth * filterTableWidth];
+
+
     struct Pixel
     {
         dVec3 rgb;
@@ -45,16 +54,26 @@ private:
             weightSum = 0;
         }
     };
-    
-    std::unique_ptr<Pixel>pixels;
-    
+
+    Pixel& GetPixel(Point2i p);
+
+    std::vector<Pixel>pixels;
+    std::mutex mutex;
 };
 
 class FilmTile
 {
 public:
-    FilmTile(const Bound2i &tilePixelBound);
+    FilmTile(const Bound2i &tileSampleBound, const Bound2i &filmPixelBound, FLOAT* filterTable);
     
+    TilePixel& GetPixel(Point2i p);
+
+    void AddSample(dVec2 p, dVec3 L);
+
+    Bound2i GetTilePixelBound();
+
 private:
-    std::unique_ptr<TilePixel>tilePixels;
+    std::vector<TilePixel>tilePixels;
+    Bound2i tilePixelBound;
+    FLOAT* filterTable;
 };

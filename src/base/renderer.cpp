@@ -56,7 +56,7 @@ inline void WriteToBuffer(Point2i& p, dVec3& col)
 	Renderer::Instance()->imageData[Idx * CHANNEL_COUNT + 2] = col.z;
 }
 
-void RenderTile(Point2i tileMin, Point2i tileMax) {
+void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film) {
 
 	std::string  str = std::to_string(tileMin.x) + " " + std::to_string(tileMin.y) + "," + std::to_string(tileMax.x) + " " + std::to_string(tileMax.y) + " rendering!\n";
 	std::cout << str;
@@ -68,8 +68,9 @@ void RenderTile(Point2i tileMin, Point2i tileMax) {
 	int localSPP = SPP;
 
 	std::shared_ptr<HaltonSampler> sampler = std::shared_ptr<HaltonSampler>(new HaltonSampler(localSPP, tileMin, tileMax));
-
 	std::shared_ptr<GaussianFilter> filter = std::shared_ptr<GaussianFilter>(new GaussianFilter({ 1,1 }, 1));
+	Bound2i tileSampleBound = Bound2i(tileMin, tileMax);
+	std::shared_ptr<FilmTile>filmTile = film->GetFilmTile(tileSampleBound);
 
 	for (int i = tileMin.x; i < tileMax.x; ++i)
 	{
@@ -90,21 +91,20 @@ void RenderTile(Point2i tileMin, Point2i tileMax) {
 				//Cam.GenerateRay(Point2i(i, j), {offsetX, offsetY}, r);
 
 				dVec3 L = Renderer::Instance()->raytracer->Trace(DEPTH, r);
-				dVec2 rayOffset = offset - dVec2{0.5, 0.5};
-				FLOAT weight = filter->Evaluate(rayOffset);
-				//if (temp.x > 1e-6 || temp.y > 1e-6 || temp.z > 1e-6) {
-					//col += weight * L;
-					col += L;
-					weightSum += weight;
-					++cnt;
-				//}
+
+				filmTile->AddSample(dVec2(i, j) + offset, L);
+
+
 			} while (sampler->StartNextSample());
-			col /= cnt;
-            Point2i p = Point2i(i,j);
+           
+			// Point2i p = Point2i(i,j);
 			// WriteToBuffer(p, col / weightSum);
-			WriteToBuffer(p, col);
+			// WriteToBuffer(p, col);
+
 		}
 	}
+
+	film->MergeTile(filmTile);
 }
 
 void Renderer::RunHaltonSample()
@@ -203,10 +203,8 @@ void Renderer::Run()
             
             tileMin -= offset;
             tileMax -= offset;
-                
-            std::shared_ptr<FilmTile>filmTile = film->GetFilmTile();
-            
-            RenderTile(tileMin, tileMax);
+
+            RenderTile(tileMin, tileMax, film);
 
 			/* Create a clone of the sampler for the current thread */
 			//RunTile(range.begin());
@@ -224,8 +222,10 @@ void Renderer::Run()
 	/* Shut down the user interface */
 	render_thread.join();
 
+
 	std::cout << "save" << std::endl;
-    
+
+	film->SaveFilm();
     //unsigned char* pixels = new unsigned char[IMG_SIZE*IMG_SIZE*CHANNEL_COUNT];
     //for(int i = 0; i < IMG_SIZE*IMG_SIZE*CHANNEL_COUNT; ++i)
     //{
