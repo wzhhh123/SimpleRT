@@ -25,6 +25,7 @@
 #include "filters/gaussian.h"
 #include "film.h"
 #include "filters/box.h"
+#include <atomic>
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
@@ -57,11 +58,14 @@ inline void WriteToBuffer(Point2i& p, dVec3& col)
 	Renderer::Instance()->imageData[Idx * CHANNEL_COUNT + 2] = col.z;
 }
 
-void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film) {
+void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film, int tileNum) {
 
-	std::string  str = std::to_string(tileMin.x) + " " + std::to_string(tileMin.y) + "," + std::to_string(tileMax.x) + " " + std::to_string(tileMax.y) + " rendering!\n";
+
+	static std::atomic<int>tileIdx(0);
+	std::string  str = std::to_string(1+tileIdx++) + "/" + std::to_string(tileNum) + " " + std::to_string(tileMin.x) + " " + std::to_string(tileMin.y) + "," + std::to_string(tileMax.x) + " " + std::to_string(tileMax.y) + " rendering!\n";
 	std::cout << str;
 	std::cout.flush();
+
 	pcg32 rng;
 	rng.seed(8, 36);
 
@@ -204,7 +208,8 @@ void Renderer::Run()
             tileMin -= offset;
             tileMax -= offset;
 
-            RenderTile(tileMin, tileMax, film);
+
+            RenderTile(tileMin, tileMax, film, nTiles.x * nTiles.y);
 
 			/* Create a clone of the sampler for the current thread */
 			//RunTile(range.begin());
