@@ -115,6 +115,7 @@ class Filter;
 class GaussianFilter;
 class Film;
 class FilmTile;
+class BoxFilter;
 
 template <typename TMem, typename TReturn> class ImageTexture;
 template <typename T>class Texture;

@@ -42,9 +42,7 @@
       "euler": [ 0, 0, 0 ],
       "scale": [ 1, 1, 1 ],
       "albedo": [ 0.725, 0.71, 0.68 ],
-      "bsdf": "glass",
-      "index": 1.5
-
+      "bsdf": "diffuse"
     },
     {
       "path": "../../assets/models/cbox/meshes/light.obj",
@@ -62,7 +60,7 @@
     "fov": 60
   },
   "renderer": {
-    "spp": 1
+    "spp": 8
   }
 }
 

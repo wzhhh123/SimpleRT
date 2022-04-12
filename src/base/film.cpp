@@ -45,7 +45,7 @@ std::unique_ptr<FilmTile>Film::GetFilmTile(const Bound2i &sampleBound)
     dVec2 pMin = floatSampleBound.min + dVec2(0.5,0.5) - filter->radius;
     dVec2 pMax= floatSampleBound.max - dVec2(0.5, 0.5) + filter->radius;
     Bound2i tilePixelBound = Bound2i(floor(pMin), ceil(pMax));
-    return std::unique_ptr<FilmTile>(new FilmTile(tilePixelBound, filePixelBound, filterTable));
+    return std::unique_ptr<FilmTile>(new FilmTile(tilePixelBound, filePixelBound, filterTable, filterTableWidth, filter->radius));
 }
 
 void Film::MergeTile(std::shared_ptr<FilmTile> tile)
@@ -81,11 +81,13 @@ void Film::SaveFilm()
 }
 
 
-FilmTile::FilmTile(const Bound2i& tileSampleBound, const Bound2i& filmPixelBound, FLOAT* filterTable)
+FilmTile::FilmTile(const Bound2i& tileSampleBound, const Bound2i& filmPixelBound, FLOAT* filterTable, int filterTableSize, const dVec2& filterRadius)
 {
     tilePixelBound = Bound2i(max(tileSampleBound.min, filmPixelBound.min), min(tileSampleBound.max, filmPixelBound.max));
     tilePixels.resize(tilePixelBound.Area());
     this->filterTable = filterTable;
+    this->filterTableSize = filterTableSize;
+    this->filterRadius = filterRadius;
 }
 
 TilePixel& FilmTile::GetPixel(Point2i p)
@@ -98,24 +100,21 @@ TilePixel& FilmTile::GetPixel(Point2i p)
 
 void FilmTile::AddSample(dVec2 p, dVec3 L)
 {
-    static const int filterTableSize = 16;
-    static const float filterRadius = 2;
-    int xMin = std::floor(-filterRadius + 0.5 + p.x);
-    int xMax = std::floor(filterRadius + 0.5 + p.x);
-    int yMin = std::floor(-filterRadius + 0.5 + p.y);
-    int yMax = std::floor(filterRadius + 0.5 + p.y);
+    int xMin = std::floor(-filterRadius.x + 0.5 + p.x);
+    int xMax = std::floor(filterRadius.x + 0.5 + p.x);
+    int yMin = std::floor(-filterRadius.y + 0.5 + p.y);
+    int yMax = std::floor(filterRadius.y + 0.5 + p.y);
 
     for (int i = xMin; i < xMax; ++i)
     {
         for (int j = yMin; j < yMax; ++j)
         {
             if (i < tilePixelBound.min.x || i >= tilePixelBound.max.x || j < tilePixelBound.min.y || j >= tilePixelBound.max.y) continue;
-            int x = abs(p.x - ((FLOAT)i + 0.5)) * filterTableSize / filterRadius;
-            int y = abs(p.y - ((FLOAT)j + 0.5)) * filterTableSize / filterRadius;
-            if (x == 16) x = 15;
-            if (y == 16) y = 15;
-            if(!(x >= 0 && x < filterTableSize && y >= 0 && y < filterTableSize))
-                assert(x >= 0 && x < filterTableSize&& y >= 0 && y < filterTableSize);
+            int x = abs(p.x - ((FLOAT)i + 0.5)) * filterTableSize / filterRadius.x;
+            int y = abs(p.y - ((FLOAT)j + 0.5)) * filterTableSize / filterRadius.y;
+            x = x == filterTableSize ? filterTableSize - 1 : x;
+            y = y == filterTableSize ? filterTableSize - 1 : y;
+            assert(x >= 0 && x < filterTableSize&& y >= 0 && y < filterTableSize);
             int filterIndex = x * filterTableSize + y;
             FLOAT weight = filterTable[filterIndex];
             TilePixel& pixel = GetPixel({ i,j });

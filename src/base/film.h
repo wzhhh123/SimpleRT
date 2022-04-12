@@ -64,7 +64,7 @@ private:
 class FilmTile
 {
 public:
-    FilmTile(const Bound2i &tileSampleBound, const Bound2i &filmPixelBound, FLOAT* filterTable);
+    FilmTile(const Bound2i &tileSampleBound, const Bound2i &filmPixelBound, FLOAT* filterTable, int filterTableSize, const dVec2& filterRadius);
     
     TilePixel& GetPixel(Point2i p);
 
@@ -76,4 +76,7 @@ private:
     std::vector<TilePixel>tilePixels;
     Bound2i tilePixelBound;
     FLOAT* filterTable;
+
+    int filterTableSize;
+    dVec2 filterRadius;
 };

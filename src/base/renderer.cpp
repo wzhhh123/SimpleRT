@@ -24,6 +24,7 @@
 #include "samplers/halton.h"
 #include "filters/gaussian.h"
 #include "film.h"
+#include "filters/box.h"
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
@@ -91,9 +92,7 @@ void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film) {
 				//Cam.GenerateRay(Point2i(i, j), {offsetX, offsetY}, r);
 
 				dVec3 L = Renderer::Instance()->raytracer->Trace(DEPTH, r);
-
 				filmTile->AddSample(dVec2(i, j) + offset, L);
-
 
 			} while (sampler->StartNextSample());
            
@@ -176,7 +175,8 @@ void Renderer::Run()
     //return;
     
     
-    std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new GaussianFilter({ 2,2 }, 2));
+	std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new GaussianFilter({ 1,1 }, 1));
+	//std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new BoxFilter({ 0.5,0.5 }));
     std::shared_ptr<Film> film = std::shared_ptr<Film>(new Film(Point2i(IMG_SIZE, IMG_SIZE), std::move(filter), OUTPUT_PATH_EXR));
     
 	std::thread render_thread([&] {
@@ -186,7 +186,7 @@ void Renderer::Run()
 		std::cout.flush();
 		Timer timer;
 
-		const int tileSize = 64;
+		const int tileSize = 16;
         
         Bound2i sampleBound = film->GetSampleBound();
         Point2i sampleBoundExtent = {sampleBound.max.x - sampleBound.min.x, sampleBound.max.y - sampleBound.min.y};
