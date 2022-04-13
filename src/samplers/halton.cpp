@@ -1,7 +1,8 @@
 #include "halton.h"
 #include "pcg32.h"
 #include "lowdiscrepancy.h"
-
+#include "../base/header.h"
+#include "../struct/common.h"
 
 static const int kMaxResolution = 128;
 
@@ -28,16 +29,16 @@ static void extendedGCD(uint64_t a, uint64_t b, int64_t* x, int64_t* y) {
 
 std::vector<uint16_t> HaltonSampler::radicalInversePermutations;
 
-HaltonSampler::HaltonSampler(int samplesPerPixel, Point2i pMin, Point2i pMax)
+HaltonSampler::HaltonSampler(int samplesPerPixel, Bound2i sampleBound)
     :GlobalSampler(samplesPerPixel)
 {
     if (radicalInversePermutations.empty())
     {
         pcg32 rng(8);
-      //  radicalInversePermutations = ComputeRadicalInversePermutations(rng);
+        radicalInversePermutations = ComputeRadicalInversePermutations(rng);
     }
 
-    Point2i extent = pMax - pMin;
+    Point2i extent = sampleBound.max - sampleBound.min;
     for (int i = 0; i < 2; ++i)
     {
         int base = i ? 3 : 2;
@@ -88,6 +89,12 @@ FLOAT HaltonSampler::SampleDimension(int64_t index, int dim) const
     else
         return ScrambledRadicalInverse(dim, index,
             PermutationForDimension(dim));
+}
+
+
+std::shared_ptr<Sampler> HaltonSampler::Clone()
+{
+    return std::shared_ptr<Sampler>(new HaltonSampler(*this));
 }
 
 

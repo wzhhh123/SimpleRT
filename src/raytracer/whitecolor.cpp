@@ -7,7 +7,7 @@
 #include "base/renderer.h"
 
 
-dVec3 WhiteColor::Trace(int level, Ray r) {
+dVec3 WhiteColor::Trace(int level, Ray r, std::shared_ptr<Sampler>sampler) {
 
 	dVec3 point = r.origin;
 	dVec3 dir = r.direction;

@@ -7,7 +7,7 @@
 
 
 
-dVec3 BusinessCard::Trace(int level, Ray r) {
+dVec3 BusinessCard::Trace(int level, Ray r, std::shared_ptr<Sampler>sampler) {
 
 	dVec3 point = r.origin;
 	dVec3 dir = r.direction;
@@ -52,8 +52,8 @@ dVec3 BusinessCard::Trace(int level, Ray r) {
 	color *= intersectColor;
 	FLOAT temp = 1 - eta * eta*(1 - d * d);
 
-	return (s->kt)*(temp > 0 ? Trace(level, { P, eta*r.direction + N * (eta*d - sqrt(temp)) }) : dVec3{ 0,0,0 }) + 
-		(s->ks)*Trace(level, { P, 2 * d * N + r.direction }) + 
+	return (s->kt)*(temp > 0 ? Trace(level, { P, eta*r.direction + N * (eta*d - sqrt(temp)) }, sampler) : dVec3{ 0,0,0 }) + 
+		(s->ks)*Trace(level, { P, 2 * d * N + r.direction }, sampler) + 
 		s->kl*intersectColor + 
 		s->kd* color;
 

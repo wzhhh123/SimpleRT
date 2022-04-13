@@ -7,10 +7,9 @@
 class RayTracer {
 	
 public:
-
-	virtual dVec3 Trace(int level, Ray r) = 0;
+	virtual dVec3 Trace(int level, Ray r, std::shared_ptr<Sampler>sampler) = 0;
 
 };
 
 
-dVec3 UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray &r);
+dVec3 UniformSampleOneLight(std::shared_ptr<Sampler>&sampler, IntersectPoint& point, Ray &r);

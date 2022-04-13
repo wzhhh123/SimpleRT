@@ -5,11 +5,11 @@
 #include "base/geometrys.h"
 #include "geometry/sphere.h"
 #include "base/renderer.h"
+#include "base/sampler.h"
 
 
 
-
-dVec3 Path::Trace(int level, Ray r) {
+dVec3 Path::Trace(int level, Ray r, std::shared_ptr<Sampler>sampler) {
 
 	dVec3 L(0), beta(1.0);
 	bool specularBounce = false;
@@ -17,7 +17,6 @@ dVec3 Path::Trace(int level, Ray r) {
 	int bounds = 0;
 	FLOAT etaScale = 1;
 
-	pcg32& rng = Renderer::Instance()->rng;
 	float rrThreshold = 1;
     bool specularBound = false;
 	for (bounds;; ++bounds) {
@@ -52,7 +51,7 @@ dVec3 Path::Trace(int level, Ray r) {
         dVec3 wo = -r.direction, wi;
 
         BxDFType type = (BxDFType)0;
-        dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, { rng.nextFloat(), rng.nextFloat() }, &pdf, type, nearestHit);
+        dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, sampler->Get2D(), &pdf, type, nearestHit);
         
         //return glm::normalize(nearestHit.worldToTangent * nearestHit.normalWS);
         //return glm::normalize(nearestHit.tangentToWorld * dVec3(0,0,1));
@@ -74,7 +73,7 @@ dVec3 Path::Trace(int level, Ray r) {
         
         if((nearestHit.GetBxDFType() & ~BSDF_SPECULAR) > 0)
         {
-            L += beta * UniformSampleOneLight(rng, nearestHit, r);
+            L += beta * UniformSampleOneLight(sampler, nearestHit, r);
         }
         
         //beta *= f * std::abs(glm::dot(glm::normalize(wi), dVec3(0,0,1))) / pdf;
@@ -91,7 +90,7 @@ dVec3 Path::Trace(int level, Ray r) {
 		FLOAT maxComponent = std::max(std::max(rrBeta.x, rrBeta.y), rrBeta.z);
 		if (bounds > 3 && (maxComponent < rrThreshold)) {
 			FLOAT q = std::max((FLOAT).05, 1 - maxComponent);
-			if (rng.nextDouble() < q) break;
+			if (sampler->Get1D() < q) break;
 			beta /= 1 - q;
 		}
 	}

@@ -4,15 +4,16 @@
 #include "base/geometrys.h"
 #include "pcg32.h"
 #include "base/renderer.h"
+#include "base/sampler.h"
 
-dVec3 UniformSampleOneLight(pcg32& rng, IntersectPoint& point, Ray& r)
+dVec3 UniformSampleOneLight(std::shared_ptr<Sampler>& sampler, IntersectPoint& point, Ray& r)
 {
     dVec3 L = dVec3(0,0,0);
     FLOAT lightPdf = 0;
-    int index = Geometrys::Instance()->lightDistribute.SampleDiscrete(rng.nextDouble(), &lightPdf);
+    int index = Geometrys::Instance()->lightDistribute.SampleDiscrete(sampler->Get1D(), &lightPdf);
     Triangle* triangle = dynamic_cast<Triangle*>(Geometrys::Instance()->shapes[Geometrys::Instance()->lightShapeIndices[index]]);
     FLOAT lightAreaPdf = 0;
-    IntersectPoint it = triangle->Samping(dVec2{ rng.nextDouble(), rng.nextDouble() }, &lightAreaPdf);
+    IntersectPoint it = triangle->Samping(sampler->Get2D(), &lightAreaPdf);
 
     Ray shadowRay;
     shadowRay.origin = point.t * r.direction + r.origin;

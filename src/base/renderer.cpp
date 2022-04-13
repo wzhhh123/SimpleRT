@@ -58,7 +58,7 @@ inline void WriteToBuffer(Point2i& p, dVec3& col)
 	Renderer::Instance()->imageData[Idx * CHANNEL_COUNT + 2] = col.z;
 }
 
-void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film, int tileNum) {
+void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film, int tileNum, std::shared_ptr<Sampler> sampler) {
 
 
 	static std::atomic<int>tileIdx(0);
@@ -72,7 +72,6 @@ void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film, in
 	Camera Cam;
 	int localSPP = SPP;
 
-	std::shared_ptr<HaltonSampler> sampler = std::shared_ptr<HaltonSampler>(new HaltonSampler(localSPP, tileMin, tileMax));
 	std::shared_ptr<GaussianFilter> filter = std::shared_ptr<GaussianFilter>(new GaussianFilter({ 1,1 }, 1));
 	Bound2i tileSampleBound = Bound2i(tileMin, tileMax);
 	std::shared_ptr<FilmTile>filmTile = film->GetFilmTile(tileSampleBound);
@@ -95,7 +94,7 @@ void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film, in
 				//float offsetY = rng.nextDouble();
 				//Cam.GenerateRay(Point2i(i, j), {offsetX, offsetY}, r);
 
-				dVec3 L = Renderer::Instance()->raytracer->Trace(DEPTH, r);
+				dVec3 L = Renderer::Instance()->raytracer->Trace(DEPTH, r, sampler);
 				filmTile->AddSample(dVec2(i, j) + offset, L);
 
 			} while (sampler->StartNextSample());
@@ -112,7 +111,7 @@ void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film, in
 
 void Renderer::RunHaltonSample()
 {
-	GlobalSampler* sampler = new HaltonSampler(30, { 0,0 }, { IMG_SIZE/10, IMG_SIZE / 10 });
+	GlobalSampler* sampler = new HaltonSampler(30, Bound2i({ 0,0 }, { IMG_SIZE/10, IMG_SIZE / 10 }));
 	for (int i = 0; i < IMG_SIZE / 10; ++i)
 	{
 		for (int j =  0; j < IMG_SIZE / 10; ++j)
@@ -182,7 +181,8 @@ void Renderer::Run()
 	std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new GaussianFilter({ 1,1 }, 1));
 	//std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new BoxFilter({ 0.5,0.5 }));
     std::shared_ptr<Film> film = std::shared_ptr<Film>(new Film(Point2i(IMG_SIZE, IMG_SIZE), std::move(filter), OUTPUT_PATH_EXR));
-    
+	std::shared_ptr<HaltonSampler> sampler = std::shared_ptr<HaltonSampler>(new HaltonSampler(SPP, film->GetSampleBound()));
+
 	std::thread render_thread([&] {
 		tbb::task_scheduler_init init(THREAD_COUNT);
 
@@ -197,6 +197,8 @@ void Renderer::Run()
 		Point2i nTiles((sampleBoundExtent.x + tileSize - 1) / tileSize, (sampleBoundExtent.y + tileSize - 1) / tileSize);
         Point2i offset = {0-sampleBound.min.x, 0-sampleBound.min.y};
         
+		std::shared_ptr<Sampler>tileSampler = sampler->Clone();
+
 		tbb::blocked_range<int> range(0, nTiles.x* nTiles.y);
         
 		auto map = [&](const tbb::blocked_range<int> &range) {
@@ -209,7 +211,7 @@ void Renderer::Run()
             tileMax -= offset;
 
 
-            RenderTile(tileMin, tileMax, film, nTiles.x * nTiles.y);
+            RenderTile(tileMin, tileMax, film, nTiles.x * nTiles.y, tileSampler);
 
 			/* Create a clone of the sampler for the current thread */
 			//RunTile(range.begin());

@@ -20,7 +20,7 @@ extern int SPP;
 #define FLOAT double
 #define  IMG_SIZE  480
 #define CHANNEL_COUNT  3
-#define DEPTH 16
+#define DEPTH 5
 #define THREAD_COUNT 64
 #define dVec2 glm::dvec2
 #define dVec3 glm::dvec3

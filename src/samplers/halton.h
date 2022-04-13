@@ -8,12 +8,14 @@ class HaltonSampler : public GlobalSampler
 {
 public:
     
-    HaltonSampler(int nSample, Point2i pMin, Point2i pMax);
+    HaltonSampler(int nSample, Bound2i sampleBound);
     
     int64_t GetIndexForSample(int64_t sampleNum) const;
     
     FLOAT SampleDimension(int64_t index, int dimension) const;
     
+
+    std::shared_ptr<Sampler>Clone();
 
 private:
     static std::vector<uint16_t> radicalInversePermutations;
