@@ -29,6 +29,8 @@ private:
 
     const uint16_t* PermutationForDimension(int dim) const {
         if (dim >= PrimeTableSize)
+            assert(0);
+           
         return &radicalInversePermutations[PrimeSums[dim]];
     }
 };
