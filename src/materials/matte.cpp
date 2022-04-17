@@ -1,20 +1,9 @@
 
-#include "lambert.h"
+#include "matte.h"
 #include "base/texture.h"
-
-LambertianRefrection::LambertianRefrection(dVec3 albedo, ImageTexture<dVec3, dVec3>* tex): BxDF((BxDFType)(BSDF_DIFFUSE)){
-	this->albedo = albedo;
-	this->tex = tex;
-}
+#include "base/reflection.h"
 
 
-dVec3 LambertianRefrection::F(const dVec3& wo, const dVec3& wi, IntersectPoint& si) {
-	if(tex)
-	{
-		return tex->Evaluate(si)*InvPi;
-	}
-	return albedo * InvPi;
-}
 
 void MatteMaterial::ComputeScatteringFunctions(IntersectPoint& si) const
 {

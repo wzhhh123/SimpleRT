@@ -1,6 +1,6 @@
 #include "base/header.h"
 #include "model.h"
-#include "bxdf/lambert.h"
+#include "materials/matte.h"
 #include "lights/diffuse.h"
 
 Model::Model()

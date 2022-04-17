@@ -8,7 +8,7 @@
 #include "accelerate.h"
 #include "pcg32.h"
 #include "bxdf.h"
-#include "bxdf/lambert.h"
+#include "materials/matte.h"
 #include <thread>
 #include <mutex>
 

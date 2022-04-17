@@ -9,7 +9,7 @@
 #include "accelerate/linear.h"
 #include "accelerate/bvh.h"
 #include "raytracer/path.h"
-#include "bxdf/lambert.h"
+#include "materials/matte.h"
 #include "base/sampling.h"
 #include "filters/gaussian.h"
 

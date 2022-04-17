@@ -17,7 +17,7 @@
 #include "tool/timer.h"
 #include "tool/math.h"
 #include "tool/exrhelper.h"
-#include "bxdf/glass.h"
+#include "materials/glass.h"
 #include "camera.h"
 #include "tool/platform.h"
 #include "texture.h"
