@@ -21,7 +21,7 @@ dVec3 WhiteColor::Trace(int level, Ray r, std::shared_ptr<Sampler>sampler) {
 		dVec3 nor = { 0,0,1 };
 		return nearestHit.tangentToWorld * nor;
 
-		return nearestHit.normalWS;
+		return nearestHit.shading.normalWS;
 
 		glm::vec4 diffuse = Renderer::Instance()->GetDiffuse(nearestHit.modelIndex, nearestHit.meshIndex);
 		glm::vec4 ambient = Renderer::Instance()->GetAmbient(nearestHit.modelIndex, nearestHit.meshIndex);

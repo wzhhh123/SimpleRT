@@ -161,6 +161,8 @@ void Model::GetMeshIndices(std::vector<int>& meshIndices) {
 }
 
 aiVector3D * Model::GetUVs(int meshIndex) {
+	if (meshes[meshIndex].mesh->GetNumUVChannels() == 0)
+		return nullptr;
 	return meshes[meshIndex].mesh->mTextureCoords[0];
 }
 

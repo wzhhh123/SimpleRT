@@ -19,27 +19,31 @@ dVec3 Path::Trace(int level, Ray r, std::shared_ptr<Sampler>sampler) {
 
 	float rrThreshold = 1;
     bool specularBound = false;
-	for (bounds;; ++bounds) {
+    for (bounds;; ++bounds) {
 
-		bool found = false;
-		IntersectPoint nearestHit;
-		found = Geometrys::Instance()->Intersect(r, &nearestHit);
+        bool found = false;
+        IntersectPoint nearestHit;
+        found = Geometrys::Instance()->Intersect(r, &nearestHit);
 
-		//if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) break;
+        //if (Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex].isAreaLight) break;
 
         //BxDF* bxdf = Renderer::Instance()->GetBxDF(nearestHit.modelIndex, nearestHit.meshIndex);
-		if(bounds == 0 || specularBound)
-		{
-            if(found)
+        if (bounds == 0 || specularBound)
+        {
+            if (found)
             {
                 L += beta * nearestHit.Le(-r.direction, nearestHit);;
             }
             else
             {
-                
+
             }
-		}
-        if (!found || bounds >= level) break;
+        }
+        if (!found || bounds >= level)
+        {
+            break;
+        }
+   
 
         nearestHit.ComputeScatteringFunctions(Renderer::Instance()->models[nearestHit.modelIndex]->meshes[nearestHit.meshIndex]);
         
@@ -75,7 +79,7 @@ dVec3 Path::Trace(int level, Ray r, std::shared_ptr<Sampler>sampler) {
         {
             L += beta * UniformSampleOneLight(sampler, nearestHit, r);
         }
-        
+
         //beta *= f * std::abs(glm::dot(glm::normalize(wi), dVec3(0,0,1))) / pdf;
 
 		//dVec3 dir = nearestHit.tangentToWorld * glm::normalize(wi);

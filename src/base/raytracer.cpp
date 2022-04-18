@@ -24,7 +24,7 @@ dVec3 UniformSampleOneLight(std::shared_ptr<Sampler>& sampler, IntersectPoint& p
     {
         // Convert from area measure, as returned by the Sample() call
         // above, to solid angle measure.
-        FLOAT lightAreaToSolidAnglePdf = lightAreaPdf * glm::distance(lightPos, shadowRay.origin) / abs(glm::dot(glm::normalize(it.normalWS), -shadowRay.direction));
+        FLOAT lightAreaToSolidAnglePdf = lightAreaPdf * glm::distance(lightPos, shadowRay.origin) / abs(glm::dot(glm::normalize(it.shading.normalWS), -shadowRay.direction));
         IntersectPoint nearestHit;
         bool found = Geometrys::Instance()->Intersect(shadowRay, &nearestHit);
         if (found)
@@ -33,7 +33,11 @@ dVec3 UniformSampleOneLight(std::shared_ptr<Sampler>& sampler, IntersectPoint& p
             
             //dVec3 f = Renderer::Instance()->GetBxDF(point.modelIndex, point.meshIndex)->F(shadowRay.direction, shadowRay.direction);
             dVec3 f = point.bsdf->F(shadowRay.direction, shadowRay.direction, nearestHit);
-            L += col * f * std::abs(glm::dot(shadowRay.direction, point.normalWS)) / (lightAreaToSolidAnglePdf);
+            //if (col.r < 1e-6 && col.g < 1e-6 && col.g < 1e-6)
+            //{
+            //    L = { 100,0,0 };
+            //}
+            L += col * f * std::abs(glm::dot(shadowRay.direction, point.shading.normalWS)) / (lightAreaToSolidAnglePdf);
         }
         else
         {

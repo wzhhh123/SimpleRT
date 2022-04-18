@@ -34,16 +34,20 @@ void Triangle::SetData(IntersectPoint& it) {
 		dVec3 worldNormal1 = objectToWorld * dVec4{ normal[idx1].x, normal[idx1].y, normal[idx1].z, 0 };
 		dVec3 worldNormal2 = objectToWorld * dVec4{ normal[idx2].x, normal[idx2].y, normal[idx2].z, 0 };
 
-		it.normalWS =
+		it.shading.normalWS =
 			glm::normalize(
 				it.weightU * worldNormal1 +
 				it.weightV * worldNormal2 +
 				(1 - it.weightV - it.weightU) * worldNormal0);
 
-		coordinateSystem(it.normalWS, it.tangentWS, it.bitangentWS);
-
-		it.tangentToWorld = { it.tangentWS, it.bitangentWS, it.normalWS };
+		it.shading.bitangentWS = glm::normalize(glm::cross(it.shading.normalWS, it.shading.tangentWS));
+		it.tangentToWorld = { it.shading.tangentWS, it.shading.bitangentWS, it.shading.normalWS };
 		it.worldToTangent = glm::inverse(it.tangentToWorld);
+
+		if (glm::dot(it.normalWS, it.shading.normalWS) < 0)
+		{
+			it.normalWS = -it.normalWS;
+		}
 	}
 	else {
 		std::cout << "no normals???" << std::endl;
@@ -162,12 +166,30 @@ bool Triangle::Intersect(Ray r, IntersectPoint& p)
 		FLOAT determinant = duv02[0] * duv12[1] - duv02[1] * duv12[0];
 		bool degenerateUV = std::abs(determinant) < 1e-8;
 		dVec3 dpdu, dpdv;
-		//if (!degenerateUV) 
+		if (!degenerateUV) 
 		{
+			//std::cout << uv[0].x << " " << uv[0].y << " " << uv[1].x << " " << uv[1].y << " " << uv[2].x << " " << uv[2].y << std::endl;
+			//std::cout << std::flush;
+
 			FLOAT invdet = 1 / determinant;
 			dpdu = (duv12[1] * dp02 - duv02[1] * dp12) * invdet;
 			dpdv = (-duv12[0] * dp02 + duv02[0] * dp12) * invdet;
 		}
+		else 
+		{
+			dVec3 ng = glm::cross(vertex2 - vertex0, vertex1 - vertex0);
+			if (glm::length(ng) == 0)
+				// The triangle is actually degenerate; the intersection is
+				// bogus.
+				return false;
+
+			coordinateSystem(glm::normalize(ng), dpdu, dpdv);
+
+		}
+
+		p.normalWS = p.shading.normalWS = glm::normalize(glm::cross(dpdu, dpdv));
+		p.tangentWS = p.shading.tangentWS = glm::normalize(dpdu);
+		p.bitangentWS = p.shading.bitangentWS = glm::normalize(dpdv);
 
 		//p.normalWS = glm::normalize(glm::cross(dpdv, dpdu));
 		//dVec3 tangent = glm::normalize(dpdu);
@@ -230,6 +252,11 @@ void Triangle::GetUVs(dVec2 uv[3],IntersectPoint& it) {
         uv[1]  = dVec2{ uva[idx1].x, uva[idx1].y};
         uv[2]  = dVec2{ uva[idx2].x, uva[idx2].y};
     }
+	else {
+		uv[0] = dVec2(0, 0);
+		uv[1] = dVec2(1, 0);
+		uv[2] = dVec2(1, 1);
+	}
     return;
 	/*	uv[0] = v0.uv;
 		uv[1] = v1.uv;

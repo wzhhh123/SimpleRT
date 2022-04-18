@@ -11,10 +11,15 @@ public:
 	FLOAT weightU;
 	FLOAT weightV;
 	dVec3 normalWS;
-	//dVec3 normalOS;
 	dVec3 tangentWS;
 	dVec3 bitangentWS;
 	dVec2 uv;
+
+	struct {
+		dVec3 normalWS;
+		dVec3 tangentWS;
+		dVec3 bitangentWS;
+	}shading;
 	
 	//dVec2 uv;
 	

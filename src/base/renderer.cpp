@@ -72,7 +72,8 @@ void RenderTile(Point2i tileMin, Point2i tileMax, std::shared_ptr<Film> film, in
 	Camera Cam;
 	int localSPP = SPP;
 
-	std::shared_ptr<GaussianFilter> filter = std::shared_ptr<GaussianFilter>(new GaussianFilter({ 1,1 }, 1));
+	std::shared_ptr<GaussianFilter> filter = std::shared_ptr<GaussianFilter>(new GaussianFilter({ 2,2 }, 2));
+	//std::shared_ptr<BoxFilter> filter = std::shared_ptr<BoxFilter>(new BoxFilter({0.5,0.5}));
 	Bound2i tileSampleBound = Bound2i(tileMin, tileMax);
 	std::shared_ptr<FilmTile>filmTile = film->GetFilmTile(tileSampleBound);
 
@@ -178,8 +179,8 @@ void Renderer::Run()
     //return;
     
     
-	std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new GaussianFilter({ 1,1 }, 1));
-	//std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new BoxFilter({ 0.5,0.5 }));
+	//std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new GaussianFilter({ 2,2 }, 2));
+	std::unique_ptr<Filter> filter = std::unique_ptr<Filter>(new BoxFilter({ 0.5,0.5 }));
     std::shared_ptr<Film> film = std::shared_ptr<Film>(new Film(Point2i(IMG_SIZE, IMG_SIZE), std::move(filter), OUTPUT_PATH_EXR));
 	std::shared_ptr<HaltonSampler> sampler = std::shared_ptr<HaltonSampler>(new HaltonSampler(SPP, film->GetSampleBound()));
 

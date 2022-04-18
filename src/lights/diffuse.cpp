@@ -13,7 +13,7 @@ DiffuseAreaLight::DiffuseAreaLight(const dVec3 &Le,bool bTwoSized):Lemit(Le), bT
 dVec3 DiffuseAreaLight::L(const dVec3& direction, const IntersectPoint& it) const
 {
     //return dVec3(0,0,0);
-    return (bTwoSized||glm::dot(direction, it.normalWS) > 0) ? Lemit : dVec3(0,0,0);
+    return (bTwoSized||glm::dot(direction, it.shading.normalWS) > 0) ? Lemit : dVec3(0,0,0);
 }
 
 std::shared_ptr<AreaLight> CreateAreaLight(const dVec3 Le)

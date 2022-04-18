@@ -1,0 +1,59 @@
+{
+  "scene": [
+    {
+      "path": "../../assets/models/cbox/meshes/walls.obj",
+      "position": [ 0, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "albedo": [ 0.725, 0.71, 0.68 ],
+      "bsdf": "diffuse"
+
+    },
+    {
+      "path": "../../assets/models/cbox/meshes/rightwall.obj",
+      "position": [ -0.15, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "albedo": [ 0.161, 0.133, 0.427 ],
+      "bsdf": "diffuse"
+
+    },
+    {
+      "path": "../../assets/models/cbox/meshes/leftwall.obj",
+      "position": [ 0.15, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "albedo": [ 0.630, 0.065, 0.05 ],
+      "bsdf": "diffuse"
+    },
+    {
+      "path": "../../assets/models/santa/Santa_Claus_Figure_01.obj",
+      "position": [ 0, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 0.013, 0.013, 0.013 ],
+      "albedo": [ 0.725, 0.71, 0.68 ],
+      "bsdf": "diffuse"
+    },
+    {
+      "path": "../../assets/models/cbox/meshes/light.obj",
+      "position": [ 0, 0, 0 ],
+      "euler": [ 0, 0, 0 ],
+      "scale": [ 1, 1, 1 ],
+      "bsdf": "diffuse",
+      "albedo": [ 0, 0, 0 ],
+      "radiance": [ 22.3, 15.1, 11.7 ]
+    }
+  ],
+  "camera": {
+    "position": [ 0, 0.8, 5.6 ],
+    "target": [ 0, 0.8, 0 ],
+    "fov": 20
+  },
+  "renderer": {
+    "spp": 1
+  }
+}
+
+
+
+
