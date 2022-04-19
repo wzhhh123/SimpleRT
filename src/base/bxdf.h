@@ -32,6 +32,8 @@ public:
 	virtual dVec3 Sample_f(const dVec3 &wo, dVec3* wi,
 		const dVec2& sample, FLOAT* pdf, BxDFType& type, IntersectPoint& is);
 
+    bool MatchFlag(BxDFType t) { return (t & type) == type; }
+
 
 	FLOAT Pdf(const dVec3 &wo, const dVec3 &wi);
     
@@ -52,12 +54,12 @@ public:
   
     void Add(BxDF* b);
     virtual dVec3 Sample_f(const dVec3 &wo, dVec3* wi,
-        const dVec2& sample, FLOAT* pdf, BxDFType& sampleType, IntersectPoint& is);
+        const dVec2& sample, FLOAT* pdf, BxDFType& sampleType, IntersectPoint& is, BxDFType types = BSDF_ALL);
     
     
     BxDFType GetBxDFType();
     
-    virtual dVec3 F(const dVec3& wo, const dVec3& wi, IntersectPoint& is);
+    virtual dVec3 F(const dVec3& wo, const dVec3& wi, IntersectPoint& is, BxDFType types = BSDF_ALL);
     
     virtual ~BSDF();
         

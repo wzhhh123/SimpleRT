@@ -2,7 +2,7 @@
 
 #include "bxdf.h"
 #include "sampling.h"
-
+#include "struct/intersectpoint.h"
 
 
 
@@ -41,16 +41,31 @@ void BSDF::Add(BxDF* b)
 }
 
 
-dVec3 BSDF::Sample_f(const dVec3 &wo, dVec3* wi,
-    const dVec2& sample, FLOAT* pdf, BxDFType& type, IntersectPoint& is)
+dVec3 BSDF::Sample_f(const dVec3& wo, dVec3* wi,
+    const dVec2& sample, FLOAT* pdf, BxDFType& type, IntersectPoint& is, BxDFType flag)
 {
     return BxDFs[0]->Sample_f(wo, wi, sample, pdf, type, is);
 }
 
 
-dVec3 BSDF::F(const dVec3& wo, const dVec3& wi, IntersectPoint& is)
+dVec3 BSDF::F(const dVec3& woW, const dVec3& wiW, IntersectPoint& is, BxDFType flags)
 {
-    return BxDFs[0]->F(wo,wi, is);
+    dVec3 wo = is.worldToTangent * woW, wi = is.worldToTangent * wiW;
+    if (wo.z == 0) return dVec3(0);
+    bool reflect = glm::dot(wiW, is.shading.normalWS) * glm::dot(woW, is.shading.normalWS) > 0;
+
+    dVec3 f(0);
+    for (int i = 0; i < NumBxDF; ++i)
+    {
+        //every bxdf flag has either bsdf_reflection or bsdf_transimission.
+        if (BxDFs[i]->MatchFlag(flags) && (reflect && (BxDFs[i]->type & BSDF_REFLECTION)) || (!reflect && (BxDFs[i]->type & BSDF_TRANSMISSION)))
+        {
+            f += BxDFs[i]->F(wo, wi, is);
+        }
+    }
+
+    return f;
+    //return BxDFs[0]->F(wo,wi, is);
 }
 
 
