@@ -62,6 +62,9 @@ public:
     virtual dVec3 F(const dVec3& wo, const dVec3& wi, IntersectPoint& is, BxDFType types = BSDF_ALL);
     
     virtual ~BSDF();
+
+    int BSDF::NumComponents(const BxDFType& type);
+
         
 private:
     BxDF* BxDFs[8];
