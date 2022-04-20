@@ -98,7 +98,19 @@ dVec3 BSDF::Sample_f(const dVec3& woW, dVec3* wiW,
             }
         }
     }
+    if (matchComps > 1) *pdf /= matchComps;
+    if (!(bxdf->type & BSDF_SPECULAR))
+    {
+        bool reflect = glm::dot(*wiW, is.shading.normalWS) * glm::dot(woW, is.shading.normalWS) > 0;
+        f = dVec3(0);
+        for (int i = 0; i < NumBxDF; ++i)
+            if (BxDFs[i]->MatchFlag(type) &&
+                ((reflect && (BxDFs[i]->type & BSDF_REFLECTION)) ||
+                    (!reflect && (BxDFs[i]->type & BSDF_TRANSMISSION))))
+                f += BxDFs[i]->F(wo, wi, is);
+    }
 
+    return f;
     //return BxDFs[0]->Sample_f(wo, wi, sample, pdf, type, is);
 }
 
