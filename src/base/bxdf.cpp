@@ -20,7 +20,6 @@ FLOAT BxDF::Pdf(const dVec3 &wo, const dVec3 &wi)
 dVec3 BxDF::Sample_f(const dVec3 &wo, dVec3* wi,
 	const dVec2& sample, FLOAT* pdf, BxDFType& type, IntersectPoint& is)  {
 
-    type = (BxDFType)(BSDF_DIFFUSE | BSDF_REFLECTION);
 	*wi = CosineSampleHemisphere(sample);
 	if (wo.z < 0)wi->z *= -1;
 	*pdf = Pdf(wo, *wi);
@@ -55,10 +54,8 @@ int BSDF::NumComponents(const BxDFType &type)
 }
 
 dVec3 BSDF::Sample_f(const dVec3& woW, dVec3* wiW,
-    const dVec2& sample, FLOAT* pdf, BxDFType& type, IntersectPoint& is, BxDFType flag, BxDFType* sampledType)
+    const dVec2& sample, FLOAT* pdf, BxDFType type, IntersectPoint& is, BxDFType flag, BxDFType* sampledType)
 {
-    return BxDFs[0]->Sample_f(woW, wiW, sample, pdf, type, is);
-
     int matchComps = NumComponents(flag);
     if (matchComps == 0)
     {
@@ -122,6 +119,7 @@ dVec3 BSDF::F(const dVec3& woW, const dVec3& wiW, IntersectPoint& is, BxDFType f
 {
     dVec3 wo = is.worldToTangent * woW, wi = is.worldToTangent * wiW;
     if (wo.z == 0) return dVec3(0);
+    //both negative or both positive will result in a positive bool value.
     bool reflect = glm::dot(wiW, is.shading.normalWS) * glm::dot(woW, is.shading.normalWS) > 0;
 
     dVec3 f(0);
