@@ -263,7 +263,7 @@ void Renderer::Initialize() {
 	string line, jsonText;
 	ifstream ifs(CONFIG_PATH);
 	while (getline(ifs, line))
-		jsonText.append(line);//Ã»ÓÐ»»ÐÐ
+		jsonText.append(line);//Ã»ï¿½Ð»ï¿½ï¿½ï¿½
 
 	Document document;
 	document.Parse(jsonText.c_str());

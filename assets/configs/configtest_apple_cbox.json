@@ -59,7 +59,7 @@
     "fov": 20
   },
   "renderer": {
-    "spp": 8
+    "spp": 16
   }
 }
 

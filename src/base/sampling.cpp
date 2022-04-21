@@ -3,7 +3,7 @@
 #include "sampling.h"
 
 
-//°ëÇò¾ùÔÈ²ÉÑù
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È²ï¿½ï¿½ï¿½
 dVec3 UniformSampleHemisphere(const dVec2 &u) {
 	FLOAT z = u[0];
 	FLOAT r = std::sqrt(std::max((FLOAT)0, (FLOAT)1. - z * z));
@@ -14,7 +14,7 @@ dVec3 UniformSampleHemisphere(const dVec2 &u) {
 FLOAT UniformHemispherePdf() { return Inv2Pi; } 
 
 
-//Í¬ÐÄÔ²²ÉÑùÔ²ÅÌ
+//Í¬ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½
 dVec2 ConcentricSampleDisk(const dVec2 &u) {
 	// Map uniform random numbers to $[-1,1]^2$
 	dVec2 uOffset = 2. * u - dVec2(1, 1);
@@ -36,7 +36,7 @@ dVec2 ConcentricSampleDisk(const dVec2 &u) {
 }
 
 
-//cos¼ÓÈ¨µÄ°ëÇò²ÉÑù
+//cosï¿½ï¿½È¨ï¿½Ä°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 dVec3 CosineSampleHemisphere(const dVec2 &u) {
 	dVec2 d = ConcentricSampleDisk(u);
 	FLOAT z = std::sqrt(std::max((FLOAT)0, 1 - d.x * d.x - d.y * d.y));

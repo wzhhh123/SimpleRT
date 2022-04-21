@@ -31,6 +31,8 @@ public:
 	int meshIndex;
 	int faceIndex;
 
+	Shape* shapePtr;
+
 	dVec3 Le(const dVec3& direction, const IntersectPoint& it);
     
     //for debug

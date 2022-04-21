@@ -6,6 +6,43 @@
 #include "base/renderer.h"
 #include "base/sampler.h"
 
+
+//
+//dVec3 EstimateDirect(IntersectPoint& point, Ray& r, Triangle* triangle, const dVec2& lightSample, const dVec2& bsdfSample, bool specular = false)
+//{
+//    BxDFType types = specular ? BSDF_ALL : BxDFType(BSDF_ALL & ~BSDF_SPECULAR);
+//    dVec3 L(0);
+//    FLOAT lightAreaPdf = 0, bxdfPdf = 0;
+//    {
+//        IntersectPoint it = triangle->Samping(lightSample, &lightAreaPdf);
+//        Ray shadowRay;
+//        shadowRay.origin = point.t * r.direction + r.origin;
+//        dVec3 lightPos = it.weightV * triangle->v0.vertexWS + it.weightU * triangle->v1.vertexWS + (1 - it.weightU - it.weightV) * triangle->v2.vertexWS;
+//        shadowRay.direction = glm::normalize(lightPos - shadowRay.origin);
+//        IntersectPoint nearestHit;
+//        bool found = Geometrys::Instance()->Intersect(shadowRay, &nearestHit);
+//        if (found && nearestHit.shapePtr == triangle)
+//        {
+//            dVec3 col = nearestHit.Le(-shadowRay.direction, nearestHit);
+//            dVec3 f = point.bsdf->F(shadowRay.direction, shadowRay.direction, point);
+//            L += col * f * std::abs(glm::dot(shadowRay.direction, point.shading.normalWS)) / (lightAreaToSolidAnglePdf);
+//        }
+//    }
+//}
+//
+//dVec3 UniformSampleOneLight1(std::shared_ptr<Sampler>& sampler, IntersectPoint& point, Ray& r)
+//{
+//    dVec3 L = dVec3(0, 0, 0);
+//    FLOAT lightPdf = 0;
+//    int index = Geometrys::Instance()->lightDistribute.SampleDiscrete(sampler->Get1D(), &lightPdf);
+//    if (lightPdf == 0) return dVec3(0);
+//    Triangle* triangle = dynamic_cast<Triangle*>(Geometrys::Instance()->shapes[Geometrys::Instance()->lightShapeIndices[index]]);
+//    dVec2 lightSample = sampler->Get2D();
+//    dVec2 bsdfSample = sampler->Get2D();
+//    return EstimateDirect(point, r, triangle, lightSample, bsdfSample) / lightPdf;
+//}
+
+
 dVec3 UniformSampleOneLight(std::shared_ptr<Sampler>& sampler, IntersectPoint& point, Ray& r)
 {
     dVec3 L = dVec3(0,0,0);
@@ -32,7 +69,7 @@ dVec3 UniformSampleOneLight(std::shared_ptr<Sampler>& sampler, IntersectPoint& p
             dVec3 col = nearestHit.Le(-shadowRay.direction, nearestHit);
             
             //dVec3 f = Renderer::Instance()->GetBxDF(point.modelIndex, point.meshIndex)->F(shadowRay.direction, shadowRay.direction);
-            dVec3 f = point.bsdf->F(shadowRay.direction, shadowRay.direction, nearestHit);
+            dVec3 f = point.bsdf->F(shadowRay.direction, shadowRay.direction, point);
             //if (col.r < 1e-6 && col.g < 1e-6 && col.g < 1e-6)
             //{
             //    L = { 100,0,0 };

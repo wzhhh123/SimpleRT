@@ -58,10 +58,10 @@ TreeNode* Bvh::BuildTree(BoundingBox box, std::vector<int>&indices, int depth) {
 	int maxExtent = box.MaxExtent();
 	if (box.amax[maxExtent] - box.amin[maxExtent] < 0.05) {
 #if DEBUG_MODE
-		//¿´¿´ÊÇ·ñ»á³öÏÖÔÚÒ»¸öÐ¡µÄaabbÄÚ»¹ÓÐ´óÁ¿Èý½ÇÐÎ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ð¡ï¿½ï¿½aabbï¿½Ú»ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		std::cout << "Bvh stop partite because max extent of aabb less than 0.05, leaf triangle count is " << indices.size() << std::endl;
 #endif
-		return curNode;//×î´óÎ¬¶È²Å0.2£¬ÔÙ»®·ÖÏÂÈ¥¿ÉÄÜÃ»É¶ÒâÒå
+		return curNode;//ï¿½ï¿½ï¿½Î¬ï¿½È²ï¿½0.2ï¿½ï¿½ï¿½Ù»ï¿½ï¿½ï¿½ï¿½ï¿½È¥ï¿½ï¿½ï¿½ï¿½Ã»É¶ï¿½ï¿½ï¿½ï¿½
 	}
 
 
@@ -99,7 +99,7 @@ bool Bvh::SearchTree(Ray& r, IntersectPoint* p, TreeNode* treeNode) {
 	IntersectPoint nearestHit = IntersectPoint();
 	Shape* boundingBox = &(treeNode->curBox);
 
-	//ÕâÀï²»ÖªµÀÎªÊ²Ã´²»ÄÜÖ±½Óµ÷ÓÃboundingboxµÄinstersect£¬Òª×ªµ½shapeµ÷ÓÃ
+	//ï¿½ï¿½ï¿½ï²»Öªï¿½ï¿½ÎªÊ²Ã´ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Óµï¿½ï¿½ï¿½boundingboxï¿½ï¿½instersectï¿½ï¿½Òª×ªï¿½ï¿½shapeï¿½ï¿½ï¿½ï¿½
 	if (boundingBox->Intersect(r, nearestHit)) {
 		if (treeNode->isLeaf) {
 			for (size_t i = 0; i < treeNode->indices.size(); ++i)
@@ -108,6 +108,7 @@ bool Bvh::SearchTree(Ray& r, IntersectPoint* p, TreeNode* treeNode) {
 				Shape* shape = (*scene)[treeNode->indices[i]];
 				if (shape->Intersect(r, p)) {
 					p.shapeIndex = treeNode->indices[i];
+					p.shapePtr = shape;
 					if (!found) {
 						found = true;
 						nearestHit = p;

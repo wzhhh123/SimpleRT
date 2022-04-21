@@ -55,8 +55,10 @@ int BSDF::NumComponents(const BxDFType &type)
 }
 
 dVec3 BSDF::Sample_f(const dVec3& woW, dVec3* wiW,
-    const dVec2& sample, FLOAT* pdf, BxDFType& type, IntersectPoint& is, BxDFType flag)
+    const dVec2& sample, FLOAT* pdf, BxDFType& type, IntersectPoint& is, BxDFType flag, BxDFType* sampledType)
 {
+    return BxDFs[0]->Sample_f(woW, wiW, sample, pdf, type, is);
+
     int matchComps = NumComponents(flag);
     if (matchComps == 0)
     {
@@ -68,7 +70,7 @@ dVec3 BSDF::Sample_f(const dVec3& woW, dVec3* wiW,
     BxDF* bxdf = nullptr;
     for (int i = 0; i < NumBxDF; ++i, --comp)
     {
-        if (BxDFs[i]->MatchFlag(flag) && comp - 1 == 0)
+        if (BxDFs[i]->MatchFlag(flag) && comp == 0)
         {
             bxdf = BxDFs[i];
             break;
@@ -81,10 +83,11 @@ dVec3 BSDF::Sample_f(const dVec3& woW, dVec3* wiW,
     dVec3 wi, wo = is.worldToTangent * woW;
     if (wo.z == 0) return dVec3(0);
     *pdf = 0;
-
+    if (sampledType) *sampledType = bxdf->type;
     dVec3 f = bxdf->Sample_f(wo, &wi, remapSample, pdf, type, is);
     if (*pdf == 0)
     {
+        if (sampledType) *sampledType = BxDFType(0);
         return dVec3(0);
     }
     *wiW = is.tangentToWorld * wi;

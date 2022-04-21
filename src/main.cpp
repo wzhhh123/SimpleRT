@@ -17,13 +17,13 @@
 #include "cstdlib"
 /*
 build log:
-1、tbb的lib要改名为tbb_debug，然后把tbbd.dll复制到debug下面
-2、assimp要build shared
+1锟斤拷tbb锟斤拷lib要锟斤拷锟斤拷为tbb_debug锟斤拷然锟斤拷锟絫bbd.dll锟斤拷锟狡碉拷debug锟斤拷锟斤拷
+2锟斤拷assimp要build shared
 */
 
 /*
-系统信息:
-1、右手坐标系
+系统锟斤拷息:
+1锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷系
 */
 
 

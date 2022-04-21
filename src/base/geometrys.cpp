@@ -74,7 +74,7 @@ void Geometrys::Initialize(std::vector<Model*>& models, std::vector<dMat4>& obje
 	}
 
 
-	//pbrt3ÓÃµÄlightµÄÊýÁ¿À´²ÉÑù
+	//pbrt3ï¿½Ãµï¿½lightï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	std::vector<FLOAT> lightDis(lights.size(), 1);
 	//for (int i = 0; i < lights.size(); ++i) {
 	//	lightDis.push_back(dynamic_cast<Triangle*>(shapes[i])->Area());

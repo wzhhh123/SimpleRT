@@ -5,7 +5,7 @@
 
 Camera::Camera()
 {
-	dirZ = IMG_SIZE / (tan(FOV * acos(-1) / 360) * 2); // 360/PI~=114  计算近平面离相机距离 //照顾一下aabb计算 使用左手系
+	dirZ = IMG_SIZE / (tan(FOV * acos(-1) / 360) * 2); // 360/PI~=114  锟斤拷锟斤拷锟狡斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷 //锟秸癸拷一锟斤拷aabb锟斤拷锟斤拷 使锟斤拷锟斤拷锟斤拷系
 
 	dVec3 o = glm::normalize(dVec3{ 0,0,dirZ });
 	dVec3 ox = glm::normalize(dVec3{ 1,0,dirZ });
