@@ -53,7 +53,7 @@ int BSDF::NumComponents(const BxDFType &type)
     return num;
 }
 
-dVec3 BSDF::Sample_f(const dVec3& woW, dVec3* wiW,
+dVec3 BSDF::Sample_f(const dVec3& wo, dVec3* wi,
     const dVec2& sample, FLOAT* pdf, BxDFType type, IntersectPoint& is, BxDFType flag, BxDFType* sampledType)
 {
     int matchComps = NumComponents(flag);
@@ -77,37 +77,37 @@ dVec3 BSDF::Sample_f(const dVec3& woW, dVec3* wiW,
     dVec2 remapSample = { std::min(sample[0] * matchComps - comp, OneMinusEpsilon),
                       sample[1] };
 
-    dVec3 wi, wo = is.worldToTangent * woW;
     if (wo.z == 0) return dVec3(0);
     *pdf = 0;
     if (sampledType) *sampledType = bxdf->type;
-    dVec3 f = bxdf->Sample_f(wo, &wi, remapSample, pdf, type, is);
+    dVec3 f = bxdf->Sample_f(wo, wi, remapSample, pdf, type, is);
     if (*pdf == 0)
     {
         if (sampledType) *sampledType = BxDFType(0);
         return dVec3(0);
     }
-    *wiW = is.tangentToWorld * wi;
     if (!(bxdf->type & BSDF_SPECULAR) && matchComps > 1)
     {
         for (int i = 0; i < NumBxDF; ++i)
         {
             if (bxdf != BxDFs[i] && BxDFs[i]->MatchFlag(flag))
             {
-                *pdf += BxDFs[i]->Pdf(wo, wi);
+                *pdf += BxDFs[i]->Pdf(wo, *wi);
             }
         }
     }
     if (matchComps > 1) *pdf /= matchComps;
     if (!(bxdf->type & BSDF_SPECULAR))
     {
-        bool reflect = glm::dot(*wiW, is.shading.normalWS) * glm::dot(woW, is.shading.normalWS) > 0;
+        dVec3 wiW = is.tangentToWorld * (*wi);
+        dVec3 woW = is.tangentToWorld * (wo);
+        bool reflect = glm::dot(wiW, is.shading.normalWS) * glm::dot(woW, is.shading.normalWS) > 0;
         f = dVec3(0);
         for (int i = 0; i < NumBxDF; ++i)
             if (BxDFs[i]->MatchFlag(type) &&
                 ((reflect && (BxDFs[i]->type & BSDF_REFLECTION)) ||
                     (!reflect && (BxDFs[i]->type & BSDF_TRANSMISSION))))
-                f += BxDFs[i]->F(wo, wi, is);
+                f += BxDFs[i]->F(wo, *wi, is);
     }
 
     return f;

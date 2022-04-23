@@ -62,7 +62,7 @@ dVec3 Path::Trace(int level, Ray r, std::shared_ptr<Sampler>sampler) {
         {
             L += beta * UniformSampleOneLight(sampler, nearestHit, r);
         }
-        return L;
+
         FLOAT pdf;
         dVec3 wo = -r.direction, wi;
 
