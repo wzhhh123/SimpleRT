@@ -39,6 +39,11 @@ dVec3 SpecularReflection::Sample_f(const dVec3& wo, dVec3* wi,
     return fresnel->Evaluate(CosTheta(*wi)) * R / AbsCosTheta(*wi);
 }
 
+FLOAT SpecularReflection::Pdf(const dVec3 &wo, const dVec3 &wi)
+{
+    return 0;
+}
+
 dVec3 FresnelConductor::Evaluate(FLOAT cosThetaI) const {
     return FrConductor(std::abs(cosThetaI), etaI, etaT, k);
 }
@@ -102,13 +107,16 @@ FresnelSpecular::FresnelSpecular(dVec3 R, dVec3 T, float etaA, float etaB) : BxD
 
 }
 
-
 //delta distrubution, 	aribitrary wi have no scattering, zero is returned.
 dVec3 FresnelSpecular::F(const dVec3& wo, const dVec3& wi, IntersectPoint& is)
 {
 	return dVec3(0, 0, 0);
 }
 
+FLOAT FresnelSpecular::Pdf(const dVec3 &wo, const dVec3 &wi)
+{
+    return 0;
+}
 
 dVec3 FresnelSpecular::Sample_f(const dVec3& wo, dVec3* wi,
 	const dVec2& sample, FLOAT* pdf, BxDFType& sampleType, IntersectPoint& is)

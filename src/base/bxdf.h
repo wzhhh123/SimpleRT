@@ -61,6 +61,8 @@ public:
     
     virtual dVec3 F(const dVec3& wo, const dVec3& wi, IntersectPoint& is, BxDFType types = BSDF_ALL);
     
+    virtual FLOAT Pdf(const dVec3& woW, const dVec3& wiW, IntersectPoint& it,BxDFType types);
+    
     virtual ~BSDF();
 
     int NumComponents(const BxDFType& type);

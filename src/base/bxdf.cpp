@@ -136,6 +136,23 @@ dVec3 BSDF::F(const dVec3& woW, const dVec3& wiW, IntersectPoint& is, BxDFType f
     //return BxDFs[0]->F(wo,wi, is);
 }
 
+FLOAT BSDF::Pdf(const dVec3& woW, const dVec3& wiW, IntersectPoint& it, BxDFType types)
+{
+
+    if (NumBxDF == 0.f) return 0.f;
+    dVec3 wo = it.worldToTangent*woW, wi = it.worldToTangent*wiW;
+    if (wo.z == 0) return 0.;
+    FLOAT pdf = 0.f;
+    int matchingComps = 0;
+    for (int i = 0; i < NumBxDF; ++i)
+        if (BxDFs[i]->MatchFlag(types)) {
+            ++matchingComps;
+            pdf += BxDFs[i]->Pdf(wo, wi);
+        }
+    FLOAT v = matchingComps > 0 ? pdf / matchingComps : 0.f;
+    return v;
+   
+}
 
 BSDF::~BSDF()
 {

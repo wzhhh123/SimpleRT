@@ -54,6 +54,8 @@ class SpecularReflection : public BxDF {
 
     virtual dVec3 F(const dVec3& wo, const dVec3& wi, IntersectPoint& is){return dVec3(0);}
 
+    virtual FLOAT Pdf(const dVec3 &wo, const dVec3 &wi);
+    
     virtual dVec3 Sample_f(const dVec3& wo, dVec3* wi,
         const dVec2& sample, FLOAT* pdf, BxDFType& sampleType, IntersectPoint& is);    
 
@@ -74,6 +76,8 @@ public:
 	virtual dVec3 Sample_f(const dVec3& wo, dVec3* wi,
 		const dVec2& sample, FLOAT* pdf, BxDFType& sampleType, IntersectPoint& is);
 
+    virtual FLOAT Pdf(const dVec3 &wo, const dVec3 &wi);
+    
 private:
 	dVec3 R, T;
 	float etaA, etaB;
