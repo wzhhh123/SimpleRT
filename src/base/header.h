@@ -53,7 +53,7 @@ const FLOAT Sqrt2 = 1.41421356237309504880;
 #if __APPLE__
 #define OUTPUT_PATH_JPG "../../assets/image/result_apple.jpg"
 #define OUTPUT_PATH_EXR "../../assets/image/result_apple.exr"
-#define CONFIG_PATH "../../assets/configs/configtest_apple_cbox.json"
+#define CONFIG_PATH "../../assets/configs/santa.json"
 //#define CONFIG_PATH "../../assets/configs/configtest_apple_tex.json"
 //#define CONFIG_PATH "../../assets/configs/configtest_apple_fruit.json"
 #else
@@ -104,6 +104,11 @@ class AreaLight;
 class DiffuseAreaLight;
 class Material;
 class GlassMaterial;
+class SpecularReflection;
+class MirrorMaterial;
+class Fresnel;
+class FresnelNoOp;
+class FresnelConductor;
 class Matte;
 class BSDF;
 class MeshInfo;

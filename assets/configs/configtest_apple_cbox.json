@@ -32,7 +32,8 @@
       "euler": [ 0, 0, 0 ],
       "scale": [ 1, 1, 1 ],
       "albedo": [ 0.725, 0.71, 0.68 ],
-      "bsdf": "diffuse"
+      "bsdf": "mirror",
+      "kr": [0.9, 0.9, 0.9]
     },
     {
       "path": "../../assets/models/cbox/meshes/sphere2.obj",
@@ -59,7 +60,7 @@
     "fov": 20
   },
   "renderer": {
-    "spp": 16
+    "spp": 128
   }
 }
 

@@ -32,7 +32,8 @@
       "euler": [ 0, 0, 0 ],
       "scale": [ 0.013, 0.013, 0.013 ],
       "albedo": [ 0.725, 0.71, 0.68 ],
-      "bsdf": "diffuse"
+      "bsdf": "mirror",
+      "kr": [0.3,0.3,0.3]
     },
     {
       "path": "../../assets/models/cbox/meshes/light.obj",
@@ -50,7 +51,7 @@
     "fov": 20
   },
   "renderer": {
-    "spp": 1
+    "spp": 16
   }
 }
 

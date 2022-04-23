@@ -2,7 +2,46 @@
 #include "header.h"
 #include "texture.h"
 
+// https://seblagarde.wordpress.com/2013/04/29/memo-on-fresnel-equations/
+dVec3 FrConductor(FLOAT cosThetaI, const dVec3 &etai,
+                     const dVec3 &etat, const dVec3 &k) {
+    cosThetaI = cosThetaI < -1 ? -1 : (cosThetaI > 1 ? 1 : cosThetaI);
+    dVec3 eta = etat / etai;
+    dVec3 etak = k / etai;
 
+    FLOAT cosThetaI2 = cosThetaI * cosThetaI;
+    FLOAT sinThetaI2 = 1. - cosThetaI2;
+    dVec3 eta2 = eta * eta;
+    dVec3 etak2 = etak * etak;
+
+    dVec3 t0 = eta2 - etak2 - sinThetaI2;
+    dVec3 a2plusb2 = glm::sqrt(t0 * t0 + 4.0 * eta2 * etak2);
+    dVec3 t1 = a2plusb2 + cosThetaI2;
+    dVec3 a = glm::sqrt(0.5 * (a2plusb2 + t0));
+    dVec3 t2 = (FLOAT)2 * cosThetaI * a;
+    dVec3 Rs = (t1 - t2) / (t1 + t2);
+
+    dVec3 t3 = cosThetaI2 * a2plusb2 + sinThetaI2 * sinThetaI2;
+    dVec3 t4 = t2 * sinThetaI2;
+    dVec3 Rp = Rs * (t3 - t4) / (t3 + t4);
+
+    return 0.5 * (Rp + Rs);
+}
+
+Fresnel::~Fresnel(){}
+
+
+dVec3 SpecularReflection::Sample_f(const dVec3& wo, dVec3* wi,
+    const dVec2& sample, FLOAT* pdf, BxDFType& sampleType, IntersectPoint& is) {
+    // Compute perfect specular reflection direction
+    *wi = dVec3(-wo.x, -wo.y, wo.z);
+    *pdf = 1;
+    return fresnel->Evaluate(CosTheta(*wi)) * R / AbsCosTheta(*wi);
+}
+
+dVec3 FresnelConductor::Evaluate(FLOAT cosThetaI) const {
+    return FrConductor(std::abs(cosThetaI), etaI, etaT, k);
+}
 
 float FrDielectric(float cosThetaI, float etaI, float etaT) {
 	cosThetaI = clamp(cosThetaI, -1, 1);
@@ -111,3 +150,6 @@ dVec3 FresnelSpecular::Sample_f(const dVec3& wo, dVec3* wi,
 		return ft / AbsCosTheta(*wi);
 	}
 }
+
+
+

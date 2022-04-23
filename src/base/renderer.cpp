@@ -26,6 +26,7 @@
 #include "film.h"
 #include "filters/box.h"
 #include <atomic>
+#include "../materials/mirror.h"
 //#include "ImfRgbaFile.h"
 //#include "ImfArray.h"
 //#include "namespaceAlias.h"
@@ -329,6 +330,12 @@ void Renderer::Initialize() {
                 else if(strcmp(obj["bsdf"].GetString(), "glass") == 0)
                 {
                     models[index]->meshes[i].material = CreateGlassMaterial(dVec3(1,1,1), dVec3(1,1,1), obj["index"].GetFloat());
+                }
+                else if(strcmp(obj["bsdf"].GetString(), "mirror") == 0)
+                {
+                    auto krArr = obj["kr"].GetArray().Begin();
+                    dVec3 kr = dVec3{ krArr->GetFloat(), (krArr + 1)->GetFloat(), (krArr + 2)->GetFloat()};
+                    models[index]->meshes[i].material = CreateMirrorMaterial(kr, nullptr);
                 }
 			}
 

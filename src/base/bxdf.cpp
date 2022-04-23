@@ -54,9 +54,9 @@ int BSDF::NumComponents(const BxDFType &type)
 }
 
 dVec3 BSDF::Sample_f(const dVec3& wo, dVec3* wi,
-    const dVec2& sample, FLOAT* pdf, BxDFType type, IntersectPoint& is, BxDFType flag, BxDFType* sampledType)
+    const dVec2& sample, FLOAT* pdf, BxDFType type, IntersectPoint& is, BxDFType* sampledType)
 {
-    int matchComps = NumComponents(flag);
+    int matchComps = NumComponents(type);
     if (matchComps == 0)
     {
         *pdf = 0;
@@ -67,7 +67,7 @@ dVec3 BSDF::Sample_f(const dVec3& wo, dVec3* wi,
     BxDF* bxdf = nullptr;
     for (int i = 0; i < NumBxDF; ++i, --comp)
     {
-        if (BxDFs[i]->MatchFlag(flag) && comp == 0)
+        if (BxDFs[i]->MatchFlag(type) && comp == 0)
         {
             bxdf = BxDFs[i];
             break;
@@ -76,11 +76,11 @@ dVec3 BSDF::Sample_f(const dVec3& wo, dVec3* wi,
 
     dVec2 remapSample = { std::min(sample[0] * matchComps - comp, OneMinusEpsilon),
                       sample[1] };
-
+    
     if (wo.z == 0) return dVec3(0);
     *pdf = 0;
     if (sampledType) *sampledType = bxdf->type;
-    dVec3 f = bxdf->Sample_f(wo, wi, remapSample, pdf, type, is);
+    dVec3 f = bxdf->Sample_f(wo, wi, remapSample, pdf, *sampledType, is);
     if (*pdf == 0)
     {
         if (sampledType) *sampledType = BxDFType(0);
@@ -90,7 +90,7 @@ dVec3 BSDF::Sample_f(const dVec3& wo, dVec3* wi,
     {
         for (int i = 0; i < NumBxDF; ++i)
         {
-            if (bxdf != BxDFs[i] && BxDFs[i]->MatchFlag(flag))
+            if (bxdf != BxDFs[i] && BxDFs[i]->MatchFlag(type))
             {
                 *pdf += BxDFs[i]->Pdf(wo, *wi);
             }

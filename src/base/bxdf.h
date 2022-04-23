@@ -54,7 +54,7 @@ public:
   
     void Add(BxDF* b);
     virtual dVec3 Sample_f(const dVec3 &wo, dVec3* wi,
-        const dVec2& sample, FLOAT* pdf, BxDFType sampleType, IntersectPoint& is, BxDFType types = BSDF_ALL, BxDFType* sampledType = nullptr);
+        const dVec2& sample, FLOAT* pdf, BxDFType sampleType, IntersectPoint& is, BxDFType* sampledType = nullptr);
     
     
     BxDFType GetBxDFType();
@@ -63,7 +63,7 @@ public:
     
     virtual ~BSDF();
 
-    int BSDF::NumComponents(const BxDFType& type);
+    int NumComponents(const BxDFType& type);
 
         
 private:

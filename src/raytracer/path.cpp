@@ -66,13 +66,13 @@ dVec3 Path::Trace(int level, Ray r, std::shared_ptr<Sampler>sampler) {
         FLOAT pdf;
         dVec3 wo = -r.direction, wi;
 
-        BxDFType type = (BxDFType)0;
-        dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, sampler->Get2D(), &pdf, BSDF_ALL, nearestHit);
+        BxDFType sampledType = (BxDFType)0;
+        dVec3 f = nearestHit.bsdf->Sample_f(glm::normalize(nearestHit.worldToTangent * wo), &wi, sampler->Get2D(), &pdf, BSDF_ALL, nearestHit, &sampledType);
 
         beta *= f * std::abs(glm::dot(nearestHit.tangentToWorld * glm::normalize(wi)
             , nearestHit.normalWS)) / pdf;
 
-        specularBound = (type & BSDF_SPECULAR) != 0;
+        specularBound = (sampledType & BSDF_SPECULAR) != 0;
 
         //    std::cout << f.x << " " << f.y << " " << f.z << std::endl;
 
