@@ -52,7 +52,7 @@ const FLOAT Sqrt2 = 1.41421356237309504880;
 
 #if __APPLE__
 #define OUTPUT_PATH_JPG "../../assets/image/result_apple.jpg"
-#define OUTPUT_PATH_EXR "../../assets/image/result_apple.exr"
+#define OUTPUT_PATH_EXR "../../assets/image/result_apple.exr"3
 #define CONFIG_PATH "../../assets/configs/santa.json"
 //#define CONFIG_PATH "../../assets/configs/configtest_apple_tex.json"
 //#define CONFIG_PATH "../../assets/configs/configtest_apple_fruit.json"
